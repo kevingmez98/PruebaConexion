@@ -13,7 +13,7 @@ li,ul{
     font-size: 18px;
 }
 .bg-image {
-    background: url(../images/background-login.jpg) no-repeat 0 0 / cover;
+    /*background: url(../images/background-login.jpg) no-repeat 0 0 / cover;*/
     position: relative;
     width: 100%;
     height: 100vh;
@@ -121,15 +121,15 @@ li,ul{
 }
 
 .user input {
-    background: rgba(0, 0, 0, 0) url("../images/user.png") no-repeat scroll 7px 12px;
+   /* background: rgba(0, 0, 0, 0) url("../images/user.png") no-repeat scroll 7px 12px;*/
 }
 
 .pass input {
-    background: rgba(0, 0, 0, 0) url("../images/password.png") no-repeat scroll 7px 12px;
+   /* background: rgba(0, 0, 0, 0) url("../images/password.png") no-repeat scroll 7px 12px;*/
 }
 
 .mail input {
-    background: rgba(0, 0, 0, 0) url("../images/mail.png") no-repeat scroll 4px 12px;
+   /* background: rgba(0, 0, 0, 0) url("../images/mail.png") no-repeat scroll 4px 12px;*/
 }
 
 .login-signup .tab-content {
@@ -245,7 +245,7 @@ li,ul{
 }
 
 .add-project::before {
-    background: rgba(0, 0, 0, 0) url("../images/plus.png") no-repeat scroll 0 0;
+  /*  background: rgba(0, 0, 0, 0) url("../images/plus.png") no-repeat scroll 0 0;*/
     content: "";
     ;
     height: 12px;
@@ -328,7 +328,7 @@ li,ul{
     font-size: 15px;
     padding: 15px 9px;
     width: 100%;
-    background: rgba(0, 0, 0, 0) url("../images/search.png") no-repeat scroll 99% 12px;
+    /*background: rgba(0, 0, 0, 0) url("../images/search.png") no-repeat scroll 99% 12px;*/
     color: #8492af;
 }
 
