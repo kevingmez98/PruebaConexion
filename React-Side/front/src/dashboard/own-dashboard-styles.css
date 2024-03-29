@@ -1,0 +1,31 @@
+.navi ul{
+    padding-left: 0%;
+}
+
+#navigation{
+    overflow-y: scroll;
+    height: 100vh;
+}
+
+
+.subnavi a {
+    background: #182c59;
+}
+
+.subnavi i {
+    margin-right: 15px;
+    color: #5584ff;
+}
+
+.subnavi .active a {
+    background: #122143;
+    border-left: 5px solid #5584ff;
+    padding-left: 15px;
+}
+
+.subnavi a:hover {
+    background: #122143 none repeat scroll 0 0;
+    border-left: 5px solid #5584ff;
+    display: block;
+    padding-left: 15px;
+}
