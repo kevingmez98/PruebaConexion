@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faPenNib } from '@fortawesome/free-solid-svg-icons'
 
 import SideBarComponent from "./SideBar/SideBarComponent";
-import NavBarComponent from './SideBar/NavBarComponent.js';
 
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
 
 
 import './CSS/dashboard-styles.css';
@@ -28,7 +26,7 @@ function DashBoardPage() {
     //Ocultar y mostrar la barra lateral (responsive)
     const [isOpen, setIsOpen] = useState(false);
 
-    function toggle(){
+    function toggle() {
         setIsOpen(!isOpen);
     }
     return (
@@ -36,7 +34,7 @@ function DashBoardPage() {
             <div className="row display-table-row">
                 <div className={`col-md-2 col-2 ${isOpen ? 'd-none' : ''} d-sm-block display-table-cell v-align box`} id="navigation" >
                     <SideBarComponent></SideBarComponent>
-                </div>      
+                </div>
                 <div className="col-md-10 col-10 display-table-cell v-align">
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
 
@@ -48,6 +46,7 @@ function DashBoardPage() {
 
                         <a className="navbar-brand" href="#">Usuario: </a>
                         <FontAwesomeIcon icon={faEnvelope} />
+                        <FontAwesomeIcon icon={faPenNib} />
 
                         <div className="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul className="navbar-nav mr-auto">
@@ -55,14 +54,7 @@ function DashBoardPage() {
                         </div>
                     </nav>
                     <div className="user-dashboard">
-                        <h1>Hello, JS</h1>
-                        <div className="row">
-                            <div className="col-md-5 col-5 col-xs-12 gutter">
-                            </div>
-                            <div className="col-md-7 col-7 col-xs-12 gutter">
-
-                            </div>
-                        </div>
+                        <Outlet></Outlet>
                     </div>
                 </div>
             </div>
