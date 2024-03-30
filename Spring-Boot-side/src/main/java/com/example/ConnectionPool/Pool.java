@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Pool {
 static Pool  pool= null;
 static ArrayList<Conexion> ConexionesActivas = new ArrayList<Conexion>();
-private static Conexion System=new Conexion("system","huesos2011");
+private static Conexion System=new Conexion("sga","sga");
 public Pool(){
  
 }

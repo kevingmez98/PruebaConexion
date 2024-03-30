@@ -20,13 +20,13 @@ function SideBar() {
                     <AccordionGroup icon={faEnvelope} nombreBtn={"Representante general"} nombreGrupo={"representante-general"}>
                         <SideBarBtn nombreBtn={"Realizar venta"} icon={faEnvelope} route={"/realizar-venta"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Gestionar clientes"} icon={faEnvelope} route={"/gestion-cliente"}></SideBarBtn>
-                        <SideBarBtn nombreBtn={"Gestionar representantes"} icon={faEnvelope} route={"/gestionrepresentante"}></SideBarBtn>
-                        <SideBarBtn nombreBtn={"Gestionar clasificación representantes"} icon={faEnvelope} route={"/gestionclasificacion"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Gestionar representantes"} icon={faEnvelope} route={"/gestion-representante"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Gestionar clasificación representantes"} icon={faEnvelope} route={"/gestion-clasificacion"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Gestionar inventario"} icon={faEnvelope} route={"/gestion-inventario"}></SideBarBtn>
                     </AccordionGroup>
 
                     <AccordionGroup icon={faEnvelope} nombreBtn={"Cliente"} nombreGrupo={"cliente"}>
-                        <SideBarBtn nombreBtn={"Gestión del representante"} icon={faEnvelope} route={"/gestionrepresentante-cliente"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Gestión del representante"} icon={faEnvelope} route={"/gestion-representante-cliente"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Ver mis compras"} icon={faEnvelope} route={"/ver-compras"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Ver carrito"} icon={faEnvelope} route={"/ver-carrito"}></SideBarBtn>
                     </AccordionGroup>

@@ -33,7 +33,7 @@ public class Conexion {
     public String conectar() {
         
 
-        String url = "jdbc:oracle:thin:@//localhost:1521/orclpdb";
+        String url = "jdbc:oracle:thin:@//localhost:1521/mypdb";
 
         try {
             Class.forName("oracle.jdbc.OracleDriver");
