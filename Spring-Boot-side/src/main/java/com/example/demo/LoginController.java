@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.javatuples.*;
 import org.json.JSONObject;
 @RequestMapping(value="/ola")
-@CrossOrigin(origins = {"http://localhost:4200"})
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 public class LoginController {
     private final LoginService loginservice=new LoginService();
@@ -31,7 +31,9 @@ public class LoginController {
 
         return new ResponseEntity(resp.toString(),HttpStatus.OK);
       }
-        return new ResponseEntity(respuesta.getValue1(),HttpStatus.BAD_REQUEST);
+      JSONObject resp = new JSONObject();
+      resp.put("errors",respuesta.getValue1());
+        return new ResponseEntity(resp.toString(),HttpStatus.BAD_REQUEST);
     }
 
 
