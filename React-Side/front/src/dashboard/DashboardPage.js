@@ -35,8 +35,8 @@ function DashBoardPage() {
                 <div className={`col-md-2 col-2 ${isOpen ? 'd-none' : ''} d-sm-block display-table-cell v-align box`} id="navigation" >
                     <SideBarComponent></SideBarComponent>
                 </div>
-                <div className="col-md-10 col-10 display-table-cell v-align">
-                    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <div className="col-md-10 col-10 display-table-cell v-align" id="main-content">
+                    <nav className="navbar navbar-expand-lg navbar-light bg-light dash-nav">
 
                         <button className="navbar-toggler" type="button" data-toggle="offcanvas"
                             data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"

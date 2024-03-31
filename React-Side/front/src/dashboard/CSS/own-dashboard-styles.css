@@ -2,11 +2,17 @@
     padding-left: 0%;
 }
 
-#navigation{
-    overflow-y: scroll;
+#navigation, #main-content{
+    overflow-y: scroll; 
     height: 100vh;
 }
 
+.dash-nav {
+    position: fixed!important;
+    top: 0; 
+    width: 100%; 
+    z-index: 1000;
+}
 
 .subnavi a {
     background: #182c59;

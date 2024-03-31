@@ -1,5 +1,6 @@
 import CardComponent from "../../public-component/Card/CardComponent";
-import JsonTableComp from "../../public-component/JSONTable/JsonTableComp";
+import SimpleTable from "../../public-component/JSONTable/SimpleTable";
+import BtnTable from "../../public-component/JSONTable/BtnTable";
 function GestionarRepresentante() {
     const jsonData = [
         { id: 1, nombre: 'Ejemplo 1', edad: 30 },
@@ -12,7 +13,8 @@ function GestionarRepresentante() {
             <CardComponent titulo={"Gestion de representantes"}>
                 <div className="p-3 mb-2 bg-info text-white">Gestion de representante</div>
             </CardComponent>
-            <JsonTableComp dataJson={jsonData}></JsonTableComp>
+         <SimpleTable dataJson={jsonData}></SimpleTable>
+            <BtnTable dataJson={jsonData}></BtnTable>
         </div>
 
     )
