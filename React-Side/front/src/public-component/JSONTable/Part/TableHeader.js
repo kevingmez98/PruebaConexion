@@ -7,14 +7,17 @@ function TableHeader({ headers, extraHeaders }) {
             <tr>
                 {/*Se iteran los headers para los encabezados de la tabla*/}
                 {headers.map(header => (
-                    <th key={header}>{header}</th>
+                    <th key={header.name}>{header.name}</th>
                 ))}
                 {/*Se iteran los headers extra para los encabezados de la tabla*/}
-                {extraHeaders.map(header => (
-                    <th key={header}>{header}</th>
-                ))}
+                {/* Se verifica si extraHeaders existe y no está vacío antes de mostrarlos */}
+                {extraHeaders && extraHeaders.length > 0 && (   
+                    extraHeaders.map(header => (
+                        <th key={header}>{header}</th>
+                    ))
+                )}
             </tr>
-        </thead> 
+        </thead>
 
     );
 }

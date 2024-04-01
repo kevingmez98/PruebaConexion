@@ -5,6 +5,7 @@
 #navigation, #main-content{
     overflow-y: scroll; 
     height: 100vh;
+    overflow-x: scroll;
 }
 
 .dash-nav {
