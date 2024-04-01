@@ -4,17 +4,16 @@ import java.sql.ResultSet;
 
 import org.javatuples.Pair;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 import com.example.ConnectionPool.Conexion;
 import com.example.ConnectionPool.Pool;
-import com.example.DAO.DAO;
+import com.example.Repositorios.ClienteRepository;
 import com.example.Utils.JsonManager;
 
 public class ClienteService {
     public Pair<JSONObject,Conexion> getrepresentanteasignado(String serial){
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
-        ResultSet rs=DAO.getRepositorio().ConsultarRepresentanteAsignado(solicitante);
+        ResultSet rs=ClienteRepository.getRepositorio().ConsultarRepresentanteAsignado(solicitante);
          JSONObject representante =new JSONObject();
         try{ 
             

@@ -2,11 +2,10 @@ package com.example.userServices;
 
 import org.javatuples.Pair;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 import com.example.ConnectionPool.Conexion;
 import com.example.ConnectionPool.Pool;
-import com.example.DAO.DAO;
+import com.example.Repositorios.DirectorRepository;
 import com.example.Utils.JsonManager;
 
 public class DirectorService {
@@ -14,7 +13,7 @@ public class DirectorService {
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
         
         try{
-        JSONObject resultado=JsonManager.convert(DAO.getRepositorio().consultarRepresentantesregion(solicitante),solicitante);
+        JSONObject resultado=JsonManager.convert(DirectorRepository.getRepositorio().consultarRepresentantesregion(solicitante),solicitante);
         return new Pair<JSONObject,Conexion>(resultado,solicitante);
         }catch(Exception e){
             System.out.println("Error en representante service");
