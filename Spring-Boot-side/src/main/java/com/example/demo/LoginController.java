@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.javatuples.*;
 import org.json.JSONObject;
-@RequestMapping(value="/ola")
+@RequestMapping(value="/Login")
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 public class LoginController {
     private final LoginService loginservice=new LoginService();
     
-    @PostMapping(value="/sex",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value="/Autenticar",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity autenticar(@RequestBody USERPOJO usuario){
       Triplet<Boolean,String,String> respuesta= loginservice.autenticar(usuario.user, usuario.pass);
       if(respuesta.getValue0()){
