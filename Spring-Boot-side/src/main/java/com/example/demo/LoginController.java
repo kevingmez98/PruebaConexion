@@ -21,13 +21,12 @@ public class LoginController {
     private final LoginService loginservice=new LoginService();
     
     @PostMapping(value="/sex",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity autenticar(@RequestBody POJOS usuario){
+    public ResponseEntity autenticar(@RequestBody USERPOJO usuario){
       Triplet<Boolean,String,String> respuesta= loginservice.autenticar(usuario.user, usuario.pass);
       if(respuesta.getValue0()){
         JSONObject resp = new JSONObject();
-        resp.put("user", usuario.user);
-        resp.put("pass",usuario.pass);
-        resp.put("Role", respuesta.getValue2());
+
+        resp.put("Serial", respuesta.getValue2());
 
         return new ResponseEntity(resp.toString(),HttpStatus.OK);
       }

@@ -23,8 +23,11 @@ public class Conexion {
     public boolean successful=false;
     public String user;
     public String pass;
-    public String Role;
+    public String serial;
 
+    public Conexion(){
+        
+    }
     public Conexion(String user, String pass){
         this.user=user;
         this.pass=pass;
@@ -33,7 +36,7 @@ public class Conexion {
     public String conectar() {
         
 
-        String url = "jdbc:oracle:thin:@//localhost:1521/mypdb";
+        String url = "jdbc:oracle:thin:@//localhost:1521/orclpdb";
 
         try {
             Class.forName("oracle.jdbc.OracleDriver");
@@ -49,7 +52,7 @@ public class Conexion {
         }
         return user+" Conexion exitosa";
     }
-
+/* 
 public void getAllStudents() {
     try {
         String sql = "SELECT * FROM ESTUDIANTE";
@@ -65,25 +68,32 @@ public void getAllStudents() {
         System.out.println(e.getMessage());
     }
 }
-    public String getRole(String user) {
+*/
+    public String getConnectionSerial(String user) {
         try {
-            String sql = "select GRANTED_ROLE,GRANTEE from dba_Role_Privs where GRANTEE=?";
+            String sql = "select serial#,username,machine,program,module from v$session where username=?";
             PreparedStatement stmt = con.prepareStatement(sql);
            stmt.setString(1,user.toUpperCase());
            
             
             ResultSet rs = stmt.executeQuery();
             rs.next();
-            return rs.getString("GRANTED_ROLE");
+            String result= rs.getString("SERIAL#");
+            rs.close();
+            stmt.close();
+            return result;
             
         } catch (Exception e) {
-            System.out.println("Fallo la recuperacion del rol");
+            System.out.println("Fallo la recuperacion del serial de conexion de "+ user);
             System.out.println(e.getMessage());
         }
         return "";
     
 }
 
+    public Connection getConexion(){
+     return con;
+    }
     public void cerrarConexion() {
         try {
             con.close();

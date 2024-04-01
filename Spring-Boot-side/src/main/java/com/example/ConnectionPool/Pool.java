@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Pool {
 static Pool  pool= null;
 static ArrayList<Conexion> ConexionesActivas = new ArrayList<Conexion>();
-private static Conexion System=new Conexion("sga","sga");
+private static Conexion system=new Conexion("system","huesos2011");
 public Pool(){
  
 }
@@ -18,7 +18,6 @@ public static Pool getPool(){
      return pool;
 }
 public Conexion createConnection(String user, String pass){
-    
     for(Conexion e : ConexionesActivas){
         if(e.user==user && e.pass==pass){
             return e;
@@ -27,15 +26,25 @@ public Conexion createConnection(String user, String pass){
     Conexion nuevaConexion=new Conexion(user,pass);
     nuevaConexion.conectar();
     if(nuevaConexion.successful==true){
-        System.conectar();
-        nuevaConexion.Role=System.getRole(user);
+        system.conectar();
+        nuevaConexion.serial=system.getConnectionSerial(user);
         ConexionesActivas.add(nuevaConexion);
     }
     return nuevaConexion;
-
-
 }
-
+public Conexion getConexionbyserial(String serial){
+    for(Conexion e : ConexionesActivas){
+        System.out.println(e.serial + " "+serial);
+        if(e.serial.equals(serial)){
+            e.message="";
+            System.out.println("se encontro la conexion solicitada");
+            return e;
+        }
+    }
+    Conexion error=new Conexion();
+    error.message="No existe conexion con el serial suministrado";
+    return error;
+}
 
 
 

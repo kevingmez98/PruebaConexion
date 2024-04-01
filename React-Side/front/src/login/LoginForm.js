@@ -27,9 +27,7 @@ function LoginForm() {
         setMessage("");
         Axios.post('http://localhost:8080/ola/sex', { pass: pass, user: user })
             .then((response) => {
-                window.sessionStorage.setItem("user", response.data.user);
-                window.sessionStorage.setItem("pass", response.data.pass);
-                window.sessionStorage.setItem("Role", response.data.Role);
+                window.sessionStorage.setItem("Serial", response.data.Serial);
                 setMessage("Usuario autenticado");
                 // Redireccion
                 navigate("/home");

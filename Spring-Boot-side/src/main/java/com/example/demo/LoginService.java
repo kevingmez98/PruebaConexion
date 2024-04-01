@@ -8,7 +8,7 @@ public class LoginService {
     }
     public Triplet<Boolean,String,String> autenticar(String user, String pass){
         Conexion Resultado =Pool.getPool().createConnection(user, pass);
-        Triplet<Boolean,String,String> confirmacion=new Triplet<Boolean,String,String>(Resultado.successful,Resultado.message,Resultado.Role);
+        Triplet<Boolean,String,String> confirmacion=new Triplet<Boolean,String,String>(Resultado.successful,Resultado.message,Resultado.serial);
         return confirmacion;
         
     }
