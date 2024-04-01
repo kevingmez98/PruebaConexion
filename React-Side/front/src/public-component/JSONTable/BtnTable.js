@@ -8,30 +8,29 @@ import Table from 'react-bootstrap/Table';
 
 function BtnTable({ dataJson }) {
 
-    //Los elementos que se coloquen en la etiqueta deben ser CustomComp, dentro de estos estarán los elementos que se quieren agregar a la tabla
-
-    // Si no hay datos
-    if (!dataJson || dataJson.length === 0) {
+      // Si no hay datos
+      if (!dataJson || !dataJson.records||!dataJson.fields) {
         return <p>No hay datos.</p>;
     }
 
-    // Claves del primer objeto del JSON para usarlas como encabezados de la tabla
-    const headers = Object.keys(dataJson[0]);
+     // En records estarán los datos consultados, en fields lo nombres de los campo
+    const {records, fields} = dataJson;
 
     return (
             <Table responsive striped bordered hover variant="dark">
-                <TableHeader headers={headers} extraHeaders={['Accion']}></TableHeader>
+                <TableHeader headers={fields} extraHeaders={['Accion']}></TableHeader>
                 <tbody>
                     {/* Se generan los datos de la tabla */}
-                    {dataJson.map((item, index) => (
+
+                    {records.map((record, index) => (
                         <tr key={`t-${index}`}>
                             {/* Iterar sobre las claves y mostrar el valor */}
-                            {headers.map(header => (
+                            {record.map((value, idx) => (
                                 /*El react fragment permite envolver elementos sin agregar cosas al DOM
                                     Acá no es tan necesario pero lo dejo ya que es la tabla de ejemplo
                                 */
-                                <React.Fragment key={`t-${header}-${index}`}>
-                                    <TableCell>{item[header]}</TableCell>
+                                <React.Fragment key={`c-${index}-${idx}`}>
+                                    <TableCell>{value}</TableCell>
                                 </React.Fragment>
                             ))}
                             <TableCell>
