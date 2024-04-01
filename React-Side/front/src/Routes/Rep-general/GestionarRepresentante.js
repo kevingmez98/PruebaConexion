@@ -99,7 +99,7 @@ function GestionarRepresentante() {
     };
 
     return (
-        <div>
+        <div className="container">
             <CardComponent titulo={"Gestion de representantes"}>
                 <div className="p-3 mb-2 bg-info text-white">Gestion de representante</div>
             </CardComponent>
