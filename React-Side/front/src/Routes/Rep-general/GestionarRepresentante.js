@@ -11,29 +11,36 @@ function GestionarRepresentante() {
     
 
     React.useEffect(() => {
-        try {
-            
-            peticion.apply();
-            console.log(jsonData);
-        } catch (error) {
-
-        }
+        const fetchData = async () => {
+            try {
+                // Esperamos la resolución de la promesa usando await
+                const data = await peticion();
+                // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
+                SetjsonData(data);
+                console.log(data); // Aquí puedes ver los datos en la consola
+            } catch (error) {
+                // Manejamos cualquier error que pueda ocurrir
+                console.error('Error al obtener los datos:', error);
+            }
+        };
+    
+        fetchData();
     }, []);
     
-    
     var peticion = () => {
-        setMessage("");
-        Axios.post('http://localhost:8080/Director/representantesA', { "Serial":window.sessionStorage.getItem("Serial")})
-            .then((response) => {
-             SetjsonData(JSON.stringify(response.data,null,4));
-             console.log(jsonData);
-            
-                // Redireccion
-            }
-            ).catch((error) => {
-                setMessage(error.response.data.errors)
-            })
-    }
+        return new Promise((resolve, reject) => {
+            setMessage("");
+            Axios.post('http://localhost:8080/Director/representantesA', { "Serial": window.sessionStorage.getItem("Serial")})
+                .then((response) => {
+                    // Resolvemos la promesa con los datos recibidos
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    // Rechazamos la promesa con el mensaje de error
+                    setMessage(error.response.data.errors);
+                });
+        });
+    };
     
     return (
         <div className="container">

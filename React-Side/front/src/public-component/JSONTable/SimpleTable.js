@@ -12,9 +12,9 @@ function SimpleTable({ dataJson }) {
 
     // En records estarán los datos consultados, en fields lo nombres de los campos
     const {records, fields} = dataJson;
-
     return (
             <Table responsive striped>
+
                 <TableHeader headers={fields}></TableHeader>
                 <tbody>
                     {/* Se generan los datos de la tabla */}
