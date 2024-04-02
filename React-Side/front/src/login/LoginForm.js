@@ -12,7 +12,7 @@ function LoginForm() {
 
     const navigate = useNavigate();
 
-    React.useEffect(() => {
+    /*React.useEffect(() => {
         try {
             setUser(window.sessionStorage.getItem("user"))
             setPass(window.sessionStorage.getItem("pass"))
@@ -21,11 +21,11 @@ function LoginForm() {
         } catch (error) {
 
         }
-    }, []);
+    }, []); */
 
     var peticion = () => {
         setMessage("");
-        Axios.post('http://localhost:8080/ola/sex', { pass: pass, user: user })
+        Axios.post('http://localhost:8080/Login/Autenticar', { pass: pass, user: user })
             .then((response) => {
                 window.sessionStorage.setItem("Serial", response.data.Serial);
                 setMessage("Usuario autenticado");

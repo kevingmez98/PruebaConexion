@@ -4,7 +4,7 @@ import TableHeader from './Part/TableHeader';
 import TableCell from './Part/TableCell';
 
 function SimpleTable({ dataJson }) {
-
+    console.log("banana "+dataJson);
     // Si no hay datos
     if (!dataJson || !dataJson.records||!dataJson.fields) {
         return <p>No hay datos.</p>;
