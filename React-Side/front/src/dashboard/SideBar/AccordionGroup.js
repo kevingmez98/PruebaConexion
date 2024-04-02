@@ -1,11 +1,14 @@
 import React from 'react';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 function AccordionGroup({ nombreBtn, icon, nombreGrupo, children }) {
 
     return (
         <div>
             <a href="#" data-bs-toggle="collapse" data-bs-target={"#" + nombreGrupo} aria-expanded="false"
                 aria-controls={nombreGrupo}>
-                <i className={icon} aria-hidden="true"></i>
+                <FontAwesomeIcon icon={icon} />
                 <span className="d-none d-sm-block d-none.d-sm-block">{nombreBtn}</span>
             </a>
 

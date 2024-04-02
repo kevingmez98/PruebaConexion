@@ -1,5 +1,6 @@
 import CardComponent from '../public-component/Card/CardComponent';
-import InputGroup from '../public-component/Form/InputGroup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faK, faKey, faSignIn } from '@fortawesome/free-solid-svg-icons';
 import { Navigate, redirect, useNavigate } from 'react-router-dom';
 
 import React from 'react';
@@ -41,11 +42,29 @@ function LoginForm() {
 
         <CardComponent titulo="Inicio de sesion">
 
-            <form method="post">
+            <form method="post" id='login-form'>
 
-                <input icon="fas fa user" type="text" name="email" placeholder="Usuario" value={user || ''} onChange={(event) => { setUser(event.target.value) }} />
+                <div className="input-group form-group">
+                    <div className="form-group input-group">
+                        <label>Usuario</label>
+                    </div>
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"><FontAwesomeIcon icon={faSignIn}></FontAwesomeIcon></span>
+                    </div>
+                    <input icon="fas fa user" type="text" name="email" placeholder="Usuario" value={user || ''} onChange={(event) => { setUser(event.target.value) }} className='form-control' />
+                </div>
 
-                <input icon="fas fa-key" type="password" name="password" placeholder="Contraseña" value={pass || ''} onChange={(event) => { setPass(event.target.value) }} />
+                <br />
+                <div className="input-group form-group">
+                    <div className="form-group input-group">
+                        <label>Contraseña</label>
+                    </div>
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"><FontAwesomeIcon icon={faKey}></FontAwesomeIcon></span>
+                    </div>
+                    <input icon="fas fa-key" type="password" name="password" placeholder="Contraseña" value={pass || ''} onChange={(event) => { setPass(event.target.value) }} className='form-control' />
+                </div>
+
 
                 <br />
                 <div className="form-group">

@@ -1,38 +1,38 @@
 import SideBarBtn from "./SideBarBtn";
 import AccordionGroup from "./AccordionGroup";
-import { faEnvelope, faPenNib } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faPenNib, faHouse, faUser, faCircleUser, faCartShopping, faHandshake, faUsers, faWarehouse, faSignOut} from '@fortawesome/free-solid-svg-icons'
 function SideBar() {
     return (
         <div className="navi">
             <ul>
                 <li>
-                    <SideBarBtn nombreBtn={"Inicio"} icon={faPenNib} route={"/home"}></SideBarBtn>
+                    <SideBarBtn nombreBtn={"Inicio"} icon={faHouse} route={"/home"}></SideBarBtn>
                 </li>
                 <li>
-                    <SideBarBtn nombreBtn={"Perfil"} icon={faEnvelope} route={"/profile"}></SideBarBtn>
+                    <SideBarBtn nombreBtn={"Perfil"} icon={faUser} route={"/profile"}></SideBarBtn>
                 </li>
                 <li>        
-                    <AccordionGroup icon={faEnvelope} nombreBtn={"Representante de ventas"} nombreGrupo={"representante-ventas"}>
+                    <AccordionGroup icon={faCircleUser} nombreBtn={"Representante de ventas"} nombreGrupo={"representante-ventas"}>
                         <SideBarBtn nombreBtn={"Realizar venta"} icon={faPenNib} route={"/realizar-venta"}></SideBarBtn>
-                        <SideBarBtn nombreBtn={"Gestionar clientes"} icon={faPenNib} route={"/gestion-cliente"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Gestionar clientes"} icon={faUser} route={"/gestion-cliente"}></SideBarBtn>
                     </AccordionGroup>
 
-                    <AccordionGroup icon={faEnvelope} nombreBtn={"Representante general"} nombreGrupo={"representante-general"}>
-                        <SideBarBtn nombreBtn={"Realizar venta"} icon={faEnvelope} route={"/realizar-venta"}></SideBarBtn>
-                        <SideBarBtn nombreBtn={"Gestionar clientes"} icon={faEnvelope} route={"/gestion-cliente"}></SideBarBtn>
-                        <SideBarBtn nombreBtn={"Gestionar representantes"} icon={faEnvelope} route={"/gestion-representante"}></SideBarBtn>
-                        <SideBarBtn nombreBtn={"Gestionar clasificación representantes"} icon={faEnvelope} route={"/gestion-clasificacion"}></SideBarBtn>
-                        <SideBarBtn nombreBtn={"Gestionar inventario"} icon={faEnvelope} route={"/gestion-inventario"}></SideBarBtn>
+                    <AccordionGroup icon={faCircleUser} nombreBtn={"Representante general"} nombreGrupo={"representante-general"}>
+                        <SideBarBtn nombreBtn={"Realizar venta"} icon={faPenNib} route={"/realizar-venta"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Gestionar clientes"} icon={faUser} route={"/gestion-cliente"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Gestionar representantes"} icon={faUsers} route={"/gestion-representante"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Gestionar clasificación representantes"} icon={faHandshake} route={"/gestion-clasificacion"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Gestionar inventario"} icon={faWarehouse} route={"/gestion-inventario"}></SideBarBtn>
                     </AccordionGroup>
 
-                    <AccordionGroup icon={faEnvelope} nombreBtn={"Cliente"} nombreGrupo={"cliente"}>
-                        <SideBarBtn nombreBtn={"Gestión del representante"} icon={faEnvelope} route={"/gestion-representante-cliente"}></SideBarBtn>
-                        <SideBarBtn nombreBtn={"Ver mis compras"} icon={faEnvelope} route={"/ver-compras"}></SideBarBtn>
-                        <SideBarBtn nombreBtn={"Ver carrito"} icon={faEnvelope} route={"/ver-carrito"}></SideBarBtn>
+                    <AccordionGroup icon={faCircleUser} nombreBtn={"Cliente"} nombreGrupo={"cliente"}>
+                        <SideBarBtn nombreBtn={"Gestión del representante"} icon={faHandshake} route={"/gestion-representante-cliente"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Ver mis compras"} icon={faWarehouse} route={"/ver-compras"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Ver carrito"} icon={faCartShopping} route={"/ver-carrito"}></SideBarBtn>
                     </AccordionGroup>
                 </li>
                 <li>
-                    <SideBarBtn nombreBtn={"Cerrar sesión"} icon={faEnvelope} route={"/"}></SideBarBtn>
+                    <SideBarBtn nombreBtn={"Cerrar sesión"} icon={faSignOut} route={"/"}></SideBarBtn>
                 </li>
             </ul>
         </div>

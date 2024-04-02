@@ -1,7 +1,9 @@
 
 .body-login-image{ background-image:url("../../global-assets/img/login-blur.jpg"); background-repeat:no-repeat; background-size:Cover; padding:0px;}
 
-
+#login-form{
+    color:#e9ecef;
+}
 .card {
     border: 1px solid #28a745;
 }
