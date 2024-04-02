@@ -14,15 +14,10 @@ public class ClienteService {
     public Pair<JSONObject,Conexion> getrepresentanteasignado(String serial){
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
         ResultSet rs=ClienteRepository.getRepositorio().ConsultarRepresentanteAsignado(solicitante);
-         JSONObject representante =new JSONObject();
+         JSONObject resultado =new JSONObject();
         try{ 
-            
-        if(rs.next()){
-            representante.put("Pnombre",rs.getString("N_PRIMER_NOMBRE"));
-            representante.put("Apellido",rs.getString("N_PRIMER_APELLIDO"));
-            
-        }
-        return new Pair<JSONObject,Conexion>(representante,solicitante);
+             resultado=JsonManager.convert(ClienteRepository.getRepositorio().ConsultarRepresentanteAsignado(solicitante),solicitante);
+        return new Pair<JSONObject,Conexion>(resultado,solicitante);
     }catch(Exception e){
         System.out.println("Error en cliente service");
     }

@@ -1,4 +1,6 @@
 import CardComponent from "../../public-component/Card/CardComponent";
+import SimpleTable from "../../public-component/JSONTable/SimpleTable";
+import BtnTable from "../../public-component/JSONTable/BtnTable";
 import React from 'react';
 import Axios from 'axios';
 function GestionarRepCl() {
@@ -14,6 +16,7 @@ function GestionarRepCl() {
                 const data = await peticion();
                 // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
                 SetjsonData(data);
+                
                 console.log(data); // Aquí puedes ver los datos en la consola
             } catch (error) {
                 // Manejamos cualquier error que pueda ocurrir
@@ -40,11 +43,14 @@ function GestionarRepCl() {
     };
     
     return (
+        <div className="container">
         <CardComponent titulo={"Gestionar representante - cliente"}>
            <div className="p-3 mb-2 bg-info text-white">Representante</div>
            <p style={{ color: 'red' }}>{ErroMessage}</p>
         </CardComponent>
-        
+            <SimpleTable dataJson={jsonData}></SimpleTable>
+            <BtnTable dataJson={jsonData}></BtnTable>
+        </div>
     )
 }
 

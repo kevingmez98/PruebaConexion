@@ -1,4 +1,6 @@
 import CardComponent from "../../public-component/Card/CardComponent";
+import SimpleTable from "../../public-component/JSONTable/SimpleTable";
+import BtnTable from "../../public-component/JSONTable/BtnTable";
 import React from 'react';
 import Axios from 'axios';
 function GestionarCliente() {
@@ -41,10 +43,14 @@ function GestionarCliente() {
     
 
     return (
+        <div className="container">
         <CardComponent titulo={"Gestion de clientess"}>
            <div className="p-3 mb-2 bg-info text-white">Gestion de clientes</div>
            <p style={{ color: 'red' }}>{ErroMessage}</p>
         </CardComponent>
+        <SimpleTable dataJson={jsonData}></SimpleTable>
+            <BtnTable dataJson={jsonData}></BtnTable>
+        </div>
     )
 }
 

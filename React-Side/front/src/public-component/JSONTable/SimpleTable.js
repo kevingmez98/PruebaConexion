@@ -4,7 +4,7 @@ import TableHeader from './Part/TableHeader';
 import TableCell from './Part/TableCell';
 
 function SimpleTable({ dataJson }) {
-    console.log("banana "+dataJson);
+    
     // Si no hay datos
     if (!dataJson || !dataJson.records||!dataJson.fields) {
         return <p>No hay datos.</p>;
@@ -12,9 +12,9 @@ function SimpleTable({ dataJson }) {
 
     // En records estarán los datos consultados, en fields lo nombres de los campos
     const {records, fields} = dataJson;
+
     return (
             <Table responsive striped>
-
                 <TableHeader headers={fields}></TableHeader>
                 <tbody>
                     {/* Se generan los datos de la tabla */}
