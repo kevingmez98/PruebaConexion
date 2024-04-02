@@ -36,7 +36,7 @@ public class Conexion {
     public String conectar() {
         
 
-        String url = "jdbc:oracle:thin:@//localhost:1521/orclpdb";
+        String url = "jdbc:oracle:thin:@//localhost:1521/BD2_2024";
 
         try {
             Class.forName("oracle.jdbc.OracleDriver");

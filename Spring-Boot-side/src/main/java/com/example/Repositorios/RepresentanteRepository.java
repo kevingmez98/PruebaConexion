@@ -22,9 +22,9 @@ static private RepresentanteRepository repositorio;
     public ResultSet consultarClientesporRepresentante(Conexion solicitante){
         System.out.println(solicitante.user);
     try {
-        String sql = "select K_COD_REP_INTRO  ,N_PRIMER_NOMBRE,O_EMAIL,Q_NUM_TELEFONO FROM system.CLIENTE where K_COD_REP_INTRO=?";
+        String sql = "select K_COD_REP_INTRO  ,N_PRIMER_NOMBRE,O_EMAIL,Q_NUM_TELEFONO FROM nataem.CLIENTE where K_COD_REP_INTRO=?";
         PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
-       stmt.setString(1,solicitante.user.toUpperCase());
+        stmt.setString(1,solicitante.user.toUpperCase());
        
         
         ResultSet rs = stmt.executeQuery();

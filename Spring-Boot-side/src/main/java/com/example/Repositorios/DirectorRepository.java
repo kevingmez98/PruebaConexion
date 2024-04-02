@@ -23,7 +23,7 @@ static private DirectorRepository repositorio;
     public ResultSet consultarRepresentantesregion(Conexion solicitante){
         System.out.println(solicitante.user);
     try {
-        String sql = "select representante.k_cod_representante,representante.n_primer_nombre,representante.n_segundo_nombre,representante.n_primer_apellido,representante.n_segundo_Apellido,representante.O_EMAIL,representante.I_GENERO,representante.F_Nacimiento,representante.F_contrato,representante.Q_NUM_TELEFONO,representante.O_Direccion,representante.K_COD_REP_SUP,representante.K_COD_CLASIFICACION,representante.K_COD_REGION from system.representante, system.region  where system.representante.k_cod_region=system.region.k_cod_region and system.region.k_rep_encargado=?";
+        String sql = "select representante.k_cod_representante,representante.n_primer_nombre,representante.n_segundo_nombre,representante.n_primer_apellido,representante.n_segundo_Apellido,representante.O_EMAIL,representante.I_GENERO,representante.F_Nacimiento,representante.F_contrato,representante.Q_NUM_TELEFONO,representante.O_Direccion,representante.K_COD_REP_SUP,representante.K_COD_CLASIFICACION,representante.K_COD_REGION from nataem.representante, nataem.region  where nataem.representante.k_cod_region=nataem.region.k_cod_region and nataem.region.k_rep_encargado=?";
         PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
        stmt.setString(1,solicitante.user.toUpperCase());
        

@@ -22,7 +22,7 @@ static private ClienteRepository repositorio;
 public ResultSet ConsultarRepresentanteAsignado(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
-    String sql = "select representante.n_primer_nombre, representante.n_primer_apellido from system.representante, system.cliente where system.cliente.k_cod_rep_intro=system.representante.k_cod_representante and system.cliente.k_doc_cliente=?";
+    String sql = "select representante.n_primer_nombre, representante.n_primer_apellido from nataem.representante, nataem.cliente where nataem.cliente.k_cod_rep_intro=nataem.representante.k_cod_representante and nataem.cliente.k_doc_cliente=?";
     PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
      stmt.setString(1,solicitante.user.toUpperCase());
    
