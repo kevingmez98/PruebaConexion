@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Pool {
 static Pool  pool= null;
 static ArrayList<Conexion> ConexionesActivas = new ArrayList<Conexion>();
-private static Conexion system=new Conexion("system","123");
+private static Conexion system=new Conexion("adminsession","session123");
 public Pool(){
  
 }
@@ -26,7 +26,7 @@ public Conexion createConnection(String user, String pass){
     Conexion nuevaConexion=new Conexion(user,pass);
     nuevaConexion.conectar();
     if(nuevaConexion.successful==true){
-        system.conectar();
+        system.conectar(); 
         nuevaConexion.serial=system.getConnectionSerial(user);
         ConexionesActivas.add(nuevaConexion);
     }

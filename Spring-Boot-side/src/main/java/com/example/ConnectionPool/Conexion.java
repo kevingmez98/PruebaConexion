@@ -71,7 +71,8 @@ public void getAllStudents() {
 */
     public String getConnectionSerial(String user) {
         try {
-            String sql = "select serial#,username,machine,program,module from v$session where username=?";
+            String sql = "select serial#,username,machine,program,module from v$session where username=? AND"+ 
+            " CON_ID = (SELECT CON_ID FROM v$containers where NAME = 'BD2_2024')";
             PreparedStatement stmt = con.prepareStatement(sql);
            stmt.setString(1,user.toUpperCase());
            
