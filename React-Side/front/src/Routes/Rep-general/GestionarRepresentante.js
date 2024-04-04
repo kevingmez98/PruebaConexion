@@ -48,15 +48,7 @@ function GestionarRepresentante() {
                 <div className="p-3 mb-2 bg-info text-white">Gestion de representante</div>
                 <p style={{ color: 'red' }}>{ErroMessage}</p>
             </CardComponent>
-            <SimpleTable dataJson={jsonData}></SimpleTable>
             <BtnTable dataJson={jsonData}></BtnTable>
-            
-                
-            
-            <div className="form-group">
-                    <input type="button" name="btn" value="Iniciar" onClick={peticion}
-                        className="btn btn-outline-danger float-right login_btn" />
-                </div>
         </div>
         
 

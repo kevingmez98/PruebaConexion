@@ -22,13 +22,16 @@ static private ClienteRepository repositorio;
 public ResultSet ConsultarRepresentanteAsignado(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
-    String sql = "select representante.n_primer_nombre, representante.n_primer_apellido from nataem.representante, nataem.cliente where nataem.cliente.k_cod_rep_intro=nataem.representante.k_cod_representante and nataem.cliente.k_doc_cliente=?";
+    String sql = "SELECT rc.n_primer_nombre, rc.n_primer_apellido"+
+                  " FROM natame.rep_cliente rc, natame.cliente c"+
+                  " WHERE c.k_cod_rep_intro = rc.k_cod_representante"+ 
+                  " AND c.n_username = ?";
     PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
-     stmt.setString(1,solicitante.user.toUpperCase());
+    stmt.setString(1,solicitante.user.toUpperCase());
    
     
     ResultSet rs = stmt.executeQuery();
-    
+        
     return rs;
     
 } catch (Exception e) {
