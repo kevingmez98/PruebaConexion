@@ -34,7 +34,7 @@ function BtnTable({ dataJson }) {
                                 </React.Fragment>
                             ))}
                             <TableCell>
-                                <button className='btn btn-info'>Ola</button>
+                                <button className='btn btn-info'>Acción</button>
                             </TableCell>
                         </tr>
                     ))}

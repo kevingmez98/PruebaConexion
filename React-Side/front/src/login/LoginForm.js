@@ -1,4 +1,4 @@
-import CardComponent from '../public-component/Card/CardComponent';
+import CardComponent from '../public-component/Card/DarkCard/CardComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faK, faKey, faSignIn } from '@fortawesome/free-solid-svg-icons';
 import { Navigate, redirect, useNavigate } from 'react-router-dom';

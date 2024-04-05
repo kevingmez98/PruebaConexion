@@ -1,5 +1,5 @@
 import Header from './Header';
-import Body from './Body';
+import Body from '../CommonComponent/Body';
 
 function CardComponent({ titulo, children }) {
     return (

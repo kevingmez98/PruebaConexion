@@ -1,4 +1,4 @@
-import CardComponent from "../../public-component/Card/CardComponent";
+import CardComponent from "../../public-component/Card/DarkCard/CardComponent";
 function RealizarVenta() {
     return (
         <CardComponent titulo={"Realizar venta"}>

@@ -5,11 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faPenNib } from '@fortawesome/free-solid-svg-icons'
 
 import SideBarComponent from "./SideBar/SideBarComponent";
-
-
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
 
 import './CSS/dashboard-styles.css';
 import './CSS/own-dashboard-styles.css';
+
+import logo from '../logo.svg';
 
 function DashBoardPage() {
 
@@ -36,23 +38,24 @@ function DashBoardPage() {
                     <SideBarComponent></SideBarComponent>
                 </div>
                 <div className="col-md-10 col-10 display-table-cell v-align" id="main-content">
-                    <nav className="navbar navbar-expand-lg navbar-light bg-light dash-nav">
+                    <Navbar expand="lg" className="bg-body-tertiary">
+                        <Container>
+                            <Navbar.Brand>
+                                <img
+                                    alt=""
+                                    src={logo}
+                                    width="40"
+                                    height="40"
+                                    className="d-inline-block align-top"
+                                />{' '}
+                                Natame</Navbar.Brand>
+                            <Navbar.Toggle onClick={toggle} />
+                            <Navbar.Text>
+                                Conectado como: <strong>Mark Otto</strong>
+                            </Navbar.Text>
+                        </Container>
+                    </Navbar>
 
-                        <button className="navbar-toggler" type="button" data-toggle="offcanvas"
-                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation" onClick={toggle}>
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
-
-                        <a className="navbar-brand" href="#">Usuario: </a>
-                        <FontAwesomeIcon icon={faEnvelope} />
-                        <FontAwesomeIcon icon={faPenNib} />
-
-                        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul className="navbar-nav mr-auto">
-                            </ul>
-                        </div>
-                    </nav>
                     <div className="user-dashboard">
                         <Outlet></Outlet>
                     </div>

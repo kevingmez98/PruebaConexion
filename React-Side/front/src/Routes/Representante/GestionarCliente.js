@@ -1,4 +1,4 @@
-import CardComponent from "../../public-component/Card/CardComponent";
+import CardComponent from "../../public-component/Card/DarkCard/CardComponent";
 import SimpleTable from "../../public-component/JSONTable/SimpleTable";
 import BtnTable from "../../public-component/JSONTable/BtnTable";
 import React from 'react';

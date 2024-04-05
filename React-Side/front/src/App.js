@@ -17,6 +17,7 @@ import GestionarInventario from './Routes/Rep-general/GestionarInventario';
 import GestionarRepCl from './Routes/Cliente/GestionarRepCl';
 import GestionarCompras from './Routes/Cliente/GestionarCompras';
 import GestionarCarrito from './Routes/Cliente/GestionarCarrito';
+import RealizarCompraCl from './Routes/Cliente/RealizarCompraCl';
 
 function App() {
   return (
@@ -37,7 +38,7 @@ function App() {
           <Route path='/gestion-representante-cliente' element={<GestionarRepCl/>} />
           <Route path='/ver-compras' element={<GestionarCompras/>} />
           <Route path='/ver-carrito' element={<GestionarCarrito/>} />
-
+          <Route path='/realizar-compra' element={<RealizarCompraCl/>} />
 
         </Route>
       </Routes>
