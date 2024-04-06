@@ -41,4 +41,16 @@ public class ClienteController {
          return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
           
         }
+
+        @PostMapping(value="/Productosregion",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity getProductosregion(@RequestBody SerialPOJO Serial){
+         Pair<JSONObject,Conexion> respuesta=  clienteservice.getProductosRegion(Serial.Serial);
+         if(respuesta.getValue0()!=null){
+            return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
+         }
+         JSONObject error = new JSONObject();
+         error.put("errors",respuesta.getValue1().message);
+         return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+          
+        }
 }

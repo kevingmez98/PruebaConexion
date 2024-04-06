@@ -42,6 +42,32 @@ try {
 return null;
 }
 
+public ResultSet ConsultarProductosRegion(Conexion solicitante){
+    System.out.println(solicitante.user);
+try {
+    String sql = "SELECT RC.K_COD_REGION FROM NATAME.CLIENTE RC WHERE RC.N_USERNAME=?";
+    PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
+    stmt.setString(1,solicitante.user.toUpperCase());
+    
+    ResultSet rs = stmt.executeQuery();
+    rs.next();
+    String regionCliente=rs.getString("K_COD_REGION");
+    System.out.println("Region: "+regionCliente);
+    
+    sql = "select P.N_NOM_PRODUCTO, V.K_COD_PRODUCTO,V.I_ID_CAT_PRODUCTO,Q_PRECIO_UNITARIO,Q_CANTIDAD_EN_STOCK FROM NATAME.PRODUCTO P,NATAME.INVENTARIO V WHERE V.K_COD_REGION=?";
+    stmt= solicitante.getConexion().prepareStatement(sql);
+    stmt.setString(1,regionCliente);
+    rs=stmt.executeQuery();
+    
+    return rs;
+    
+} catch (Exception e) {
+    System.out.println("Fallo la recuperacion del serial de conexion");
+    System.out.println(e.getMessage());
+    solicitante.message=e.getMessage();
+}
+return null;
+}
 
 
 
