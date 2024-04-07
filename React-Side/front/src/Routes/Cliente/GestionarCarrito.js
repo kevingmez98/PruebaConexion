@@ -1,9 +1,28 @@
-import CardComponent from "../../public-component/Card/DarkCard/CardComponent";
+import React, { useState } from 'react';
+import { obtenerCarrito } from "../../public-component/Product/Carrito/CarritoSession";
+
 function GestionarCarrito() {
+    var listaCarrito = (obtenerCarrito("1"));
+    const [ErroMessage, setMessage] = React.useState('');
+
+
     return (
-        <CardComponent titulo={"Gestionar carrito"}>
-           <div className="p-3 mb-2 bg-info text-white">Realizar venta</div>
-        </CardComponent>
+        <React.Fragment>
+            {/*Verificar que el carrito no sea Null*/}
+         {console.log(listaCarrito.productos)}  
+            {listaCarrito ? (
+                listaCarrito.productos.map((producto, index) => (
+                    <div key={index}>
+                        <p>ID:{producto.idProducto}</p>
+                        <p>Nombre: {producto.nombreProducto}</p>
+                        <p>Cantidad: {producto.cantidad}</p>
+                    </div>
+
+                ))
+            ) : (
+                <p>No hay elementos en el carrito.</p>
+            )}
+        </React.Fragment>
     )
 }
 

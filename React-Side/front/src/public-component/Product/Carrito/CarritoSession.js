@@ -1,6 +1,7 @@
 
-export const actualizarCarrito = async (usuario, producto, cantidad) => {
+export const actualizarCarrito = async (usuario,nomProducto, idProducto, cantidad) => {
     try {
+        console.log(cantidad);
         //Obtener el carrito, si no existe se crea uno
         const claveCarrito = "carrito_" + usuario;
         
@@ -9,18 +10,20 @@ export const actualizarCarrito = async (usuario, producto, cantidad) => {
             carritoActual = { userId: usuario, productos: [] };
         }
         //Se valida que el producto esté en inventario
-        await validarProducto(producto);
+        await validarProducto(idProducto);
 
         //Se busca el producto en el carrito
-        const indiceProducto = carritoActual.productos.findIndex(item => item.idProducto === producto);
+        const indiceProducto = carritoActual.productos.findIndex(item => item.idProducto === idProducto);
 
         // Si el producto ya está en el carrito, aumentar la cantidad
         if (indiceProducto !== -1) {
             carritoActual.productos[indiceProducto].cantidad += parseInt(cantidad);
         } else {
-            carritoActual.productos.push({ idProducto: producto, cantidad: parseInt(cantidad) })
+            carritoActual.productos.push({ idProducto: idProducto,nombreProducto:nomProducto, cantidad: parseInt(cantidad) })
         }
         sessionStorage.setItem(claveCarrito, JSON.stringify(carritoActual));
+        console.log(carritoActual);
+        console.log(cantidad);
     } catch (error) {
         throw error;
     }

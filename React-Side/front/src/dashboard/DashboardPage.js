@@ -35,7 +35,7 @@ function DashBoardPage() {
                     <SideBarComponent></SideBarComponent>
                 </div>
                 <div className="col-md-10 col-10 display-table-cell v-align" id="main-content">
-                    <Navbar expand="lg" className="bg-body-tertiary">
+                    <Navbar expand="lg" className="bg-body-tertiary sticky-top">
                         <Container>
                             <Navbar.Brand>
                                 <img

@@ -5,56 +5,61 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import SimpleProductCard from "../../public-component/Product/CardProduct/SimpleProductCard";
 import { actualizarCarrito, eliminarCarrito } from '../../public-component/Product/Carrito/CarritoSession';
+import Axios from 'axios';
 
 
 function RealizarCompraCl() {
 
     const [isBtnLoading, setLoading] = useState(false);
+    const [ErroMessage, setMessage] = React.useState('');
+    var [dataJson, SetjsonData] = React.useState('');
+    var [listaProductos, setListaProductos] = React.useState([]);
 
-    const dataJson = {
-        "records": [
-            [
-                "Prod0001",
-                "Huevos",
-                "2000"
-            ],
-            [
-                "Prod0002",
-                "Aguacate",
-                "500"
-            ],
-            [
-                "Prod0003",
-                "Agua",
-                "5030"
-            ],
-            [
-                "Prod0004",
-                "cate",
-                "1500"
-            ],
-            [
-                "Prod0005",
-                "tIERRA",
-                "500"
-            ]
-        ],
-        "fields": [
-            {
-                "name": "ID_PROD",
-                "type": "OTHER"
-            },
-            {
-                "name": "N_PROD",
-                "type": "OTHER"
-            },
-            {
-                "name": "Precio",
-                "type": "OTHER"
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Esperamos la resolución de la promesa usando await
+                const data = await peticion();
+                // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
+                SetjsonData(data);
+                console.log(data); // Aquí puedes ver los datos en la consola
+            } catch (error) {
+                // Manejamos cualquier error que pueda ocurrir
+                console.error('Error al obtener los datos:', error);
             }
-        ]
-    }
-    const { records, fields } = dataJson;
+        };
+        fetchData();
+    }, []);
+
+    //Revisar el cambio en dataJson y actualiza la lista
+    React.useEffect(() => {
+        if (dataJson) {
+            //Records o resultados
+            let { records, fields } = dataJson;
+            //Se divide el array de productos(records) en grupos de 3
+            let lista = dividirArray(records, 3);
+            setListaProductos(lista);
+
+            console.log(listaProductos);
+        }
+    }, [dataJson])
+
+    var peticion = () => {
+        return new Promise((resolve, reject) => {
+            setMessage("");
+            Axios.post('http://localhost:8080/cliente/Productosregion', { "Serial": window.sessionStorage.getItem("Serial") })
+                .then((response) => {
+                    // Resolvemos la promesa con los datos recibidos
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    // Rechazamos la promesa con el mensaje de error
+                    console.log(error);
+                    setMessage(error.response.data.errors);
+
+                });
+        });
+    };
 
     // Función para dividir un array en grupos de tamaño dado
     function dividirArray(array, size) {
@@ -74,14 +79,15 @@ function RealizarCompraCl() {
             //Obtener cantidad del formulario
             const prodForm = document.getElementById(formId);
             const cant = prodForm.elements["cantidad"].value;
+            const nom = prodForm.elements["nombre"].value;
             if (cant > 0) {
                 setTimeout(() => {
                     //Guardar en el carrito
                     setLoading(false);
                 }, 1000); // Tiempo de espera
-                actualizarCarrito("1", productoId, cant);
+                actualizarCarrito("1",nom, productoId, cant);
                 alert(`Producto ${productoId} agregado con ${cant} unidades`);
-                prodForm.elements["cantidad"].value="";
+                prodForm.elements["cantidad"].value = "";
             } else {
                 setTimeout(() => {
                     setLoading(false);
@@ -94,21 +100,22 @@ function RealizarCompraCl() {
 
     };
 
-    //Se divide el array de productos(records) en grupos de 3
-    const listaProductos = dividirArray(records, 3);
-
     return (
         <React.Fragment>
-            <button onClick={()=> eliminarCarrito("1")}></button>
+            <button onClick={() => eliminarCarrito("1")}>Borrar todo el carro</button>
+            <p style={{ color: 'red' }}>{ErroMessage}</p>
             {listaProductos.map((grupoProd, index) => (
                 <Row key={index}>
                     {grupoProd.map((producto, i) => (
                         <Col key={i}>
-                            <SimpleProductCard idProd={producto[0]} nomProducto={producto[1]} precio={producto[2]}>
+                            <SimpleProductCard idProd={producto[1]} nomProducto={producto[0]} precio={producto[3]}>
                                 <Form id={`form-prod-${index}-${i}`}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Cantidad</Form.Label>
                                         <Form.Control size="sm" type="number" placeholder="1" min="1" name="cantidad" />
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
+                                        <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="nombre" value={producto[0]} />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}
@@ -121,10 +128,12 @@ function RealizarCompraCl() {
                         </Col>
                     ))}
                 </Row>
-
             ))}
+
+
         </React.Fragment>
     )
+
 }
 
 export default RealizarCompraCl;

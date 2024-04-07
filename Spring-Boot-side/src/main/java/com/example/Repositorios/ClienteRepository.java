@@ -54,7 +54,9 @@ try {
     String regionCliente=rs.getString("K_COD_REGION");
     System.out.println("Region: "+regionCliente);
     
-    sql = "select P.N_NOM_PRODUCTO, V.K_COD_PRODUCTO,V.I_ID_CAT_PRODUCTO,Q_PRECIO_UNITARIO,Q_CANTIDAD_EN_STOCK FROM NATAME.PRODUCTO P,NATAME.INVENTARIO V WHERE V.K_COD_REGION=?";
+    sql = "select P.N_NOM_PRODUCTO, V.K_COD_PRODUCTO,V.I_ID_CAT_PRODUCTO,Q_PRECIO_UNITARIO,Q_CANTIDAD_EN_STOCK "
+    +"FROM NATAME.PRODUCTO P,NATAME.INVENTARIO V WHERE V.K_COD_REGION=?" 
+    +"AND P.K_COD_PRODUCTO = V.K_COD_PRODUCTO";
     stmt= solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,regionCliente);
     rs=stmt.executeQuery();
