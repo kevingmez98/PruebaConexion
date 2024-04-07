@@ -1,5 +1,4 @@
 import CardComponent from "../../public-component/Card/DarkCard/CardComponent";
-import SimpleTable from "../../public-component/JSONTable/SimpleTable";
 import BtnTable from "../../public-component/JSONTable/BtnTable";
 import React from 'react';
 import Axios from 'axios';
@@ -43,13 +42,13 @@ function GestionarRepresentante() {
     };
     
     return (
-        <div className="container">
+        <React.Fragment>
             <CardComponent titulo={"Gestion de representantes"}>
                 <div className="p-3 mb-2 bg-info text-white">Gestion de representante</div>
                 <p style={{ color: 'red' }}>{ErroMessage}</p>
             </CardComponent>
             <BtnTable dataJson={jsonData}></BtnTable>
-        </div>
+        </React.Fragment>
         
 
     )

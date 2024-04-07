@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faPenNib } from '@fortawesome/free-solid-svg-icons'
-
 import SideBarComponent from "./SideBar/SideBarComponent";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
@@ -57,7 +54,9 @@ function DashBoardPage() {
                     </Navbar>
 
                     <div className="user-dashboard">
-                        <Outlet></Outlet>
+                        <Container> 
+                            <Outlet></Outlet>
+                        </Container>
                     </div>
                 </div>
             </div>

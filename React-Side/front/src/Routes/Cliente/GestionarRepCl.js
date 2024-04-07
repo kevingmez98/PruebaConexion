@@ -43,14 +43,14 @@ function GestionarRepCl() {
     };
 
     return (
-        <div className="container">
+        <React.Fragment>
             <CardComponent titulo={"Gestionar representante - cliente"}>
                 <div className="p-3 mb-2 bg-info text-white">Representante</div>
                 <p style={{ color: 'red' }}>{ErroMessage}</p>
             </CardComponent>
             <SimpleTable dataJson={jsonData}></SimpleTable>
             <BtnTable dataJson={jsonData}></BtnTable>
-        </div>
+        </React.Fragment>
     )
 }
 
