@@ -39,9 +39,7 @@ function RealizarCompraCl() {
             //Se divide el array de productos(records) en grupos de 3
             let lista = dividirArray(records, 3);
             setListaProductos(lista);
-
-            console.log(listaProductos);
-        }
+    }
     }, [dataJson])
 
     var peticion = () => {
@@ -86,7 +84,7 @@ function RealizarCompraCl() {
                     setLoading(false);
                 }, 1000); // Tiempo de espera
                 actualizarCarrito("1",nom, productoId, cant);
-                alert(`Producto ${productoId} agregado con ${cant} unidades`);
+                alert(`Producto ${nom} agregado con ${cant} unidades`);
                 prodForm.elements["cantidad"].value = "";
             } else {
                 setTimeout(() => {
@@ -115,11 +113,11 @@ function RealizarCompraCl() {
                                         <Form.Control size="sm" type="number" placeholder="1" min="1" name="cantidad" />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
-                                        <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="nombre" value={producto[0]} />
+                                        <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="nombre" value={producto[0]} disabled readOnly/>
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}
-                                            onClick={() => cargarProducto(`${producto[0]}`, `form-prod-${index}-${i}`)}>
+                                            onClick={() => cargarProducto(`${producto[1]}`, `form-prod-${index}-${i}`)}>
                                             {isBtnLoading ? 'Cargando...' : 'Agregar al carrito'}
                                         </Button>
                                     </Form.Group>
