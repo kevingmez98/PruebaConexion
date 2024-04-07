@@ -5,6 +5,8 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { obtenerCarrito, actualizarCarrito } from "../../public-component/Product/Carrito/CarritoSession";
 import SimpleProductCard from '../../public-component/Product/CardProduct/SimpleProductCard';
+import Pedido from '../../mapeo/Pedido';
+import Item from '../../mapeo/Item';
 
 function GestionarCarrito() {
     const [isBtnLoading, setLoading] = useState(false);
@@ -28,9 +30,7 @@ function GestionarCarrito() {
 
     React.useEffect(() => {
         if (carrito) {
-            let records = carrito.productos;
-            console.log("cambiooo");
-            console.log(carrito);   
+            let records = carrito.productos; 
 
             //Se divide el array de productos(records) en grupos de 3
             let lista = dividirArray(records, 3);
@@ -59,7 +59,6 @@ function GestionarCarrito() {
 
             const cant = prodForm.elements["cantidad"].value;
             const nom = prodForm.elements["nombre"].value;
-            console.log(cant);
             if (cant >= 0) {
                 setTimeout(() => {
                     setLoading(false);
@@ -91,13 +90,29 @@ function GestionarCarrito() {
 
     };
 
+    function pagar(){
+        let carrito = obtenerCarrito("1");
+        let listaProd = carrito.productos;
+
+        let pedido = new Pedido();
+
+        for (let i = 0; i < listaProd.length; i++) {
+            let item = new Item(listaProd[i].idProducto, listaProd[i].cantidad);
+            pedido.agregarItem(item);
+        }
+
+        console.log(pedido);
+        //Acá se haría lo de la petición... creo, falta mirar para recuperar desde acá datos del usuario
+
+    }
+
 
     return (
         <React.Fragment>
             {/*Mensaje de error */}
             <p style={{ color: 'red' }}>{ErroMessage}</p>
             <p>Precio total:</p>
-            <Button>Pagar</Button>
+            <Button onClick={pagar}>Pagar</Button>
             {/*Recorrer la lista de productos agregados al carrito */}
             {listaProductos.map((grupoProd, index) => (
                 <Row key={index}>
