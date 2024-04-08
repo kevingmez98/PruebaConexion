@@ -15,9 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ConnectionPool.Conexion;
+import com.example.Utils.ITEM;
+import com.example.Utils.PEDIDOPOJO;
 import com.example.Utils.SerialPOJO;
 import com.example.userServices.ClienteService;
 import com.example.userServices.RepresentanteService;
+
+import java.util.List;
 
 import org.javatuples.*;
 import org.json.JSONArray;
@@ -51,6 +55,23 @@ public class ClienteController {
          JSONObject error = new JSONObject();
          error.put("errors",respuesta.getValue1().message);
          return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+          
+        }
+
+        @PostMapping(value="/CrearPedido",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity<List<ITEM>> crearPedido(@RequestBody PEDIDOPOJO pedido){
+         System.out.println(pedido.get_items().get(0).get_codigoProducto());
+         System.out.println(pedido.getSerial());
+         /* 
+         Pair<JSONObject,Conexion> respuesta=  clienteservice.getProductosRegion(Serial.Serial);
+          System.out.println(pedido);
+         if(respuesta.getValue0()!=null){
+            return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
+         }
+         JSONObject error = new JSONObject();
+         error.put("errors",respuesta.getValue1().message);
+         */
+         return new ResponseEntity("error.toString()",HttpStatus.BAD_REQUEST);
           
         }
 }

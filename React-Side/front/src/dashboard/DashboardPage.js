@@ -8,7 +8,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import './CSS/dashboard-styles.css';
 import './CSS/own-dashboard-styles.css';
 
-import logo from '../logo.svg';
+
 
 function DashBoardPage() {
 
@@ -40,7 +40,7 @@ function DashBoardPage() {
                             <Navbar.Brand>
                                 <img
                                     alt=""
-                                    src={logo}
+                                    
                                     width="40"
                                     height="40"
                                     className="d-inline-block align-top"

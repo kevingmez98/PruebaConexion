@@ -7,7 +7,7 @@ import { obtenerCarrito, actualizarCarrito } from "../../public-component/Produc
 import SimpleProductCard from '../../public-component/Product/CardProduct/SimpleProductCard';
 import Pedido from '../../mapeo/Pedido';
 import Item from '../../mapeo/Item';
-
+import Axios from 'axios';
 function GestionarCarrito() {
     const [isBtnLoading, setLoading] = useState(false);
     var [carrito, SetCarrito] = React.useState('');
@@ -102,8 +102,21 @@ function GestionarCarrito() {
         }
 
         console.log(pedido);
-        //Acá se haría lo de la petición... creo, falta mirar para recuperar desde acá datos del usuario
 
+        var peticion = () => {
+            setMessage("");
+            Axios.post('http://localhost:8080/cliente/CrearPedido', {"_items":pedido._items,"Serial":sessionStorage.getItem("Serial")})
+                .then((response) => {
+                    
+                    setMessage("Carrito enviado");
+                    // Redireccion
+                    
+                }
+                ).catch((error) => {
+                    setMessage(error.response.data.errors)
+                })
+        }
+        peticion.call();
     }
 
 
