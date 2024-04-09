@@ -65,7 +65,7 @@ function GestionarCarrito() {
                 }, 1000); // Tiempo de espera
 
                 //Se coloca en negativo para restar la diferencia
-                actualizarCarrito("1", nom, productoId, cant, true)
+                actualizarCarrito("1", nom, productoId, cant,null, true)
                 .then((actualizacionExitosa) => {
                   if (actualizacionExitosa) {
                     alert(`Producto ${nom}. Actualizado a ${cant} unidades`);
@@ -124,14 +124,14 @@ function GestionarCarrito() {
         <React.Fragment>
             {/*Mensaje de error */}
             <p style={{ color: 'red' }}>{ErroMessage}</p>
-            <p>Precio total:</p>
+            <p>Precio total: {carrito.total}</p>
             <Button onClick={pagar}>Pagar</Button>
             {/*Recorrer la lista de productos agregados al carrito */}
             {listaProductos.map((grupoProd, index) => (
                 <Row key={index}>
                     {grupoProd.map((producto, ix) => (
                         <Col key={`${index}-${ix}`}>
-                            <SimpleProductCard idProd={producto.idProducto} nomProducto={producto.nombreProducto} key={index}>
+                            <SimpleProductCard idProd={producto.idProducto} nomProducto={producto.nombreProducto} precio={producto.precio} key={index}>
                                 <Form id={`form-prod-${index}-${ix}`}>
                                     <Form.Label htmlFor={`cant-${index}-${ix}`}>Cantidad actual en el carrito: {producto.cantidad}</Form.Label>
                                     <br />

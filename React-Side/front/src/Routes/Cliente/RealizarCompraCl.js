@@ -78,12 +78,13 @@ function RealizarCompraCl() {
             const prodForm = document.getElementById(formId);
             const cant = prodForm.elements["cantidad"].value;
             const nom = prodForm.elements["nombre"].value;
+            const precio = prodForm.elements["precio"].value;
             if (cant > 0) {
                 setTimeout(() => {
                     //Guardar en el carrito
                     setLoading(false);
                 }, 1000); // Tiempo de espera
-                actualizarCarrito("1",nom, productoId, cant);
+                actualizarCarrito("1",nom, productoId, cant,precio);
                 alert(`Producto ${nom} agregado con ${cant} unidades`);
                 prodForm.elements["cantidad"].value = "";
             } else {
@@ -110,10 +111,13 @@ function RealizarCompraCl() {
                                 <Form id={`form-prod-${index}-${i}`}>
                                     <Form.Group className="mb-3">
                                         <Form.Label>Cantidad</Form.Label>
-                                        <Form.Control size="sm" type="number" placeholder="1" min="1" name="cantidad" />
+                                        <Form.Control size="sm" type="number" min="1" name="cantidad" />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="nombre" value={producto[0]} disabled readOnly/>
+                                    </Form.Group>
+                                    <Form.Group className="mb-3">
+                                        <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="precio" value={producto[3]} disabled readOnly/>
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}

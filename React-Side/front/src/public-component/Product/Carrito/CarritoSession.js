@@ -1,5 +1,5 @@
 
-export const actualizarCarrito = async (usuario, nomProducto, idProducto, cantidad, reemplazar) => {
+export const actualizarCarrito = async (usuario, nomProducto, idProducto, cantidad,precio, reemplazar) => {
     try {
         //En lugar de sumar el valor de la cantidad se reemplaza deltodo
         if(!reemplazar){
@@ -38,16 +38,18 @@ export const actualizarCarrito = async (usuario, nomProducto, idProducto, cantid
             }else{
                 //Reeemplazar por el valor dado inicialmente
                 carritoActual.productos[indiceProducto].cantidad = parseInt(cantidad);
-                if(cantidad==0){
+                if(cantidad===0){
                     carritoActual.productos.splice(indiceProducto,1);
                 }
             }
            
 
         } else {
-            carritoActual.productos.push({ idProducto: idProducto, nombreProducto: nomProducto, cantidad: parseInt(cantidad) })
+            carritoActual.productos.push({ idProducto: idProducto, nombreProducto: nomProducto, cantidad: parseInt(cantidad),precio:parseInt(precio) });
         }
 
+        //Calcular el precio
+        carritoActual.total= calcularTotalCarrito(carritoActual.productos);
         //Se actualiza el carrito en sesion
         sessionStorage.setItem(claveCarrito, JSON.stringify(carritoActual));  
         return true;   
@@ -57,13 +59,19 @@ export const actualizarCarrito = async (usuario, nomProducto, idProducto, cantid
 
 };
 
-export const calcularTotalCarrito= (claveCarrito) =>{
-    let carritoActual = JSON.parse(sessionStorage.getItem(claveCarrito));
-
-    let productos = carritoActual.productos;
+export const calcularTotalCarrito= (listaProductos) =>{
+    let productos = listaProductos;
 
     let total= 0;
 
+    console.log(productos.length);
+
+    for (let i = 0; i < productos.length; i++) {
+        const prod = productos[i];
+        total += prod.precio*prod.cantidad;
+    }
+
+    return total;
 }
 
 export const obtenerCarrito = (usuario) => {
