@@ -30,13 +30,11 @@ function GestionarCarrito() {
 
     React.useEffect(() => {
         if (carrito) {
-            let records = carrito.productos; 
+            let records = carrito.productos;
 
             //Se divide el array de productos(records) en grupos de 3
             let lista = dividirArray(records, 3);
             setListaProductos(lista);
-            console.log("editao");
-            console.log(lista);
         }
     }, [carrito])
 
@@ -64,20 +62,19 @@ function GestionarCarrito() {
                     setLoading(false);
                 }, 1000); // Tiempo de espera
 
-                //Se coloca en negativo para restar la diferencia
-                actualizarCarrito("1", nom, productoId, cant,null, true)
-                .then((actualizacionExitosa) => {
-                  if (actualizacionExitosa) {
-                    alert(`Producto ${nom}. Actualizado a ${cant} unidades`);
-                    SetCarrito(obtenerCarrito("1"));
-                    if(cant!=0){
-                        prodForm.elements["cantidad"].value = cant;
-                    }
-                  } else {
-                    alert('Hubo un error al actualizar el carrito.');
-                  }
-                }); 
-                  
+                actualizarCarrito("1", nom, productoId, cant, null, true)
+                    .then((actualizacionExitosa) => {
+                        if (actualizacionExitosa) {
+                            alert(`Producto ${nom}. Actualizado a ${cant} unidades`);
+                            SetCarrito(obtenerCarrito("1"));
+                            if (cant != 0) {
+                                prodForm.elements["cantidad"].value = cant;
+                            }
+                        } else {
+                            alert('Hubo un error al actualizar el carrito.');
+                        }
+                    });
+
             } else {
                 setTimeout(() => {
                     setLoading(false);
@@ -90,7 +87,7 @@ function GestionarCarrito() {
 
     };
 
-    function pagar(){
+    function pagar() {
         let carrito = obtenerCarrito("1");
         let listaProd = carrito.productos;
 
@@ -101,16 +98,15 @@ function GestionarCarrito() {
             pedido.agregarItem(item);
         }
 
-        console.log(pedido);
 
         var peticion = () => {
             setMessage("");
-            Axios.post('http://localhost:8080/cliente/CrearPedido', {"_items":pedido._items,"Serial":sessionStorage.getItem("Serial")})
+            Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido._items, "Serial": sessionStorage.getItem("Serial") })
                 .then((response) => {
-                    
+
                     setMessage("Carrito enviado");
                     // Redireccion
-                    
+
                 }
                 ).catch((error) => {
                     setMessage(error.response.data.errors)

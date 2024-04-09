@@ -7,6 +7,8 @@ import SimpleProductCard from "../../public-component/Product/CardProduct/Simple
 import { actualizarCarrito, eliminarCarrito } from '../../public-component/Product/Carrito/CarritoSession';
 import Axios from 'axios';
 
+import SimpleModal from '../../public-component/Modal/SimpleModal';
+
 
 function RealizarCompraCl() {
 
@@ -14,6 +16,10 @@ function RealizarCompraCl() {
     const [ErroMessage, setMessage] = React.useState('');
     var [dataJson, SetjsonData] = React.useState('');
     var [listaProductos, setListaProductos] = React.useState([]);
+
+    const [showModal, setShowModal] = useState(true);
+
+    const showRegModal = () => setShowModal(!setShowModal);
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -39,7 +45,7 @@ function RealizarCompraCl() {
             //Se divide el array de productos(records) en grupos de 3
             let lista = dividirArray(records, 3);
             setListaProductos(lista);
-    }
+        }
     }, [dataJson])
 
     var peticion = () => {
@@ -84,7 +90,7 @@ function RealizarCompraCl() {
                     //Guardar en el carrito
                     setLoading(false);
                 }, 1000); // Tiempo de espera
-                actualizarCarrito("1",nom, productoId, cant,precio);
+                actualizarCarrito("1", nom, productoId, cant, precio);
                 alert(`Producto ${nom} agregado con ${cant} unidades`);
                 prodForm.elements["cantidad"].value = "";
             } else {
@@ -101,7 +107,25 @@ function RealizarCompraCl() {
 
     return (
         <React.Fragment>
-            <button onClick={() => eliminarCarrito("1")}>Borrar todo el carro</button>
+            <SimpleModal show={showModal} titulo={"Cambio de región"} handleClose={showRegModal}>
+                <Form id="form-region">
+                    <Form.Select>
+                        <option>Seleccionar</option>
+                        <option value="1">Uno</option>
+                        <option value="2">Dos</option>
+                        <option value="3">Tre</option>
+                    </Form.Select>
+                    <Button variant="primary">Seleccionar</Button>
+
+                </Form>
+            </SimpleModal>
+
+            <Button variant="primary" onClick={() => setShowModal(true)}>
+                Cambiar región
+            </Button>
+
+            <br />
+            <Button variant="danger" onClick={() => eliminarCarrito("1")}>Borrar todo el carro</Button>
             <p style={{ color: 'red' }}>{ErroMessage}</p>
             {listaProductos.map((grupoProd, index) => (
                 <Row key={index}>
@@ -114,10 +138,10 @@ function RealizarCompraCl() {
                                         <Form.Control size="sm" type="number" min="1" name="cantidad" />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
-                                        <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="nombre" value={producto[0]} disabled readOnly/>
+                                        <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="nombre" value={producto[0]} disabled readOnly />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
-                                        <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="precio" value={producto[3]} disabled readOnly/>
+                                        <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="precio" value={producto[3]} disabled readOnly />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}
