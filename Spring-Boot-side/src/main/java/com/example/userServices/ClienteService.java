@@ -23,11 +23,11 @@ public class ClienteService {
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
 
-    public Pair<JSONObject,Conexion> getProductosRegion(String serial){
+    public Pair<JSONObject,Conexion> getProductosRegion(String region ,String serial, String categoria, String subcategoria){
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
          JSONObject resultado =new JSONObject();
         try{ 
-             resultado=JsonManager.convert(ClienteRepository.getRepositorio().ConsultarProductosRegion(solicitante),solicitante);
+             resultado=JsonManager.convert(ClienteRepository.getRepositorio().ConsultarProductosRegion(solicitante,region,categoria,subcategoria),solicitante);
         return new Pair<JSONObject,Conexion>(resultado,solicitante);
     }catch(Exception e){
         System.out.println("Error en cliente service");

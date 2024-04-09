@@ -18,6 +18,7 @@ import com.example.ConnectionPool.Conexion;
 import com.example.Utils.ITEM;
 import com.example.Utils.PEDIDOPOJO;
 import com.example.Utils.SerialPOJO;
+import com.example.Utils.peticionregionPOJO;
 import com.example.userServices.ClienteService;
 import com.example.userServices.RepresentanteService;
 
@@ -46,14 +47,32 @@ public class ClienteController {
           
         }
 
+        /* Vieja consulta de productos por la region del cliente
         @PostMapping(value="/Productosregion",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity getProductosregion(@RequestBody SerialPOJO Serial){
+        public ResponseEntity getProductosregion(@RequestBody peticionregionPOJO){
          Pair<JSONObject,Conexion> respuesta=  clienteservice.getProductosRegion(Serial.Serial);
          if(respuesta.getValue0()!=null){
             return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
          }
          JSONObject error = new JSONObject();
          error.put("errors",respuesta.getValue1().message);
+         return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+          
+        }
+        */
+
+        //Endpoint Que devuelve un json con una lista de productos con una region, categoria y subcategoria especificas.
+        @PostMapping(value="/Productosregion",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity getProductosregion(@RequestBody peticionregionPOJO productos){
+         
+         Pair<JSONObject,Conexion> respuesta=  clienteservice.getProductosRegion(productos.getRegion(),productos.getSerial(),productos.getCategoria(),productos.getSubcategoria());
+         if(respuesta.getValue0()!=null){
+            return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
+         }
+         
+         JSONObject error = new JSONObject();
+         error.put("errors",respuesta.getValue1().message);
+
          return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
           
         }

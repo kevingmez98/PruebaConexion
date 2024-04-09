@@ -42,24 +42,40 @@ try {
 return null;
 }
 
-public ResultSet ConsultarProductosRegion(Conexion solicitante){
+public ResultSet ConsultarProductosRegion(Conexion solicitante,String region, String categoria, String subcategoria){
     System.out.println(solicitante.user);
+    System.out.println(region);
+    System.out.println(categoria);
+    System.out.println(subcategoria);
 try {
-    String sql = "SELECT RC.K_COD_REGION FROM NATAME.CLIENTE RC WHERE RC.N_USERNAME=?";
-    PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
-    stmt.setString(1,solicitante.user.toUpperCase());
-    
-    ResultSet rs = stmt.executeQuery();
-    rs.next();
-    String regionCliente=rs.getString("K_COD_REGION");
-    System.out.println("Region: "+regionCliente);
-    
-    sql = "select P.N_NOM_PRODUCTO, V.K_COD_PRODUCTO,V.I_ID_CAT_PRODUCTO,Q_PRECIO_UNITARIO,Q_CANTIDAD_EN_STOCK "
-    +"FROM NATAME.PRODUCTO P,NATAME.INVENTARIO V WHERE V.K_COD_REGION=?" 
-    +"AND P.K_COD_PRODUCTO = V.K_COD_PRODUCTO";
-    stmt= solicitante.getConexion().prepareStatement(sql);
-    stmt.setString(1,regionCliente);
-    rs=stmt.executeQuery();
+    int parametros=0;
+    String sql = "select P.N_NOM_PRODUCTO, V.K_COD_PRODUCTO,V.I_ID_CAT_PRODUCTO,C.I_ID_CAT_PRO_SUP,Q_PRECIO_UNITARIO,Q_CANTIDAD_EN_STOCK "
+    +"FROM NATAME.PRODUCTO P,NATAME.INVENTARIO V, NATAME.CAT_PRODUCTO C WHERE V.K_COD_REGION=?" 
+    +"AND P.K_COD_PRODUCTO = V.K_COD_PRODUCTO AND P.I_ID_CAT_PRODUCTO=C.I_ID_CAT_PRODUCTO ";
+    String sqlcategoria= "AND C.I_ID_CAT_PRO_SUP=?";
+    String sqlsubcategoria= "AND V.I_ID_CAT_PRODUCTO=?";
+    if(region!=null){
+        parametros++;
+    }
+    if(categoria!=null){
+        parametros++;
+        sql=sql+sqlcategoria;
+    }
+    if(subcategoria!=null){
+        parametros++;
+        sql=sql+sqlsubcategoria;
+    }
+    PreparedStatement stmt= solicitante.getConexion().prepareStatement(sql);
+    if(region!=null){
+        stmt.setString(1,region.toUpperCase());
+    }
+    if(categoria!=null){
+        stmt.setString(2,categoria.toUpperCase());
+    }
+    if(subcategoria!=null){
+        stmt.setString(3,subcategoria.toUpperCase());
+    }
+    ResultSet rs=stmt.executeQuery();
     
     return rs;
     
