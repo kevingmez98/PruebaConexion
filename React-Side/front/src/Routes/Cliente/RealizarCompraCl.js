@@ -8,6 +8,7 @@ import { actualizarCarrito, eliminarCarrito } from '../../public-component/Produ
 import Axios from 'axios';
 
 import SimpleModal from '../../public-component/Modal/SimpleModal';
+import CategorySelect from '../../public-component/Product/CategoryComponent/CategorySelect';
 
 
 function RealizarCompraCl() {
@@ -21,6 +22,36 @@ function RealizarCompraCl() {
 
     const showRegModal = () => setShowModal(!setShowModal);
 
+    const categoriesData = 
+    {
+      "records": [
+          ["HG2", "HG", "Artículos de cocina"],
+          ["HG3", "HG", "Productos de lavandería"],
+          ["HG4", "HG", "Limpieza de pisos"],
+          ["HG5", "HG", "Desinfectantes"],
+          ["CP1", "CP", "Cuidado de la piel"],
+          ["CP2", "CP", "Higiene bucal"],
+          ["CP3", "CP", "Cuidado del cabello"],
+          ["CP4", "CP", "Cuidado de las uñas"],
+          ["CP5", "CP", "Fragancias"],
+          ["EL1", "EL", "Teléfonos móviles"],
+          ["EL2", "EL", "Computadoras"],
+          ["EL3", "EL", "Tablets"],
+          ["EL4", "EL", "Relojes inteligentes"],
+          ["EL5", "EL", "Televisores"],
+          ["EL", "", "Electronica"],
+          ["BL", "", "Belleza"],
+          ["CP", "", "Cuidado personal"],
+          ["HG", "", "Hogar"],
+          ["EL51", "EL5", "ElectronicaTesst"]
+      ],
+      "fields": [
+          {"name": "I_ID_CAT_PRODUCTO", "type": "VARCHAR2(5)"},
+          {"name": "I_ID_CAT_PRO_SUP", "type": "VARCHAR2(5)"},
+          {"name": "N_NOM_CAT_PRODUCTO", "type": "VARCHAR2(50)"}
+      ]
+  }
+  
     React.useEffect(() => {
         const fetchData = async () => {
             try {
@@ -28,7 +59,6 @@ function RealizarCompraCl() {
                 const data = await peticion();
                 // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
                 SetjsonData(data);
-                console.log(data); // Aquí puedes ver los datos en la consola
             } catch (error) {
                 // Manejamos cualquier error que pueda ocurrir
                 console.error('Error al obtener los datos:', error);
@@ -51,14 +81,13 @@ function RealizarCompraCl() {
     var peticion = () => {
         return new Promise((resolve, reject) => {
             setMessage("");
-            Axios.post('http://localhost:8080/cliente/Productosregion', { "Serial": window.sessionStorage.getItem("Serial") })
+            Axios.post('http://localhost:8080/cliente/Productosregion', { "serial": window.sessionStorage.getItem("Serial"),"region":"AND","categoria":"EL"})
                 .then((response) => {
                     // Resolvemos la promesa con los datos recibidos
                     resolve(response.data);
                 })
                 .catch((error) => {
                     // Rechazamos la promesa con el mensaje de error
-                    console.log(error);
                     setMessage(error.response.data.errors);
 
                 });
@@ -76,7 +105,6 @@ function RealizarCompraCl() {
 
     const cargarProducto = (productoId, formId) => {
         try {
-            console.log(dataJson);
             //Congelar botones
             setLoading(true);
 
@@ -126,6 +154,10 @@ function RealizarCompraCl() {
 
             <br />
             <Button variant="danger" onClick={() => eliminarCarrito("1")}>Borrar todo el carro</Button>
+
+            <br/>
+
+            <CategorySelect categorias={categoriesData.records}/>
             <p style={{ color: 'red' }}>{ErroMessage}</p>
             {listaProductos.map((grupoProd, index) => (
                 <Row key={index}>

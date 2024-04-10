@@ -120,7 +120,7 @@ function GestionarCarrito() {
         <React.Fragment>
             {/*Mensaje de error */}
             <p style={{ color: 'red' }}>{ErroMessage}</p>
-            <p>Precio total: {carrito.total}</p>
+            <p>Precio total: {carrito && carrito.total? carrito.total:0}</p>
             <Button onClick={pagar}>Pagar</Button>
             {/*Recorrer la lista de productos agregados al carrito */}
             {listaProductos.map((grupoProd, index) => (
