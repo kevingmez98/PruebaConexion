@@ -22,36 +22,107 @@ function RealizarCompraCl() {
 
     const showRegModal = () => setShowModal(!setShowModal);
 
-    const categoriesData = 
+    // Estado para almacenar los valores de los checkboxes de categoria 
+    const [checkData, setCheckData] = useState([]);
+
+    // Función para manejar el cambio de estado de los checkbox de categoria
+    /*
+        Se guarda el id de los formularios activados, el nombre del check
+        tambien la categoria y posible categoria padre
+    */
+    const handleCheckBox = (formCheck, idCat, idCatPadre, nombreCheck) => {
+
+        //obtener el valor del check de categorias
+        const prodForm = document.getElementById(formCheck);
+
+        const valor = prodForm.elements[nombreCheck].checked;
+
+        // Obtener el índice del formData actual si existe en checkData
+        const index = checkData.findIndex(data => data['id-cat'] === idCat);
+
+        //Si no existe se agrega
+        if (index === -1) {
+
+            const formData = { 'id-form': formCheck, 'nombre-check': nombreCheck, 'id-cat': idCat, 'id-cat-padre': idCatPadre, 'value': valor };
+
+            // ...checkData permite tener una copia superficial de la variable
+            setCheckData([
+                ...checkData,
+                formData
+            ]);
+        };
+        //Si el valor es true indica que se activa el check
+        if (valor) {
+            //Se desactivan todos los check exceto el que activó el metodo
+            checkData.forEach(data => {
+                data['value'] = false;
+                cambiarCheck(data['id-form'], data['nombre-check'], false);
+
+                //Si la categoria que se activa tiene categoria padre tambien se activa
+                if (data['id-cat'] == idCat) {
+                    data['value'] = true;
+                    cambiarCheck(data['id-form'], data['nombre-check'], true);
+                }
+
+            });
+        }
+
+    };
+
+    //Hacer la consulta de filtros con categorias
+    const aplicarFiltroCat = () => {
+        let cat = "No se especificó una categoria";
+        for (let i = 0; i < checkData.length; i++) {
+            if (checkData[i]['value']) {
+                cat = "categoria con id " + checkData[i]['id-cat'];
+                if(checkData[i]['id-cat-padre']){
+                    cat += ". tiene el id padre "+checkData[i]['id-cat-padre'];
+                }
+            }
+        }
+        alert(cat);
+    }
+
+    function cambiarCheck(idForm, nombreCheck, valor) {
+        const prodForm = document.getElementById(idForm);
+
+        // Cambiar el valor del checkbox
+        prodForm.elements[nombreCheck].checked = valor;
+
+    }
+
+
+
+    const categoriesData =
     {
-      "records": [
-          ["HG2", "HG", "Artículos de cocina"],
-          ["HG3", "HG", "Productos de lavandería"],
-          ["HG4", "HG", "Limpieza de pisos"],
-          ["HG5", "HG", "Desinfectantes"],
-          ["CP1", "CP", "Cuidado de la piel"],
-          ["CP2", "CP", "Higiene bucal"],
-          ["CP3", "CP", "Cuidado del cabello"],
-          ["CP4", "CP", "Cuidado de las uñas"],
-          ["CP5", "CP", "Fragancias"],
-          ["EL1", "EL", "Teléfonos móviles"],
-          ["EL2", "EL", "Computadoras"],
-          ["EL3", "EL", "Tablets"],
-          ["EL4", "EL", "Relojes inteligentes"],
-          ["EL5", "EL", "Televisores"],
-          ["EL", "", "Electronica"],
-          ["BL", "", "Belleza"],
-          ["CP", "", "Cuidado personal"],
-          ["HG", "", "Hogar"],
-          ["EL51", "EL5", "ElectronicaTesst"]
-      ],
-      "fields": [
-          {"name": "I_ID_CAT_PRODUCTO", "type": "VARCHAR2(5)"},
-          {"name": "I_ID_CAT_PRO_SUP", "type": "VARCHAR2(5)"},
-          {"name": "N_NOM_CAT_PRODUCTO", "type": "VARCHAR2(50)"}
-      ]
-  }
-  
+        "records": [
+            ["HG2", "HG", "Artículos de cocina"],
+            ["HG3", "HG", "Productos de lavandería"],
+            ["HG4", "HG", "Limpieza de pisos"],
+            ["HG5", "HG", "Desinfectantes"],
+            ["CP1", "CP", "Cuidado de la piel"],
+            ["CP2", "CP", "Higiene bucal"],
+            ["CP3", "CP", "Cuidado del cabello"],
+            ["CP4", "CP", "Cuidado de las uñas"],
+            ["CP5", "CP", "Fragancias"],
+            ["EL1", "EL", "Teléfonos móviles"],
+            ["EL2", "EL", "Computadoras"],
+            ["EL3", "EL", "Tablets"],
+            ["EL4", "EL", "Relojes inteligentes"],
+            ["EL5", "EL", "Televisores"],
+            ["EL", "", "Electronica"],
+            ["BL", "", "Belleza"],
+            ["CP", "", "Cuidado personal"],
+            ["HG", "", "Hogar"],
+            ["EL51", "EL5", "ElectronicaTesst"]
+        ],
+        "fields": [
+            { "name": "I_ID_CAT_PRODUCTO", "type": "VARCHAR2(5)" },
+            { "name": "I_ID_CAT_PRO_SUP", "type": "VARCHAR2(5)" },
+            { "name": "N_NOM_CAT_PRODUCTO", "type": "VARCHAR2(50)" }
+        ]
+    }
+
     React.useEffect(() => {
         const fetchData = async () => {
             try {
@@ -81,7 +152,7 @@ function RealizarCompraCl() {
     var peticion = () => {
         return new Promise((resolve, reject) => {
             setMessage("");
-            Axios.post('http://localhost:8080/cliente/Productosregion', { "serial": window.sessionStorage.getItem("Serial"),"region":"AND","categoria":"EL"})
+            Axios.post('http://localhost:8080/cliente/Productosregion', { "serial": window.sessionStorage.getItem("Serial"), "region": "AND", "categoria": "EL" })
                 .then((response) => {
                     // Resolvemos la promesa con los datos recibidos
                     resolve(response.data);
@@ -155,9 +226,13 @@ function RealizarCompraCl() {
             <br />
             <Button variant="danger" onClick={() => eliminarCarrito("1")}>Borrar todo el carro</Button>
 
-            <br/>
+            <br />
 
-            <CategorySelect categorias={categoriesData.records}/>
+            <CategorySelect categorias={categoriesData.records} handlerPadre={handleCheckBox} />
+            <br />
+            <Button variant="primary" onClick={() => aplicarFiltroCat()}>
+                Aplicar filtro de categorias
+            </Button>
             <p style={{ color: 'red' }}>{ErroMessage}</p>
             {listaProductos.map((grupoProd, index) => (
                 <Row key={index}>

@@ -36,3 +36,15 @@
     display: block;
     padding-left: 15px;
 }
+
+.switch-category{
+    align-content: center;
+}
+
+.own-drop-tog{
+    margin-left: 5%!important;
+}
+
+.category-wrapper{
+    width: 100%;
+}
