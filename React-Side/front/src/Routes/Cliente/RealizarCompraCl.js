@@ -9,22 +9,49 @@ import Axios from 'axios';
 
 import SimpleModal from '../../public-component/Modal/SimpleModal';
 import CategorySelect from '../../public-component/Product/CategoryComponent/CategorySelect';
+import { convertirMuchosDatos as convertirMuchosDatosRegion } from '../../mapeo/Helpers/RegionHelper';
 
 
 function RealizarCompraCl() {
 
+    //Variable para controlar cuando un boton está 'cargando'
     const [isBtnLoading, setLoading] = useState(false);
+
+    //Mensaje de error
     const [ErroMessage, setMessage] = React.useState('');
+
+    //Datos JSON traidos por la petición de busqueda por region
     var [dataJson, SetjsonData] = React.useState('');
+
+    //Datos traidos por la peticion de regiones
+    var [regionData, setRegionData] = React.useState([]);
+
+    //Variable de la region seleccionada
+    var [regionActiva, setRegionActiva] = React.useState('');
+
+    //La lista de productos que se obtienen de la base de datos
     var [listaProductos, setListaProductos] = React.useState([]);
 
+    //Una lista que guardará la lista de productos si se filtran por nombre
+    var [listaProdTemp, setListaProdTemp] = React.useState([]);
+
+    //Variable que guarda el valor puesto en el filtro por nombre
+    var [nomFiltro, setNomFiltro] = React.useState('');
+
+    //Variable para mostrar el modal de region
     const [showModal, setShowModal] = useState(true);
 
+    //Constante que cambia el valor de la variable del modal
     const showRegModal = () => setShowModal(!setShowModal);
 
     // Estado para almacenar los valores de los checkboxes de categoria 
     const [checkData, setCheckData] = useState([]);
 
+    //Funcion para manejar el cambio de nomFiltro
+    const handleNomFiltro = () => {
+        const valorInput = document.getElementById("nomFiltroInput").value;
+        setNomFiltro(valorInput);
+    }
     // Función para manejar el cambio de estado de los checkbox de categoria
     /*
         Se guarda el id de los formularios activados, el nombre del check
@@ -59,7 +86,7 @@ function RealizarCompraCl() {
                 cambiarCheck(data['id-form'], data['nombre-check'], false);
 
                 //Si la categoria que se activa tiene categoria padre tambien se activa
-                if (data['id-cat'] == idCat) {
+                if (data['id-cat'] === idCat) {
                     data['value'] = true;
                     cambiarCheck(data['id-form'], data['nombre-check'], true);
                 }
@@ -69,20 +96,43 @@ function RealizarCompraCl() {
 
     };
 
+    /*Handler para manejar la región activa */
+    const handleRegionActiva = () => {
+        const valorInput = document.getElementById("regionSel").value;
+        setRegionActiva(valorInput);
+    }
+
     //Hacer la consulta de filtros con categorias
-    const aplicarFiltroCat = () => {
+    const aplicarFiltroCat = async () => {
+        let idCatPadre;
+        let idCat;
         let cat = "No se especificó una categoria";
+
+        //Se recorren lo check de las categorias y se traen su id y su id de categoria padre
         for (let i = 0; i < checkData.length; i++) {
             if (checkData[i]['value']) {
                 cat = "categoria con id " + checkData[i]['id-cat'];
-                if(checkData[i]['id-cat-padre']){
-                    cat += ". tiene el id padre "+checkData[i]['id-cat-padre'];
+                idCat = checkData[i]['id-cat'];
+
+
+                if (checkData[i]['id-cat-padre']) {
+                    cat += ". tiene el id padre " + checkData[i]['id-cat-padre'];
+                    idCatPadre = checkData[i]['id-cat-padre'];
+                }
+
+                //Si existe idCat es porque se seleccionó aunque sea una categoria
+                if (idCat) {
+                    const data = await peticion(regionActiva, idCat, idCatPadre);
+
+                    // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
+                    SetjsonData(data);
                 }
             }
         }
         alert(cat);
     }
 
+    //Cambiar el valor de un checkbox dandole el nombre que tiene y el idForm al que pertenece
     function cambiarCheck(idForm, nombreCheck, valor) {
         const prodForm = document.getElementById(idForm);
 
@@ -91,6 +141,19 @@ function RealizarCompraCl() {
 
     }
 
+    const regionDataTemp =
+    {
+        "records": [
+            ["AND", "ANDINA", "COL", ""],
+            ["LLA", "LLANOS", "COL", ""]
+        ],
+        "fields": [
+            { "name": "K_COD_REGION", "type": "VARCHAR2(25)" },
+            { "name": "N_NOM_REGION", "type": "VARCHAR2(25)" },
+            { "name": "K_COD_PAIS", "type": "VARCHAR2(25)" },
+            { "name": "K_REP_ENCARGADO", "type": "VARCHAR2(25)" }
+        ]
+    }
 
 
     const categoriesData =
@@ -123,13 +186,17 @@ function RealizarCompraCl() {
         ]
     }
 
+    //UseEffect inicial, se ejecuta al cargar el componente
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                // Esperamos la resolución de la promesa usando await
-                const data = await peticion();
-                // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
-                SetjsonData(data);
+                //Se espera la promesa de peticion region
+                //const dataRegion = await peticionRegiones();
+                const dataRegion = convertirMuchosDatosRegion(regionDataTemp.records);
+
+                setRegionData(dataRegion);
+
+
             } catch (error) {
                 // Manejamos cualquier error que pueda ocurrir
                 console.error('Error al obtener los datos:', error);
@@ -138,7 +205,7 @@ function RealizarCompraCl() {
         fetchData();
     }, []);
 
-    //Revisar el cambio en dataJson y actualiza la lista
+    //UseEffect que Revisa el cambio en dataJson y actualiza la lista
     React.useEffect(() => {
         if (dataJson) {
             //Records o resultados
@@ -146,13 +213,77 @@ function RealizarCompraCl() {
             //Se divide el array de productos(records) en grupos de 3
             let lista = dividirArray(records, 3);
             setListaProductos(lista);
+            setListaProdTemp(lista);
+
+            //Se reinicia el filtro de busqueda por nombre
+            document.getElementById("nomFiltroInput").value = '';
+            setNomFiltro('');
         }
     }, [dataJson])
 
-    var peticion = () => {
+    //UseEffect que Revisa el cambio en regionActiva y actualiza la lista de producto
+    React.useEffect(() => {
+        async function fetchData() {
+            if (regionActiva) {
+                // Esperamos la resolución de la promesa usando await
+                const data = await peticion(regionActiva, null, null);
+                // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
+                SetjsonData(data);
+
+                //Records o resultados
+                let { records, fields } = dataJson;
+                //Se divide el array de productos(records) en grupos de 3
+                if (records) {
+                    let lista = dividirArray(records, 3);
+                    setListaProductos(lista);
+                    setListaProdTemp(lista);
+                }
+                showRegModal();
+                //Se reinicia el filtro de busqueda por nombre
+                document.getElementById("nomFiltroInput").value = '';
+            }
+
+        }
+
+        fetchData();
+
+    }, [regionActiva])
+
+    //UseEffect que Revisa el cambio en el nombre y actualiza la lista que se muestra
+    React.useEffect(() => {
+        if (nomFiltro) {
+            let productosFiltrados = [];
+
+            /*ListaProductos es una lista de listas de productos se recorre todo para agregarla a la lista temp*/
+            for (let i = 0; i < listaProductos.length; i++) {
+                let listaInterna = listaProductos[i];
+                for (let j = 0; j < listaInterna.length; j++) {
+                    //El componente en la posicion 1 es el nombre guardado
+                    let producto = listaInterna[j];
+                    let nombreProducto = producto[0].toUpperCase();
+
+                    // Convertir nomFiltro a mayúsculas y eliminar espacios en blanco
+                    let nombreBusqueda = nomFiltro.trim().toUpperCase();
+
+
+                    if (nombreProducto.includes(nombreBusqueda)) {
+                        productosFiltrados.push(producto);
+                    }
+                }
+            }
+
+            //Se divide el array en grupos para que se vea bien y se pasa a la lista que se muestra
+            setListaProdTemp(dividirArray(productosFiltrados, 3));
+        } else {
+            setListaProdTemp(listaProductos);
+        }
+    }, [nomFiltro])
+
+    //Peticion para actualizar la lista de productos por región
+    var peticion = (region, idCat, idSub) => {
         return new Promise((resolve, reject) => {
             setMessage("");
-            Axios.post('http://localhost:8080/cliente/Productosregion', { "serial": window.sessionStorage.getItem("Serial"), "region": "AND", "categoria": "EL" })
+            Axios.post('http://localhost:8080/cliente/Productosregion', { "serial": window.sessionStorage.getItem("Serial"), "region": region, "categoria": idCat, "subcategoria": idSub })
                 .then((response) => {
                     // Resolvemos la promesa con los datos recibidos
                     resolve(response.data);
@@ -165,6 +296,11 @@ function RealizarCompraCl() {
         });
     };
 
+    //Peticion para traer las regiones
+    var peticionRegiones = () => {
+
+    };
+
     // Función para dividir un array en grupos de tamaño dado
     function dividirArray(array, size) {
         const listaDividida = [];
@@ -174,6 +310,7 @@ function RealizarCompraCl() {
         return listaDividida;
     }
 
+    //Funcion para cargar un producto al carrito
     const cargarProducto = (productoId, formId) => {
         try {
             //Congelar botones
@@ -208,13 +345,13 @@ function RealizarCompraCl() {
         <React.Fragment>
             <SimpleModal show={showModal} titulo={"Cambio de región"} handleClose={showRegModal}>
                 <Form id="form-region">
-                    <Form.Select>
-                        <option>Seleccionar</option>
-                        <option value="1">Uno</option>
-                        <option value="2">Dos</option>
-                        <option value="3">Tre</option>
+                    <Form.Select id='regionSel'>
+                        {regionData.map((region, index) => (
+                            <option key={index} value={region.codRegion}>{region.nomRegion}</option>
+                        ))};
+
                     </Form.Select>
-                    <Button variant="primary">Seleccionar</Button>
+                    <Button variant="primary" onClick={handleRegionActiva}>Seleccionar</Button>
 
                 </Form>
             </SimpleModal>
@@ -233,35 +370,54 @@ function RealizarCompraCl() {
             <Button variant="primary" onClick={() => aplicarFiltroCat()}>
                 Aplicar filtro de categorias
             </Button>
-            <p style={{ color: 'red' }}>{ErroMessage}</p>
-            {listaProductos.map((grupoProd, index) => (
-                <Row key={index}>
-                    {grupoProd.map((producto, i) => (
-                        <Col key={i}>
-                            <SimpleProductCard idProd={producto[1]} nomProducto={producto[0]} precio={producto[3]}>
-                                <Form id={`form-prod-${index}-${i}`}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Cantidad</Form.Label>
-                                        <Form.Control size="sm" type="number" min="1" name="cantidad" />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="nombre" value={producto[0]} disabled readOnly />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="precio" value={producto[3]} disabled readOnly />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}
-                                            onClick={() => cargarProducto(`${producto[1]}`, `form-prod-${index}-${i}`)}>
-                                            {isBtnLoading ? 'Cargando...' : 'Agregar al carrito'}
-                                        </Button>
-                                    </Form.Group>
-                                </Form>
-                            </SimpleProductCard>
-                        </Col>
-                    ))}
+            <Form id="form-filtro-nom">
+                <Row className="align-items-center">
+                    <Col sm={3} className="my-1">
+                        <Form.Label htmlFor="nomFiltroInput" visuallyHidden>
+                            Nombre producto
+                        </Form.Label>
+                        <Form.Control id="nomFiltroInput" placeholder="Nombre producto" required/>
+                    </Col>
+                    <Col xs="auto" className="my-1">
+                        <Button onClick={handleNomFiltro}>Buscar por nombre</Button>
+                    </Col>
                 </Row>
-            ))}
+            </Form>
+            <p style={{ color: 'red' }}>{ErroMessage}</p>
+            {listaProdTemp.length === 0 ? (
+                <p>No hay productos disponibles que cumplan con los criterios</p>
+            ) : (
+
+                listaProdTemp.map((grupoProd, index) => (
+                    <Row key={index}>
+                        {grupoProd.map((producto, i) => (
+                            <Col key={i}>
+                                <SimpleProductCard idProd={producto[1]} nomProducto={producto[0]} precio={producto[3]}>
+                                    <Form id={`form-prod-${index}-${i}`}>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Cantidad</Form.Label>
+                                            <Form.Control size="sm" type="number" min="1" name="cantidad" />
+                                        </Form.Group>
+                                        <Form.Group className="mb-3">
+                                            <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="nombre" value={producto[0]} disabled readOnly />
+                                        </Form.Group>
+                                        <Form.Group className="mb-3">
+                                            <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="precio" value={producto[3]} disabled readOnly />
+                                        </Form.Group>
+                                        <Form.Group className="mb-3">
+                                            <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}
+                                                onClick={() => cargarProducto(`${producto[1]}`, `form-prod-${index}-${i}`)}>
+                                                {isBtnLoading ? 'Cargando...' : 'Agregar al carrito'}
+                                            </Button>
+                                        </Form.Group>
+                                    </Form>
+                                </SimpleProductCard>
+                            </Col>
+                        ))}
+                    </Row>
+                ))
+
+            )}
 
 
         </React.Fragment>

@@ -44,7 +44,7 @@ return null;
 
 public ResultSet ConsultarProductosRegion(Conexion solicitante,String region, String categoria, String subcategoria){
     System.out.println(solicitante.user);
-    System.out.println(region);
+    System.out.println(region); 
     System.out.println(categoria);
     System.out.println(subcategoria);
 try {
