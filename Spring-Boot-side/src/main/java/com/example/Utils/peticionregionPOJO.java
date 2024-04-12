@@ -14,6 +14,7 @@ public peticionregionPOJO(String serial, String region, String categoria, String
     Categoria = categoria;
     Subcategoria = subcategoria;
 }
+
 public String getSerial() {
     return Serial;
 }

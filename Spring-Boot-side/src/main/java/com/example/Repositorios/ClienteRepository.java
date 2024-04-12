@@ -1,6 +1,7 @@
 package com.example.Repositorios;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import com.example.ConnectionPool.Conexion;
 
@@ -87,9 +88,23 @@ try {
 return null;
 }
 
-
-
-
-
+public ResultSet ConsultarCategorias(Conexion solicitante,String region){
+try {
+    int parametros=0;
+    String sql = "select distinct C.I_ID_CAT_PRODUCTO,C.N_NOM_CAT_PRODUCTO,C.I_ID_CAT_PRO_SUP FROM NATAME.INVENTARIO V, NATAME.CAT_PRODUCTO C WHERE V.K_COD_REGION=? and C.I_ID_CAT_PRODUCTO=V.I_ID_CAT_PRODUCTO" ;
+    
+    PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+    stmt.setString(1, region);
+    ResultSet rs=stmt.executeQuery();
+    
+    return rs;
+    
+} catch (Exception e) {
+    System.out.println("Fallo la recuperacion del serial de conexion");
+    System.out.println(e.getMessage());
+    solicitante.message=e.getMessage();
+}
+return null;
+}
 
 }

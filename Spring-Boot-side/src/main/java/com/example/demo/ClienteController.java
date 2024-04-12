@@ -91,6 +91,27 @@ public class ClienteController {
          error.put("errors",respuesta.getValue1().message);
          */
          return new ResponseEntity("error.toString()",HttpStatus.BAD_REQUEST);
+        }
+        @PostMapping(value="/Regiones",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity Regiones(@RequestBody String request){
+           JSONArray respuesta= clienteservice.ObtenerRegiones();
+
+         
+         return new ResponseEntity(respuesta.toJSONObject(respuesta).toString(),HttpStatus.BAD_REQUEST);
+          
+        }
+        @PostMapping(value="/Categoriasregion",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity getcategorias(@RequestBody peticionregionPOJO productos){
+         
+         Pair<JSONObject,Conexion> respuesta=clienteservice.getCategoriasRegion(productos.getRegion(),productos.getSerial());
+         if(respuesta.getValue0()!=null){
+            return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
+         }
+         
+         JSONObject error = new JSONObject();
+         error.put("errors",respuesta.getValue1().message);
+
+         return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
           
         }
 }

@@ -91,6 +91,24 @@ public void getAllStudents() {
         return "";
     
 }
+public ResultSet ConsultarRegiones(Conexion solicitante){
+    System.out.println(solicitante.user);
+try {
+    String sql = "SELECT r.K_COD_REGION, r.N_NOM_REGION from REGION r";
+    Statement stmt=solicitante.getConexion().createStatement();
+   
+    
+    ResultSet rs = stmt.executeQuery(sql);
+        
+    return rs;
+    
+} catch (Exception e) {
+    System.out.println("Fallo la consulta de regiones");
+    System.out.println(e.getMessage());
+    solicitante.message=e.getMessage();
+}
+return null;
+}
 
     public Connection getConexion(){
      return con;

@@ -122,7 +122,7 @@ function RealizarCompraCl() {
 
                 //Si existe idCat es porque se seleccionó aunque sea una categoria
                 if (idCat) {
-                    const data = await peticion(regionActiva, idCat, idCatPadre);
+                    const data = await peticion(regionActiva, idCatPadre, idCat);
 
                     // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
                     SetjsonData(data);
