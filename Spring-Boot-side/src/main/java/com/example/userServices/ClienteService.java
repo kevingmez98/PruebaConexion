@@ -26,11 +26,11 @@ public class ClienteService {
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
 
-    public Pair<JSONObject,Conexion> getCategoriasRegion(String region ,String serial){
+    public Pair<JSONObject,Conexion> getCategorias(String serial){
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
          JSONObject resultado =new JSONObject();
         try{ 
-             resultado=JsonManager.convert(ClienteRepository.getRepositorio().ConsultarCategorias(solicitante,region),solicitante);
+             resultado=JsonManager.convert(ClienteRepository.getRepositorio().ConsultarCategorias(solicitante),solicitante);
         return new Pair<JSONObject,Conexion>(resultado,solicitante);
     }catch(Exception e){
         System.out.println("Error en cliente service");

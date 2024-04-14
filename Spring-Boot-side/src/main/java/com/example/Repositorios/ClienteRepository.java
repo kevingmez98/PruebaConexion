@@ -88,13 +88,13 @@ try {
 return null;
 }
 
-public ResultSet ConsultarCategorias(Conexion solicitante,String region){
+public ResultSet ConsultarCategorias(Conexion solicitante){
 try {
     int parametros=0;
-    String sql = "select distinct C.I_ID_CAT_PRODUCTO,C.N_NOM_CAT_PRODUCTO,C.I_ID_CAT_PRO_SUP FROM NATAME.INVENTARIO V, NATAME.CAT_PRODUCTO C WHERE V.K_COD_REGION=? and C.I_ID_CAT_PRODUCTO=V.I_ID_CAT_PRODUCTO" ;
+    String sql = "select C.I_ID_CAT_PRODUCTO, C.I_ID_CAT_PRO_SUP, C.N_NOM_CAT_PRODUCTO from natame.CAT_PRODUCTO c" ;
     
     PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
-    stmt.setString(1, region);
+
     ResultSet rs=stmt.executeQuery();
     
     return rs;

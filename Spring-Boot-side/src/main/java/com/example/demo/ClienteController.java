@@ -100,14 +100,13 @@ public class ClienteController {
          return new ResponseEntity(respuesta.toJSONObject(respuesta).toString(),HttpStatus.BAD_REQUEST);
           
         }
-        @PostMapping(value="/Categoriasregion",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity getcategorias(@RequestBody peticionregionPOJO productos){
+        @PostMapping(value="/Categorias",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity getcategorias(@RequestBody SerialPOJO Serial){
          
-         Pair<JSONObject,Conexion> respuesta=clienteservice.getCategoriasRegion(productos.getRegion(),productos.getSerial());
+         Pair<JSONObject,Conexion> respuesta=clienteservice.getCategorias(Serial.Serial);
          if(respuesta.getValue0()!=null){
             return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
          }
-         
          JSONObject error = new JSONObject();
          error.put("errors",respuesta.getValue1().message);
 
