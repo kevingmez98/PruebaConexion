@@ -2,8 +2,13 @@ package com.example.Repositorios;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import com.example.ConnectionPool.Conexion;
+import com.example.Utils.PEDIDOPOJO;
 
 public class ClienteRepository {
 static private ClienteRepository repositorio;
@@ -110,4 +115,57 @@ try {
 return null;
 }
 
+public void crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
+    //Se crea el pedido primero
+    try{
+        String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from natame.cliente C where  C.n_username='"+solicitante.user+"'";
+        PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+        ResultSet rs=stmt.executeQuery();
+        rs.next();
+        //Se obtienen los datos necesarios para realizar el pedido
+        String documentocliente=rs.getString("K_DOC_CLIENTE");
+        String tipoDocCliente=rs.getString("I_TIPO_DOC");
+        String estado="P";
+        //Se obtiene la fecha actual
+        LocalDate now = LocalDate.now();
+		LocalDateTime startOfDay = now.atStartOfDay();
+		java.util.Date hola=java.util.Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
+		Date today = new Date(hola.getTime());
+        rs.close();
+        stmt.close();
+        
+		//Se procede a insertar el pedido
+         sql= "INSERT INTO NATAME.PEDIDO(K_COD_PEDIDO,K_DOC_CLIENTE,I_TIPO_DOC,I_ESTADO,F_PEDIDO) VALUES ('1',?,?,?,?)";
+         stmt=solicitante.getConexion().prepareStatement(sql);
+         stmt.setString(1, documentocliente);
+         stmt.setString(2, tipoDocCliente);
+         stmt.setString(3, estado);
+         stmt.setDate(4, today);
+         stmt.executeUpdate();
+         
+         solicitante.getConexion().commit();
+
+    }catch(Exception e){
+        e.printStackTrace();
+    }
+    /* 
+    try {
+        int parametros=0;
+        String sql = "select C.I_ID_CAT_PRODUCTO, C.I_ID_CAT_PRO_SUP, C.N_NOM_CAT_PRODUCTO from natame.CAT_PRODUCTO c" ;
+        
+        PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+    
+        ResultSet rs=stmt.executeQuery();
+        
+        return rs;
+        
+    } catch (Exception e) {
+        System.out.println("Fallo la recuperacion del serial de conexion");
+        System.out.println(e.getMessage());
+        solicitante.message=e.getMessage();
+    }
+    
+    return null;
+    */
+    }
 }

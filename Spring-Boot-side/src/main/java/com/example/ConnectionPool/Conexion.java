@@ -42,6 +42,7 @@ public class Conexion {
             Class.forName("oracle.jdbc.OracleDriver");
 
             con = DriverManager.getConnection(url, user, pass);
+            con.setAutoCommit(false);
             System.out.println("Conexion exitosa");
             successful=true;
         } catch (Exception e) {

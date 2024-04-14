@@ -83,6 +83,7 @@ public class ClienteController {
         public ResponseEntity<List<ITEM>> crearPedido(@RequestBody PEDIDOPOJO pedido){
          System.out.println(pedido.get_items().get(0).get_codigoProducto());
          System.out.println(pedido.getSerial());
+         clienteservice.crearPedido(pedido);
          /* 
          Pair<JSONObject,Conexion> respuesta=  clienteservice.getProductosRegion(Serial.Serial);
           System.out.println(pedido);
