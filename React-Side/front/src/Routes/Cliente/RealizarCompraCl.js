@@ -20,7 +20,7 @@ function RealizarCompraCl() {
     //Mensaje de error
     const [ErroMessage, setMessage] = React.useState('');
 
-    //Datos JSON traidos por la petición de busqueda por region
+    //Datos JSON de productos traidos por la busqueda de region
     var [dataJson, SetjsonData] = React.useState('');
 
     //Datos traidos por la peticion de regiones
@@ -28,6 +28,9 @@ function RealizarCompraCl() {
 
     //Variable de la region seleccionada
     var [regionActiva, setRegionActiva] = React.useState('');
+
+    //Datos de las categorias obtenidas 
+    var [categories, setCategories] = React.useState([]);
 
     //La lista de productos que se obtienen de la base de datos
     var [listaProductos, setListaProductos] = React.useState([]);
@@ -191,8 +194,10 @@ function RealizarCompraCl() {
         const fetchData = async () => {
             try {
                 //Se espera la promesa de peticion region
-                //const dataRegion = await peticionRegiones();
+                //const dataR = await peticionRegiones();
+                //console.log(dataR);
                 const dataRegion = convertirMuchosDatosRegion(regionDataTemp.records);
+                console.log(dataRegion);
 
                 setRegionData(dataRegion);
 
@@ -233,6 +238,12 @@ function RealizarCompraCl() {
                 //Records o resultados
                 let { records, fields } = dataJson;
                 //Se divide el array de productos(records) en grupos de 3
+
+                const datosCat = await peticionCategorias();
+                //const datosCat = categoriesData;
+                setCategories(datosCat);
+                console.log(datosCat);
+
                 if (records) {
                     let lista = dividirArray(records, 3);
                     setListaProductos(lista);
@@ -298,8 +309,38 @@ function RealizarCompraCl() {
 
     //Peticion para traer las regiones
     var peticionRegiones = () => {
+        return new Promise((resolve, reject) => {
+            setMessage("");
+            Axios.post('http://localhost:8080/cliente/Regiones', { "serial": window.sessionStorage.getItem("Serial") })
+                .then((response) => {
+                    // Resolvemos la promesa con los datos recibidos
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    // Rechazamos la promesa con el mensaje de error
+                    setMessage(error.response.data.errors);
 
+                });
+        });
     };
+
+    //Peticion para traer las categorias
+    var peticionCategorias = () => {
+        return new Promise((resolve, reject) => {
+            setMessage("");
+            Axios.post('http://localhost:8080/cliente/Categoriasregion', { "serial": window.sessionStorage.getItem("Serial"), "region": regionActiva })
+                .then((response) => {
+                    // Resolvemos la promesa con los datos recibidos
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    // Rechazamos la promesa con el mensaje de error
+                    setMessage(error.response.data.errors);
+
+                });
+        });
+    };
+
 
     // Función para dividir un array en grupos de tamaño dado
     function dividirArray(array, size) {
@@ -364,9 +405,9 @@ function RealizarCompraCl() {
             <Button variant="danger" onClick={() => eliminarCarrito("1")}>Borrar todo el carro</Button>
 
             <br />
-
-            <CategorySelect categorias={categoriesData.records} handlerPadre={handleCheckBox} />
-            <br />
+            {categories && categories.records && (
+                <CategorySelect categorias={categories.records} handlerPadre={handleCheckBox} />
+            )}            <br />
             <Button variant="primary" onClick={() => aplicarFiltroCat()}>
                 Aplicar filtro de categorias
             </Button>
@@ -376,7 +417,7 @@ function RealizarCompraCl() {
                         <Form.Label htmlFor="nomFiltroInput" visuallyHidden>
                             Nombre producto
                         </Form.Label>
-                        <Form.Control id="nomFiltroInput" placeholder="Nombre producto" required/>
+                        <Form.Control id="nomFiltroInput" placeholder="Nombre producto" required />
                     </Col>
                     <Col xs="auto" className="my-1">
                         <Button onClick={handleNomFiltro}>Buscar por nombre</Button>

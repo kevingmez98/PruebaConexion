@@ -7,8 +7,8 @@ import CatProducto from "../CatProducto"
 function convertirDatos(record) {
     let catProd = new CatProducto();
     catProd.idCatProducto = record[0];
-    catProd.idCatProSup = record[1];
-    catProd.nomCat = record[2];
+    catProd.nomCat = record[1];
+    catProd.idCatProSup = record[2];
 
     return catProd;
 }
