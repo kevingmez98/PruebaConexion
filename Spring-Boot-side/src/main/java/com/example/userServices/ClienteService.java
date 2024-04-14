@@ -50,9 +50,9 @@ public class ClienteService {
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
 
-    public JSONArray ObtenerRegiones(){
-        JSONArray Regiones=new JSONArray(Pool.getPool().getRegiones());
-        System.out.println(Regiones.toString());
+    public ArrayList<ArrayList<String>> ObtenerRegiones(){
+        ArrayList<ArrayList<String>> Regiones=Pool.getPool().getRegiones();
+       
         return Regiones;
     }
 

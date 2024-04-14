@@ -19,9 +19,11 @@ import com.example.Utils.ITEM;
 import com.example.Utils.PEDIDOPOJO;
 import com.example.Utils.SerialPOJO;
 import com.example.Utils.peticionregionPOJO;
+import com.example.Utils.regionPOJO;
 import com.example.userServices.ClienteService;
 import com.example.userServices.RepresentanteService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.javatuples.*;
@@ -94,10 +96,13 @@ public class ClienteController {
         }
         @PostMapping(value="/Regiones",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity Regiones(@RequestBody String request){
-           JSONArray respuesta= clienteservice.ObtenerRegiones();
+           ArrayList<ArrayList<String>> regiones= clienteservice.ObtenerRegiones();
+          ArrayList<String> codregiones= regiones.get(0);
+          ArrayList<String> nomregiones=regiones.get(1);
+          regionPOJO respuesta=new regionPOJO(codregiones,nomregiones);
+          JSONObject response=new JSONObject(respuesta);
 
-         
-         return new ResponseEntity(respuesta.toJSONObject(respuesta).toString(),HttpStatus.BAD_REQUEST);
+         return new ResponseEntity(response.toString(),HttpStatus.OK);
           
         }
         @PostMapping(value="/Categorias",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)

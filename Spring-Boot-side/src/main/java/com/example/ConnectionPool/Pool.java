@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Pool {
 static Pool  pool= null;
 
-static ArrayList<String> regiones=new ArrayList<String>();
+static ArrayList<ArrayList<String>> regiones=new ArrayList<ArrayList<String>>();
 static ArrayList<Conexion> ConexionesActivas = new ArrayList<Conexion>();
 private static Conexion system=new Conexion("adminsession","session123");
 public Pool(){
@@ -50,18 +50,24 @@ public Conexion getConexionbyserial(String serial){
     error.message="No existe conexion con el serial suministrado";
     return error;
 }
-public ArrayList<String> getRegiones() {
+public ArrayList<ArrayList<String>> getRegiones() {
     if(regiones.isEmpty()){
         Conexion natame= pool.getPool().createConnection("NATAME","natame");
        ResultSet rs= natame.ConsultarRegiones(natame);
        int i=0;
+       ArrayList<String> nombreRegiones=new ArrayList<>();
+       ArrayList<String> codRegiones=new ArrayList<>();
        try{
        while(rs.next()){
 
-        regiones.add(rs.getString("K_COD_REGION"));
-        System.out.println(regiones.get(i));
+        codRegiones.add(rs.getString("K_COD_REGION"));
+        nombreRegiones.add(rs.getString("N_NOM_REGION"));
+        
+        
         i++;
        }
+       regiones.add(codRegiones);
+       regiones.add(nombreRegiones);
         }catch(Exception e){
             
         }
@@ -69,7 +75,7 @@ public ArrayList<String> getRegiones() {
     return regiones;
 }
 
-public static void setRegiones(ArrayList<String> regiones) {
+public static void setRegiones(ArrayList<ArrayList<String>> regiones) {
     Pool.regiones = regiones;
 }
 

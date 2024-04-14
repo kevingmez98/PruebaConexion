@@ -23,15 +23,18 @@ static private ClienteRepository repositorio;
 public ResultSet ConsultarRepresentanteAsignado(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
-    String sql = "SELECT rc.n_primer_nombre, rc.n_primer_apellido"+
-                  " FROM natame.rep_cliente rc, natame.cliente c"+
-                  " WHERE c.k_cod_rep_intro = rc.k_cod_representante"+ 
-                  " AND c.n_username = ?";
-    PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
-    stmt.setString(1,solicitante.user.toUpperCase());
+    String sql= "SELECT C.K_DOC_CLIENTE from natame.cliente C where  C.n_username='"+solicitante.user+"'";
+    PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+    ResultSet rs=stmt.executeQuery();
+    rs.next();
+    String documentocliente=rs.getString("K_DOC_CLIENTE");
+    System.out.println(documentocliente);
+    sql = "SELECT rc.n_primer_nombre, rc.n_primer_apellido FROM natame.contrato c, natame.representante rc where C.K_DOC_CLIENTE=? AND RC.K_COD_REPRESENTANTE=C.K_COD_REPRESENTANTE AND C.F_TERMINO is null";
+    stmt = solicitante.getConexion().prepareStatement(sql);
+    stmt.setString(1,documentocliente);
    
     
-    ResultSet rs = stmt.executeQuery();
+     rs = stmt.executeQuery();
         
     return rs;
     
