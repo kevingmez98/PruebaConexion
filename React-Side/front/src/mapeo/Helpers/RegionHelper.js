@@ -23,4 +23,17 @@ function convertirMuchosDatos(records) {
     return listaRegion;
 }
 
-export { convertirDatos, convertirMuchosDatos }
+//Convierte un formato de doss listas (nomRegion, idRegion) a objetos
+function convertirFormatoRegion(listaNom, listaId){
+    let regiones = [];
+    for (let i = 0; i < listaNom.length; i++) {
+        let region = new Region();
+        region.codPais ='COL';
+        region.codRegion= listaId[i];
+        region.nomRegion = listaNom[i];
+        regiones.push(region);
+    }
+    return regiones;
+}
+
+export { convertirDatos, convertirMuchosDatos, convertirFormatoRegion }

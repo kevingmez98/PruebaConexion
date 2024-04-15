@@ -1,6 +1,21 @@
-import CardComponent from "../../public-component/Card/DarkCard/CardComponent";
 import React, { useState } from 'react';
+import Axios from 'axios';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import { dividirArray } from '../../public-component/Common-functions/ArrayFunct';
+import CategoryFilter from "../../public-component/Product/CategoryComponent/CategoryFilter";
+import SimpleProductCard from '../../public-component/Product/CardProduct/SimpleProductCard';
+
+
 function GestionarInventario() {
+
+    //Mensaje de error
+    const [ErroMessage, setMessage] = React.useState('');
+
+    //Datos JSON de productos traidos por la busqueda de region
+    var [productosJson, SetproductosJson] = React.useState('');
 
     //La lista de productos que se obtienen de la base de datos
     var [listaProductos, setListaProductos] = React.useState([]);
@@ -8,106 +23,182 @@ function GestionarInventario() {
     //Una lista que guardará la lista de productos si se filtran por nombre
     var [listaProdTemp, setListaProdTemp] = React.useState([]);
 
-    //Datos de las categorias obtenidas 
-    var [categories, setCategories] = React.useState([]);
-
-    //Datos JSON de productos traidos por la busqueda de region
-    var [dataJson, SetjsonData] = React.useState('');
-
     //Variable que guarda el valor puesto en el filtro por nombre
     var [nomFiltro, setNomFiltro] = React.useState('');
 
-    // Estado para almacenar los valores de los checkboxes de categoria 
-    const [checkData, setCheckData] = useState([]);
+    //Variable para controlar cuando un boton está 'cargando'
+    const [isBtnLoading, setLoading] = useState(false);
 
-    // Función para manejar el cambio de estado de los checkbox de categoria
-    /*
-        Se guarda el id de los formularios activados, el nombre del check
-        tambien la categoria y posible categoria padre
-    */
-    const handleCheckBox = (formCheck, idCat, idCatPadre, nombreCheck) => {
+    //UseEffect inicial, se ejecuta al cargar el componente
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Esperamos la resolución de la promesa usando await
+                const data = await peticionProductos('AND', null, null);
+                // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
+                SetproductosJson(data);
 
-        //obtener el valor del check de categorias
-        const prodForm = document.getElementById(formCheck);
+                if (productosJson) {
+                    //Records o resultados
+                    let { records, fields } = productosJson;
+                    //Se divide el array de productos(records) en grupos de 3
+                    let lista = dividirArray(records, 3);
+                    setListaProductos(lista);
+                    setListaProdTemp(lista);
 
-        const valor = prodForm.elements[nombreCheck].checked;
+                    //Se reinicia el filtro de busqueda por nombre
+                    document.getElementById("nomFiltroInput").value = '';
+                    setNomFiltro('');
+                }
 
-        // Obtener el índice del formData actual si existe en checkData
-        const index = checkData.findIndex(data => data['id-cat'] === idCat);
 
-        //Si no existe se agrega
-        if (index === -1) {
-
-            const formData = { 'id-form': formCheck, 'nombre-check': nombreCheck, 'id-cat': idCat, 'id-cat-padre': idCatPadre, 'value': valor };
-
-            // ...checkData permite tener una copia superficial de la variable
-            setCheckData([
-                ...checkData,
-                formData
-            ]);
+            } catch (error) {
+                // Manejamos cualquier error que pueda ocurrir
+                console.error('Error al obtener los datos:', error);
+            }
         };
-        //Si el valor es true indica que se activa el check
-        if (valor) {
-            //Se desactivan todos los check exceto el que activó el metodo
-            checkData.forEach(data => {
-                data['value'] = false;
-                cambiarCheck(data['id-form'], data['nombre-check'], false);
+        fetchData();
+    }, []);
 
-                //Si la categoria que se activa tiene categoria padre tambien se activa
-                if (data['id-cat'] === idCat) {
-                    data['value'] = true;
-                    cambiarCheck(data['id-form'], data['nombre-check'], true);
-                }
 
-            });
+    //UseEffect que Revisa el cambio en productosJson y actualiza la lista
+    React.useEffect(() => {
+        if (productosJson) {
+            //Records o resultados
+            let { records, fields } = productosJson;
+            //Se divide el array de productos(records) en grupos de 3
+            let lista = dividirArray(records, 3);
+            setListaProductos(lista);
+            setListaProdTemp(lista);
+
+            //Se reinicia el filtro de busqueda por nombre
+            document.getElementById("nomFiltroInput").value = '';
+            setNomFiltro('');
         }
+    }, [productosJson])
 
-    };
+    //UseEffect que Revisa el cambio en el nombre y actualiza la lista que se muestra
+    React.useEffect(() => {
+        if (nomFiltro) {
+            let productosFiltrados = [];
 
-    //Hacer la consulta de filtros con categorias
-    const aplicarFiltroCat = async () => {
-        let idCatPadre;
-        let idCat;
-        let cat = "No se especificó una categoria";
+            /*ListaProductos es una lista de listas de productos se recorre todo para agregarla a la lista temp*/
+            for (let i = 0; i < listaProductos.length; i++) {
+                let listaInterna = listaProductos[i];
+                for (let j = 0; j < listaInterna.length; j++) {
+                    //El componente en la posicion 1 es el nombre guardado
+                    let producto = listaInterna[j];
+                    let nombreProducto = producto[0].toUpperCase();
 
-        //Se recorren lo check de las categorias y se traen su id y su id de categoria padre
-        for (let i = 0; i < checkData.length; i++) {
-            if (checkData[i]['value']) {
-                cat = "categoria con id " + checkData[i]['id-cat'];
-                idCat = checkData[i]['id-cat'];
+                    // Convertir nomFiltro a mayúsculas y eliminar espacios en blanco
+                    let nombreBusqueda = nomFiltro.trim().toUpperCase();
 
 
-                if (checkData[i]['id-cat-padre']) {
-                    cat += ". tiene el id padre " + checkData[i]['id-cat-padre'];
-                    idCatPadre = checkData[i]['id-cat-padre'];
-                }
-
-                //Si existe idCat es porque se seleccionó aunque sea una categoria
-                if (idCat) {
-                    //const data = await peticion(regionActiva, idCatPadre, idCat);
-
-                    // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
-                    //SetjsonData(data);
+                    if (nombreProducto.includes(nombreBusqueda)) {
+                        productosFiltrados.push(producto);
+                    }
                 }
             }
+
+            //Se divide el array en grupos para que se vea bien y se pasa a la lista que se muestra
+            setListaProdTemp(dividirArray(productosFiltrados, 3));
+        } else {
+            setListaProdTemp(listaProductos);
         }
-        alert(cat);
+    }, [nomFiltro])
+
+    //Peticion para actualizar la lista de productos por región
+    var peticionProductos = (region, idCat, idSub) => {
+        return new Promise((resolve, reject) => {
+            setMessage("");
+            Axios.post('http://localhost:8080/cliente/Productosregion', { "serial": window.sessionStorage.getItem("Serial"), "region": region, "categoria": idCat, "subcategoria": idSub })
+                .then((response) => {
+                    // Resolvemos la promesa con los datos recibidos
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    // Rechazamos la promesa con el mensaje de error
+                    setMessage(error.response.data.errors);
+
+                });
+        });
+    };
+
+
+    //Funcion para recibir la categoria elegida desde el categoryFilter
+    const handleCatElegida = async (datos) => {
+        //Si existe idCat es porque se seleccionó aunque sea una categoria
+        if (datos.idCat) {
+            const data = await peticionProductos('AND', datos.idCatPadre, datos.idCat);
+
+            // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
+            SetproductosJson(data);
+        }
+    }
+
+    //Funcion para manejar el cambio de nomFiltro
+    const handleNomFiltro = () => {
+        const valorInput = document.getElementById("nomFiltroInput").value;
+        setNomFiltro(valorInput);
     }
 
 
-        //Cambiar el valor de un checkbox dandole el nombre que tiene y el idForm al que pertenece
-        function cambiarCheck(idForm, nombreCheck, valor) {
-            const prodForm = document.getElementById(idForm);
-    
-            // Cambiar el valor del checkbox
-            prodForm.elements[nombreCheck].checked = valor;
-    
-        }
-
     return (
-        <CardComponent titulo={"Gestion de inventario"}>
-            <div className="p-3 mb-2 bg-info text-white">Gestion de inventario</div>
-        </CardComponent>
+        <React.Fragment>
+            <CategoryFilter handleFiltro={handleCatElegida}></CategoryFilter>
+            <Form id="form-filtro-nom">
+                <Row className="align-items-center">
+                    <Col sm={3} className="my-1">
+                        <Form.Label htmlFor="nomFiltroInput" visuallyHidden>
+                            Nombre producto
+                        </Form.Label>
+                        <Form.Control id="nomFiltroInput" placeholder="Nombre producto" required />
+                    </Col>
+                    <Col xs="auto" className="my-1">
+                        <Button onClick={handleNomFiltro}>Buscar por nombre</Button>
+                    </Col>
+                </Row>
+            </Form>
+
+            <p style={{ color: 'red' }}>{ErroMessage}</p>
+            {listaProdTemp.length === 0 ? (
+                <p>No hay productos disponibles que cumplan con los criterios</p>
+            ) : (
+
+                listaProdTemp.map((grupoProd, index) => (
+                    <Row key={index}>
+                        {grupoProd.map((producto, i) => (
+                            <Col key={i}>
+                                <SimpleProductCard idProd={producto[1]} nomProducto={producto[0]} precio={producto[3]}>
+                                    <Form id={`form-prod-${index}-${i}`}>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label>Cantidad actual : 3</Form.Label>
+                                            <Form.Control size="sm" type="number" min="1" name="cantidad" />
+                                        </Form.Group>
+                                        <Form.Group className="mb-3">
+                                            <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="nombre" value={producto[0]} disabled readOnly />
+                                        </Form.Group>
+                                        <Form.Group className="mb-3">
+                                            <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}>
+                                                {isBtnLoading ? 'Cargando...' : 'Agregar al inventario'}
+                                            </Button>
+                                        </Form.Group>
+                                        <Form.Group className="mb-3">
+                                                <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}>
+                                                    {isBtnLoading ? 'Cargando...' : 'Quitar del inventario'}
+                                                </Button>
+                                            </Form.Group>
+                                    </Form>
+                                </SimpleProductCard>
+                            </Col>
+                        ))}
+                    </Row>
+                ))
+
+            )}
+
+
+        </React.Fragment>
     )
 }
 

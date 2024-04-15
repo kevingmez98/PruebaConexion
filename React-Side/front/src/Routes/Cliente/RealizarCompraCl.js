@@ -8,8 +8,10 @@ import { actualizarCarrito, eliminarCarrito } from '../../public-component/Produ
 import Axios from 'axios';
 
 import SimpleModal from '../../public-component/Modal/SimpleModal';
-import CategorySelect from '../../public-component/Product/CategoryComponent/CategorySelect';
-import { convertirMuchosDatos as convertirMuchosDatosRegion } from '../../mapeo/Helpers/RegionHelper';
+import { convertirMuchosDatos as convertirMuchosDatosRegion, convertirFormatoRegion } from '../../mapeo/Helpers/RegionHelper';
+
+import { dividirArray } from '../../public-component/Common-functions/ArrayFunct';
+import CategoryFilter from '../../public-component/Product/CategoryComponent/CategoryFilter';
 
 
 function RealizarCompraCl() {
@@ -29,8 +31,6 @@ function RealizarCompraCl() {
     //Variable de la region seleccionada
     var [regionActiva, setRegionActiva] = React.useState('');
 
-    //Datos de las categorias obtenidas 
-    var [categories, setCategories] = React.useState([]);
 
     //La lista de productos que se obtienen de la base de datos
     var [listaProductos, setListaProductos] = React.useState([]);
@@ -47,57 +47,11 @@ function RealizarCompraCl() {
     //Constante que cambia el valor de la variable del modal
     const showRegModal = () => setShowModal(!setShowModal);
 
-    // Estado para almacenar los valores de los checkboxes de categoria 
-    const [checkData, setCheckData] = useState([]);
-
     //Funcion para manejar el cambio de nomFiltro
     const handleNomFiltro = () => {
         const valorInput = document.getElementById("nomFiltroInput").value;
         setNomFiltro(valorInput);
     }
-    // Función para manejar el cambio de estado de los checkbox de categoria
-    /*
-        Se guarda el id de los formularios activados, el nombre del check
-        tambien la categoria y posible categoria padre
-    */
-    const handleCheckBox = (formCheck, idCat, idCatPadre, nombreCheck) => {
-
-        //obtener el valor del check de categorias
-        const prodForm = document.getElementById(formCheck);
-
-        const valor = prodForm.elements[nombreCheck].checked;
-
-        // Obtener el índice del formData actual si existe en checkData
-        const index = checkData.findIndex(data => data['id-cat'] === idCat);
-
-        //Si no existe se agrega
-        if (index === -1) {
-
-            const formData = { 'id-form': formCheck, 'nombre-check': nombreCheck, 'id-cat': idCat, 'id-cat-padre': idCatPadre, 'value': valor };
-
-            // ...checkData permite tener una copia superficial de la variable
-            setCheckData([
-                ...checkData,
-                formData
-            ]);
-        };
-        //Si el valor es true indica que se activa el check
-        if (valor) {
-            //Se desactivan todos los check exceto el que activó el metodo
-            checkData.forEach(data => {
-                data['value'] = false;
-                cambiarCheck(data['id-form'], data['nombre-check'], false);
-
-                //Si la categoria que se activa tiene categoria padre tambien se activa
-                if (data['id-cat'] === idCat) {
-                    data['value'] = true;
-                    cambiarCheck(data['id-form'], data['nombre-check'], true);
-                }
-
-            });
-        }
-
-    };
 
     /*Handler para manejar la región activa */
     const handleRegionActiva = () => {
@@ -105,88 +59,16 @@ function RealizarCompraCl() {
         setRegionActiva(valorInput);
     }
 
-    //Hacer la consulta de filtros con categorias
-    const aplicarFiltroCat = async () => {
-        let idCatPadre;
-        let idCat;
-        let cat = "No se especificó una categoria";
+    //Funcion para recibir la categoria elegida desde el categoryFilter
+    const handleCatElegida = async (datos) => {
+        console.log(datos);
+        //Si existe idCat es porque se seleccionó aunque sea una categoria
+        if (datos.idCat) {
+            const data = await peticion(regionActiva, datos.idCatPadre, datos.idCat);
 
-        //Se recorren lo check de las categorias y se traen su id y su id de categoria padre
-        for (let i = 0; i < checkData.length; i++) {
-            if (checkData[i]['value']) {
-                cat = "categoria con id " + checkData[i]['id-cat'];
-                idCat = checkData[i]['id-cat'];
-
-
-                if (checkData[i]['id-cat-padre']) {
-                    cat += ". tiene el id padre " + checkData[i]['id-cat-padre'];
-                    idCatPadre = checkData[i]['id-cat-padre'];
-                }
-
-                //Si existe idCat es porque se seleccionó aunque sea una categoria
-                if (idCat) {
-                    const data = await peticion(regionActiva, idCatPadre, idCat);
-
-                    // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
-                    SetjsonData(data);
-                }
-            }
+            // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
+            SetjsonData(data);
         }
-        alert(cat);
-    }
-
-    //Cambiar el valor de un checkbox dandole el nombre que tiene y el idForm al que pertenece
-    function cambiarCheck(idForm, nombreCheck, valor) {
-        const prodForm = document.getElementById(idForm);
-
-        // Cambiar el valor del checkbox
-        prodForm.elements[nombreCheck].checked = valor;
-
-    }
-
-    const regionDataTemp =
-    {
-        "records": [
-            ["AND", "ANDINA", "COL", ""],
-            ["LLA", "LLANOS", "COL", ""]
-        ],
-        "fields": [
-            { "name": "K_COD_REGION", "type": "VARCHAR2(25)" },
-            { "name": "N_NOM_REGION", "type": "VARCHAR2(25)" },
-            { "name": "K_COD_PAIS", "type": "VARCHAR2(25)" },
-            { "name": "K_REP_ENCARGADO", "type": "VARCHAR2(25)" }
-        ]
-    }
-
-
-    const categoriesData =
-    {
-        "records": [
-            ["HG2", "HG", "Artículos de cocina"],
-            ["HG3", "HG", "Productos de lavandería"],
-            ["HG4", "HG", "Limpieza de pisos"],
-            ["HG5", "HG", "Desinfectantes"],
-            ["CP1", "CP", "Cuidado de la piel"],
-            ["CP2", "CP", "Higiene bucal"],
-            ["CP3", "CP", "Cuidado del cabello"],
-            ["CP4", "CP", "Cuidado de las uñas"],
-            ["CP5", "CP", "Fragancias"],
-            ["EL1", "EL", "Teléfonos móviles"],
-            ["EL2", "EL", "Computadoras"],
-            ["EL3", "EL", "Tablets"],
-            ["EL4", "EL", "Relojes inteligentes"],
-            ["EL5", "EL", "Televisores"],
-            ["EL", "", "Electronica"],
-            ["BL", "", "Belleza"],
-            ["CP", "", "Cuidado personal"],
-            ["HG", "", "Hogar"],
-            ["EL51", "EL5", "ElectronicaTesst"]
-        ],
-        "fields": [
-            { "name": "I_ID_CAT_PRODUCTO", "type": "VARCHAR2(5)" },
-            { "name": "I_ID_CAT_PRO_SUP", "type": "VARCHAR2(5)" },
-            { "name": "N_NOM_CAT_PRODUCTO", "type": "VARCHAR2(50)" }
-        ]
     }
 
     //UseEffect inicial, se ejecuta al cargar el componente
@@ -194,9 +76,10 @@ function RealizarCompraCl() {
         const fetchData = async () => {
             try {
                 //Se espera la promesa de peticion region
-                //const dataR = await peticionRegiones();
-                //console.log(dataR);
-                const dataRegion = convertirMuchosDatosRegion(regionDataTemp.records);
+                const dataR = await peticionRegiones();
+
+                //La consulta de regiones trae los datos de otra manera por lo que se convierten los datos primero
+                const dataRegion = convertirFormatoRegion(dataR.nomRegiones,dataR.codRegiones);
                 console.log(dataRegion);
 
                 setRegionData(dataRegion);
@@ -238,11 +121,6 @@ function RealizarCompraCl() {
                 //Records o resultados
                 let { records, fields } = dataJson;
                 //Se divide el array de productos(records) en grupos de 3
-
-                const datosCat = await peticionCategorias();
-                //const datosCat = categoriesData;
-                setCategories(datosCat);
-                console.log(datosCat);
 
                 if (records) {
                     let lista = dividirArray(records, 3);
@@ -324,32 +202,7 @@ function RealizarCompraCl() {
         });
     };
 
-    //Peticion para traer las categorias
-    var peticionCategorias = () => {
-        return new Promise((resolve, reject) => {
-            setMessage("");
-            Axios.post('http://localhost:8080/cliente/Categoriasregion', { "serial": window.sessionStorage.getItem("Serial"), "region": regionActiva })
-                .then((response) => {
-                    // Resolvemos la promesa con los datos recibidos
-                    resolve(response.data);
-                })
-                .catch((error) => {
-                    // Rechazamos la promesa con el mensaje de error
-                    setMessage(error.response.data.errors);
 
-                });
-        });
-    };
-
-
-    // Función para dividir un array en grupos de tamaño dado
-    function dividirArray(array, size) {
-        const listaDividida = [];
-        for (let i = 0; i < array.length; i += size) {
-            listaDividida.push(array.slice(i, i + size));
-        }
-        return listaDividida;
-    }
 
     //Funcion para cargar un producto al carrito
     const cargarProducto = (productoId, formId) => {
@@ -405,12 +258,7 @@ function RealizarCompraCl() {
             <Button variant="danger" onClick={() => eliminarCarrito("1")}>Borrar todo el carro</Button>
 
             <br />
-            {categories && categories.records && (
-                <CategorySelect categorias={categories.records} handlerPadre={handleCheckBox} />
-            )}            <br />
-            <Button variant="primary" onClick={() => aplicarFiltroCat()}>
-                Aplicar filtro de categorias
-            </Button>
+            <CategoryFilter handleFiltro={handleCatElegida}></CategoryFilter>
             <Form id="form-filtro-nom">
                 <Row className="align-items-center">
                     <Col sm={3} className="my-1">
