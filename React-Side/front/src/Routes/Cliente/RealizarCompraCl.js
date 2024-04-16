@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import SimpleProductCard from "../../public-component/Product/CardProduct/SimpleProductCard";
 import { actualizarCarrito, eliminarCarrito } from '../../public-component/Product/Carrito/CarritoSession';
 import Axios from 'axios';
@@ -57,14 +58,22 @@ function RealizarCompraCl() {
     const handleRegionActiva = () => {
         const valorInput = document.getElementById("regionSel").value;
         setRegionActiva(valorInput);
+        eliminarCarrito('1');
     }
 
     //Funcion para recibir la categoria elegida desde el categoryFilter
     const handleCatElegida = async (datos) => {
-        console.log(datos);
+        let data = "";
+
         //Si existe idCat es porque se seleccionó aunque sea una categoria
         if (datos.idCat) {
-            const data = await peticion(regionActiva, datos.idCatPadre, datos.idCat);
+
+            //Si la categoria elegida no tiene categoria padre entonces se envia la categoria elegida como categoria padre
+            if (!datos.idCatPadre) {
+                data = await peticion(regionActiva, datos.idCat, null);
+            } else {
+                data = await peticion(regionActiva, datos.idCatPadre, datos.idCat);
+            }
 
             // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
             SetjsonData(data);
@@ -79,9 +88,7 @@ function RealizarCompraCl() {
                 const dataR = await peticionRegiones();
 
                 //La consulta de regiones trae los datos de otra manera por lo que se convierten los datos primero
-                const dataRegion = convertirFormatoRegion(dataR.nomRegiones,dataR.codRegiones);
-                console.log(dataRegion);
-
+                const dataRegion = convertirFormatoRegion(dataR.nomRegiones, dataR.codRegiones);
                 setRegionData(dataRegion);
 
 
@@ -245,18 +252,33 @@ function RealizarCompraCl() {
                         ))};
 
                     </Form.Select>
-                    <Button variant="primary" onClick={handleRegionActiva}>Seleccionar</Button>
-
+                    <div className="d-grid gap-2">
+                        <Button variant="primary" onClick={handleRegionActiva}>Seleccionar</Button>
+                    </div>
+                    <br/>
+                    {regionActiva && (
+                          <Alert variant="warning">Cambiar de región borrará el carrito</Alert>
+                    )}
+                  
                 </Form>
             </SimpleModal>
 
-            <Button variant="primary" onClick={() => setShowModal(true)}>
-                Cambiar región
-            </Button>
+            <Alert variant="secondary">Agregar elementos al carrito para comprar</Alert>
+            
+                <div className="d-grid gap-2">
+                    <Button variant="primary" onClick={() => setShowModal(true)}>
+                        Cambiar región
+                    </Button>
+                </div>
+
+              {ErroMessage && (
+                <Alert variant="danger">{ErroMessage}</Alert>
+            )}
 
             <br />
-            <Button variant="danger" onClick={() => eliminarCarrito("1")}>Borrar todo el carro</Button>
-
+            <div className="d-grid gap-2">
+                <Button variant="danger" onClick={() => eliminarCarrito("1")}>Borrar todo el carro</Button>
+            </div>
             <br />
             <CategoryFilter handleFiltro={handleCatElegida}></CategoryFilter>
             <Form id="form-filtro-nom">
@@ -272,7 +294,7 @@ function RealizarCompraCl() {
                     </Col>
                 </Row>
             </Form>
-            <p style={{ color: 'red' }}>{ErroMessage}</p>
+
             {listaProdTemp.length === 0 ? (
                 <p>No hay productos disponibles que cumplan con los criterios</p>
             ) : (

@@ -14,6 +14,7 @@ function SideBar() {
                 <li>        
                     <AccordionGroup icon={faCircleUser} nombreBtn={"Representante de ventas"} nombreGrupo={"representante-ventas"}>
                         <SideBarBtn nombreBtn={"Realizar venta"} icon={faPenNib} route={"/realizar-venta"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Ver carrito"} icon={faCartShopping} route={"/ver-carrito"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Gestionar clientes"} icon={faUser} route={"/gestion-cliente"}></SideBarBtn>
                     </AccordionGroup>
 
@@ -29,7 +30,7 @@ function SideBar() {
                         <SideBarBtn nombreBtn={"Gestión del representante"} icon={faHandshake} route={"/gestion-representante-cliente"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Ver mis compras"} icon={faWarehouse} route={"/ver-compras"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Realizar compra"} icon={faPenNib} route={"/realizar-compra"}></SideBarBtn>
-                        <SideBarBtn nombreBtn={"Ver carrito"} icon={faCartShopping} route={"/ver-carrito"}></SideBarBtn>
+                        <SideBarBtn nombreBtn={"Ver carrito"} icon={faCartShopping} route={"/ver-carrito-cliente"}></SideBarBtn>
                     </AccordionGroup>
                 </li>
                 <li>

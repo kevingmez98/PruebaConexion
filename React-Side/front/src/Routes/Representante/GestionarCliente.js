@@ -71,7 +71,7 @@ function GestionarCliente() {
                         <Form.Control required />
                     </Form.Group>
                     <Row as={Col}>
-                    <Form.Group as={Col} controlId="formGridTipoDoc">
+                    <Form.Group as={Col} controlId="formGridCiudad">
                         <Form.Label>Ciudad</Form.Label>
                         <Form.Select defaultValue="" required>
                             <option>Escoger</option>
@@ -95,12 +95,12 @@ function GestionarCliente() {
                     </Form.Group>
                 </Row>
                 <Row className="mb-3">
-                    <Form.Group as={Col} controlId="formGridPrimerNom">
+                    <Form.Group as={Col} controlId="formGridPrimerApe">
                         <Form.Label>Primer apellido</Form.Label>
                         <Form.Control required />
                     </Form.Group>
 
-                    <Form.Group as={Col} controlId="formGridSegNom">
+                    <Form.Group as={Col} controlId="formGridSegApe">
                         <Form.Label>Segundo apellido</Form.Label>
                         <Form.Control />
                     </Form.Group>

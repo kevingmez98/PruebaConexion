@@ -8,7 +8,9 @@ import SimpleProductCard from '../../public-component/Product/CardProduct/Simple
 import Pedido from '../../mapeo/Pedido';
 import Item from '../../mapeo/Item';
 import Axios from 'axios';
-function GestionarCarrito() {
+import { dividirArray } from '../../public-component/Common-functions/ArrayFunct';
+
+function GestionarCarritoCl() {
     const [isBtnLoading, setLoading] = useState(false);
     var [carrito, SetCarrito] = React.useState('');
     const [ErroMessage, setMessage] = React.useState('');
@@ -37,15 +39,6 @@ function GestionarCarrito() {
             setListaProductos(lista);
         }
     }, [carrito])
-
-    // Función para dividir un array en grupos de tamaño dado
-    function dividirArray(array, size) {
-        const listaDividida = [];
-        for (let i = 0; i < array.length; i += size) {
-            listaDividida.push(array.slice(i, i + size));
-        }
-        return listaDividida;
-    }
 
     const modificarProducto = (productoId, formId) => {
         try {
@@ -161,4 +154,4 @@ function GestionarCarrito() {
     )
 }
 
-export default GestionarCarrito;
+export default GestionarCarritoCl;

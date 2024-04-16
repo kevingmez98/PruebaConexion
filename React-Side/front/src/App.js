@@ -16,8 +16,9 @@ import GestionarClasificacion from './Routes/Rep-general/GestionarClasificacion'
 import GestionarInventario from './Routes/Rep-general/GestionarInventario';
 import GestionarRepCl from './Routes/Cliente/GestionarRepCl';
 import GestionarCompras from './Routes/Cliente/GestionarCompras';
-import GestionarCarrito from './Routes/Cliente/GestionarCarrito';
+import GestionarCarritoCl from './Routes/Cliente/GestionarCarritoCl';
 import RealizarCompraCl from './Routes/Cliente/RealizarCompraCl';
+import GestionarCarritoRep from './Routes/Representante/GestionarCarritoRep';
 
 function App() {
   return (
@@ -35,9 +36,11 @@ function App() {
           <Route path='/gestion-clasificacion' element={<GestionarClasificacion/>} />
           <Route path='/gestion-inventario' element={<GestionarInventario/>} />
 
+          <Route path='/ver-carrito' element={<GestionarCarritoRep/>} />
+
           <Route path='/gestion-representante-cliente' element={<GestionarRepCl/>} />
           <Route path='/ver-compras' element={<GestionarCompras/>} />
-          <Route path='/ver-carrito' element={<GestionarCarrito/>} />
+          <Route path='/ver-carrito-cliente' element={<GestionarCarritoCl/>} />
           <Route path='/realizar-compra' element={<RealizarCompraCl/>} />
 
         </Route>

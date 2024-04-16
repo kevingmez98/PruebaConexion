@@ -23,7 +23,7 @@ public class ClienteService {
              resultado=JsonManager.convert(ClienteRepository.getRepositorio().ConsultarRepresentanteAsignado(solicitante),solicitante);
         return new Pair<JSONObject,Conexion>(resultado,solicitante);
     }catch(Exception e){
-        System.out.println("Error en cliente service");
+        System.out.println("Error en cliente service - Rep asignado");
     }
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
@@ -35,7 +35,7 @@ public class ClienteService {
              resultado=JsonManager.convert(ClienteRepository.getRepositorio().ConsultarCategorias(solicitante),solicitante);
         return new Pair<JSONObject,Conexion>(resultado,solicitante);
     }catch(Exception e){
-        System.out.println("Error en cliente service");
+        System.out.println("Error en cliente service- Categorias");
     }
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
@@ -47,7 +47,7 @@ public class ClienteService {
              resultado=JsonManager.convert(ClienteRepository.getRepositorio().ConsultarProductosRegion(solicitante,region,categoria,subcategoria),solicitante);
         return new Pair<JSONObject,Conexion>(resultado,solicitante);
     }catch(Exception e){
-        System.out.println("Error en cliente service");
+        System.out.println("Error en cliente service - Productos por region");
     }
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
