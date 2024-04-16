@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import com.example.ConnectionPool.Conexion;
 import com.example.ConnectionPool.Pool;
 import com.example.Repositorios.ClienteRepository;
+import com.example.Utils.CLIENTEPOJO;
 import com.example.Utils.JsonManager;
 import com.example.Utils.PEDIDOPOJO;
 
@@ -60,5 +61,8 @@ public class ClienteService {
         Conexion solicitante=Pool.getPool().getConexionbyserial(pedido.getSerial());
         ClienteRepository.getRepositorio().crearPedido(solicitante,pedido);
     }
+    
+
+    
 
 }

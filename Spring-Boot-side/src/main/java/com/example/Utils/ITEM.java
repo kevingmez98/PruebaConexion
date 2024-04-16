@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ITEM {
 private String _codigoProducto;
+private String _catProducto;
 private int _cantidad;
 @JsonCreator
 public ITEM(String _codigoProducto, int _cantidad) {

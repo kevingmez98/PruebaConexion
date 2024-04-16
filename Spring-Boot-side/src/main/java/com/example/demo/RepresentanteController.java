@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ConnectionPool.Conexion;
+import com.example.Utils.CLIENTEPOJO;
 import com.example.Utils.SerialPOJO;
 import com.example.userServices.RepresentanteService;
 
@@ -36,6 +37,34 @@ public class RepresentanteController {
          JSONObject error = new JSONObject();
          error.put("errors",respuesta.getValue1().message);
          return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+          
+        }
+        //End point que retorna las ciudades de la region del representante
+        @PostMapping(value="/ciudades",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity getCiudades(@RequestBody SerialPOJO Serial){
+         Pair<JSONObject,Conexion> respuesta= representanteservice.getciudades(Serial.Serial);
+         if(respuesta.getValue0()!=null){
+            return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
+         }
+         JSONObject error = new JSONObject();
+         error.put("errors",respuesta.getValue1().message);
+         return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+          
+        }
+        //End point para crear un cliente, para conocer los campos de la peticion, revisar CLIENTEPOJO
+        @PostMapping(value="/crearCliente",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity getCiudades(@RequestBody CLIENTEPOJO cliente){
+        if(cliente.getSerial()==null){
+            JSONObject error=new JSONObject();
+            error.put("errors","Peticion invalida, hace falta identificador");
+            return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+        }
+        String message= representanteservice.crearCliente(cliente);
+
+         JSONObject error = new JSONObject();
+         error.put("errors",message);
+         
+         return new ResponseEntity(error.toString(),HttpStatus.OK);
           
         }
 }

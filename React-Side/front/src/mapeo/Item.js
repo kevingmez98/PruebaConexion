@@ -3,6 +3,7 @@ export default class Item {
     constructor(codigoProducto,cantidad ){
         this._codigoProducto = codigoProducto;
         this._cantidad = cantidad;
+        
     }
   
     // Getters

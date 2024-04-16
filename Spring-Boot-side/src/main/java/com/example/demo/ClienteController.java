@@ -49,19 +49,7 @@ public class ClienteController {
           
         }
 
-        /* Vieja consulta de productos por la region del cliente
-        @PostMapping(value="/Productosregion",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity getProductosregion(@RequestBody peticionregionPOJO){
-         Pair<JSONObject,Conexion> respuesta=  clienteservice.getProductosRegion(Serial.Serial);
-         if(respuesta.getValue0()!=null){
-            return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
-         }
-         JSONObject error = new JSONObject();
-         error.put("errors",respuesta.getValue1().message);
-         return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
-          
-        }
-        */
+       
 
         //Endpoint Que devuelve un json con una lista de productos con una region, categoria y subcategoria especificas.
         @PostMapping(value="/Productosregion",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
