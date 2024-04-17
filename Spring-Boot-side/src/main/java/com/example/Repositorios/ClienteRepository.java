@@ -61,7 +61,7 @@ public ResultSet ConsultarProductosRegion(Conexion solicitante,String region, St
     System.out.println(subcategoria);
 try {
     int parametros=0;
-    String sql = "select P.N_NOM_PRODUCTO, V.K_COD_PRODUCTO,V.I_ID_CAT_PRODUCTO,C.I_ID_CAT_PRO_SUP,Q_PRECIO_UNITARIO,Q_CANTIDAD_EN_STOCK "
+    String sql = "select P.N_NOM_PRODUCTO, V.K_COD_PRODUCTO,V.I_ID_CAT_PRODUCTO,C.I_ID_CAT_PRO_SUP,V.Q_PRECIO_UNITARIO,V.Q_CANTIDAD_EN_STOCK "
     +"FROM NATAME.PRODUCTO P,NATAME.INVENTARIO V, NATAME.CAT_PRODUCTO C WHERE V.K_COD_REGION=?" 
     +"AND P.K_COD_PRODUCTO = V.K_COD_PRODUCTO AND P.I_ID_CAT_PRODUCTO=C.I_ID_CAT_PRODUCTO ";
     String sqlcategoria= "AND C.I_ID_CAT_PRO_SUP=?";

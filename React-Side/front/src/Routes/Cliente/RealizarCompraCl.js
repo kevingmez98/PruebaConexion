@@ -9,7 +9,8 @@ import { actualizarCarrito, eliminarCarrito } from '../../public-component/Produ
 import Axios from 'axios';
 
 import SimpleModal from '../../public-component/Modal/SimpleModal';
-import { convertirMuchosDatos as convertirMuchosDatosRegion, convertirFormatoRegion } from '../../mapeo/Helpers/RegionHelper';
+import { convertirFormatoRegion } from '../../mapeo/Helpers/RegionHelper';
+import { convertirMuchosDatos as convertirProductos, buscarProducto } from '../../mapeo/Helpers/ProductoHelper';
 
 import { dividirArray } from '../../public-component/Common-functions/ArrayFunct';
 import CategoryFilter from '../../public-component/Product/CategoryComponent/CategoryFilter';
@@ -58,7 +59,7 @@ function RealizarCompraCl() {
     const handleRegionActiva = () => {
         const valorInput = document.getElementById("regionSel").value;
         setRegionActiva(valorInput);
-        eliminarCarrito('1');
+        eliminarCarrito();
     }
 
     //Funcion para recibir la categoria elegida desde el categoryFilter
@@ -105,10 +106,14 @@ function RealizarCompraCl() {
         if (dataJson) {
             //Records o resultados
             let { records, fields } = dataJson;
+            //Se convierten los records en productos
+            let productos = convertirProductos(records);
+
             //Se divide el array de productos(records) en grupos de 3
-            let lista = dividirArray(records, 3);
-            setListaProductos(lista);
-            setListaProdTemp(lista);
+            let listaDividida = dividirArray(productos, 3);
+
+            setListaProductos(listaDividida);
+            setListaProdTemp(listaDividida);
 
             //Se reinicia el filtro de busqueda por nombre
             document.getElementById("nomFiltroInput").value = '';
@@ -125,15 +130,6 @@ function RealizarCompraCl() {
                 // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
                 SetjsonData(data);
 
-                //Records o resultados
-                let { records, fields } = dataJson;
-                //Se divide el array de productos(records) en grupos de 3
-
-                if (records) {
-                    let lista = dividirArray(records, 3);
-                    setListaProductos(lista);
-                    setListaProdTemp(lista);
-                }
                 showRegModal();
                 //Se reinicia el filtro de busqueda por nombre
                 document.getElementById("nomFiltroInput").value = '';
@@ -156,7 +152,7 @@ function RealizarCompraCl() {
                 for (let j = 0; j < listaInterna.length; j++) {
                     //El componente en la posicion 1 es el nombre guardado
                     let producto = listaInterna[j];
-                    let nombreProducto = producto[0].toUpperCase();
+                    let nombreProducto = producto.nomProducto.toUpperCase();
 
                     // Convertir nomFiltro a mayúsculas y eliminar espacios en blanco
                     let nombreBusqueda = nomFiltro.trim().toUpperCase();
@@ -214,21 +210,30 @@ function RealizarCompraCl() {
     //Funcion para cargar un producto al carrito
     const cargarProducto = (productoId, formId) => {
         try {
+            console.log(productoId);
             //Congelar botones
             setLoading(true);
-
+            console.log(productoId)
             //Obtener cantidad del formulario
             const prodForm = document.getElementById(formId);
             const cant = prodForm.elements["cantidad"].value;
-            const nom = prodForm.elements["nombre"].value;
-            const precio = prodForm.elements["precio"].value;
+            let producto = "";
+            //Se recorre la lista de listas de productos hasta encontrar al producto respectivo
+             for (let i = 0; i < listaProductos.length; i++) {
+                let listaP = listaProductos[i];
+                producto = buscarProducto(listaP, productoId);
+                if(producto.codProducto){
+                    break;
+                }
+             }
+            console.log(producto);
             if (cant > 0) {
                 setTimeout(() => {
                     //Guardar en el carrito
                     setLoading(false);
                 }, 1000); // Tiempo de espera
-                actualizarCarrito("1", nom, productoId, cant, precio);
-                alert(`Producto ${nom} agregado con ${cant} unidades`);
+                actualizarCarrito(window.sessionStorage.getItem("Serial") , producto.nomProducto, productoId, cant, producto.precioUnitario);
+                alert(`Producto ${producto.nomProducto} agregado con ${cant} unidades`);
                 prodForm.elements["cantidad"].value = "";
             } else {
                 setTimeout(() => {
@@ -277,7 +282,7 @@ function RealizarCompraCl() {
 
             <br />
             <div className="d-grid gap-2">
-                <Button variant="danger" onClick={() => eliminarCarrito("1")}>Borrar todo el carro</Button>
+                <Button variant="danger" onClick={() => eliminarCarrito()}>Borrar todo el carro</Button>
             </div>
             <br />
             <CategoryFilter handleFiltro={handleCatElegida}></CategoryFilter>
@@ -303,21 +308,15 @@ function RealizarCompraCl() {
                     <Row key={index}>
                         {grupoProd.map((producto, i) => (
                             <Col key={i}>
-                                <SimpleProductCard idProd={producto[1]} nomProducto={producto[0]} precio={producto[3]}>
+                                <SimpleProductCard idProd={producto.codProducto} nomProducto={producto.nomProducto} precio={producto.precioUnitario}>
                                     <Form id={`form-prod-${index}-${i}`}>
                                         <Form.Group className="mb-3">
                                             <Form.Label>Cantidad</Form.Label>
                                             <Form.Control size="sm" type="number" min="1" name="cantidad" />
                                         </Form.Group>
                                         <Form.Group className="mb-3">
-                                            <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="nombre" value={producto[0]} disabled readOnly />
-                                        </Form.Group>
-                                        <Form.Group className="mb-3">
-                                            <Form.Control size="sm" type="hidden" placeholder="1" min="1" name="precio" value={producto[3]} disabled readOnly />
-                                        </Form.Group>
-                                        <Form.Group className="mb-3">
                                             <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}
-                                                onClick={() => cargarProducto(`${producto[1]}`, `form-prod-${index}-${i}`)}>
+                                                onClick={() => cargarProducto(`${producto.codProducto}`, `form-prod-${index}-${i}`)}>
                                                 {isBtnLoading ? 'Cargando...' : 'Agregar al carrito'}
                                             </Button>
                                         </Form.Group>

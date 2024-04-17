@@ -1,22 +1,23 @@
 
-export const actualizarCarrito = async (id, nomProducto, idProducto, cantidad,precio, reemplazar) => {
+export const actualizarCarrito = async (idCliente, nomProducto, idProducto, cantidad,precio, reemplazar) => {
     try {
         //En lugar de sumar el valor de la cantidad se reemplaza deltodo
         if(!reemplazar){
             reemplazar = false;
         }
+
         //Obtener el carrito, si no existe se crea uno
-        const claveCarrito = "carrito_" + id;
+        const claveCarrito = "_carrito_";
 
         let carritoActual = JSON.parse(sessionStorage.getItem(claveCarrito));
         if (!carritoActual) {
-            carritoActual = { userId: id, productos: [] };
+            carritoActual = { idCliente: idCliente, productos: [] };
         }
 
         let cant;
 
         //Se busca el producto en el carrito
-        const indiceProducto = carritoActual.productos.findIndex(item => item.idProducto === idProducto);
+        const indiceProducto = carritoActual.productos.findIndex(item => item.codProducto === idProducto);
 
         // Se obtiene primero cual sería la cantidad total del producto si existe o no en el carrito
         if (indiceProducto !== -1) {
@@ -38,14 +39,14 @@ export const actualizarCarrito = async (id, nomProducto, idProducto, cantidad,pr
             }else{
                 //Reeemplazar por el valor dado inicialmente
                 carritoActual.productos[indiceProducto].cantidad = parseInt(cantidad);
-                if(cantidad===0){
+                if(parseInt(cantidad)===0){
                     carritoActual.productos.splice(indiceProducto,1);
                 }
             }
            
 
         } else {
-            carritoActual.productos.push({ idProducto: idProducto, nombreProducto: nomProducto, cantidad: parseInt(cantidad),precio:parseInt(precio) });
+            carritoActual.productos.push({ codProducto: idProducto, nomProducto: nomProducto, cantidad: parseInt(cantidad),precioUnitario:parseInt(precio) });
         }
 
         //Calcular el precio
@@ -68,20 +69,20 @@ export const calcularTotalCarrito= (listaProductos) =>{
 
     for (let i = 0; i < productos.length; i++) {
         const prod = productos[i];
-        total += prod.precio*prod.cantidad;
+        total += prod.precioUnitario*prod.cantidad;
     }
 
     return total;
 }
 
-export const obtenerCarrito = (id) => {
-    const claveCarrito = "carrito_" + id;
+export const obtenerCarrito = () => {
+    const claveCarrito = "_carrito_";
     const valor = sessionStorage.getItem(claveCarrito);
     return valor ? JSON.parse(valor) : null;
 };
 
-export const eliminarCarrito = (id) => {
-    const claveCarrito = "carrito_" + id;
+export const eliminarCarrito = () => {
+    const claveCarrito = "_carrito_";
     sessionStorage.removeItem(claveCarrito);
 };
 

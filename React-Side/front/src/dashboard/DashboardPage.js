@@ -40,7 +40,6 @@ function DashBoardPage() {
                             <Navbar.Brand>
                                 <img
                                     alt=""
-                                    
                                     width="40"
                                     height="40"
                                     className="d-inline-block align-top"
