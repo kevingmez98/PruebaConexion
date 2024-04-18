@@ -1,7 +1,7 @@
 
 //productoHelper contiene metodos de ayuda para manejar el mapeo
 
-import Producto from "../Producto"
+import Producto from "../Classes/Producto"
 
 //convierte datos traidos de Axios a clase de producto
 function convertirDatos(record) {

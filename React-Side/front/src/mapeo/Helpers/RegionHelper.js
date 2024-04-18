@@ -1,7 +1,7 @@
 
 //RegionHelper contiene metodos de ayuda para manejar el mapeo
 
-import Region from "../Region"
+import Region from "../Classes/Region"
 
 //convierte datos traidos de Axios a clase de region
 function convertirDatos(record) {

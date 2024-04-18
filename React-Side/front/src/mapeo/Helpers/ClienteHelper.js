@@ -1,7 +1,7 @@
 
 //ClienteHelper contiene metodos de ayuda para manejar el mapeo
 
-import Cliente from "../Cliente";
+import Cliente from "../Classes/Cliente";
 
 //convierte datos traidos de Axios a clase de region
 function convertirDatos(record) {

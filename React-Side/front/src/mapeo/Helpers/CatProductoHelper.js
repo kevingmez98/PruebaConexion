@@ -1,7 +1,7 @@
 
 //CatProductoHelper contiene metodos de ayuda para manejar el mapeo
 
-import CatProducto from "../CatProducto"
+import CatProducto from "../Classes/CatProducto"
 
 //convierte datos traidos de Axios a clase de catProducto
 function convertirDatos(record) {

@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import CatProducto from '../../../mapeo/CatProducto';
+import CatProducto from '../../../mapeo/Classes/CatProducto';
 
 /*
 El objeto tipo categoria para extraer sus componentes

@@ -6,8 +6,8 @@ import Button from 'react-bootstrap/Button';
 import { obtenerCarrito, actualizarCarrito } from "./CarritoSession";
 import SimpleProductCard from '../CardProduct/SimpleProductCard';
 import { convertirMuchosDatos as convertirProductos, buscarProducto } from '../../../mapeo/Helpers/ProductoHelper';
-import Pedido from '../../../mapeo/Pedido';
-import Item from '../../../mapeo/Item';
+import Pedido from '../../../mapeo/Classes/Pedido';
+import Item from '../../../mapeo/Classes/Item';
 import Axios from 'axios';
 import Alert from 'react-bootstrap/Alert';
 import { dividirArray } from '../../../public-component/Common-functions/ArrayFunct';
@@ -135,7 +135,7 @@ function CarritoComponent({isCliente}) {
                 alert("pago enviado como cliente. Serial "+sessionStorage.getItem("Serial")+" id/serial: "+carrito.idCliente);
             }else{
                 //Se hace pago como representante. Se envia la sesion del representante y el id del cliente
-                               /* Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido._items, "Serial": sessionStorage.getItem("Serial") })
+                    /* Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido._items, "Serial": sessionStorage.getItem("Serial") })
                     .then((response) => {
 
                         setMessage("Carrito enviado");
