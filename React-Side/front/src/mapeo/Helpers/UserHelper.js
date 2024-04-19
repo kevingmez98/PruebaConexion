@@ -18,7 +18,6 @@ function convertirDatos(record) {
 
 //Solo convierte los datos de nombre y correo
 function convertirDatosParcial(record){
-    console.log(record);
     let user = new Usuario();
     user.region = record[0];
     user.primerNombre = record[1];

@@ -30,7 +30,11 @@ function GestionarCarritoRep() {
                 <Alert variant="danger">{ErroMessage}</Alert>
             )}
 
-            <Alert variant="secondary">Gestionar carrito del cliente {carrito.idCliente}</Alert>
+            <Alert variant="secondary">Gestionar carrito del cliente                 
+                {carrito && (
+                    carrito.idCliente
+                )}
+            </Alert>
             <CarritoComponent isCliente={false}></CarritoComponent>
         </React.Fragment>
     )

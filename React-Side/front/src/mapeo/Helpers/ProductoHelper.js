@@ -3,17 +3,31 @@
 
 import Producto from "../Classes/Producto"
 
+// Define un mapeo de nombres de campo entre la base de datos y la aplicación
+const campoMap = {
+    k_cod_producto: 'codProducto',
+    n_nom_producto: 'nomProducto',
+    i_id_cat_producto: 'idCatProducto',
+    i_id_cat_pro_sup: 'idCatProSuo',
+    q_precio_unitario: 'precioUnitario',
+    q_cantidad_en_stock: 'cantidadStock',
+};
+
 //convierte datos traidos de Axios a clase de producto
 function convertirDatos(record) {
     let producto = new Producto();
     
-    producto.nomProducto = record[0];
-    
-    producto.codProducto = record[1];
-    producto.idCatProducto = record[2];
-    producto.idCatProSup = record[3];
-    producto.precioUnitario = record[4];
-    producto.cantidadStock = record[5];
+    // Itera sobre las claves del mapeo
+    for (let campoDb in campoMap) {
+        
+        /*Se verifica si record tiene una propiedad que coincida con el valor del map evaluado*/
+        if (record[campoDb] !== undefined) {
+
+            //Se recupera el valor del map que pertence al de la clase que se mapea
+            const campoApp = campoMap[campoDb];
+            producto[campoApp] = record[campoDb];
+        }
+    }
     return producto;
 }
 
@@ -29,8 +43,7 @@ function convertirMuchosDatos(records) {
 //Busca en una lista de productos un producto con un id en especifico
 function buscarProducto(lista,idProducto){
     let producto = new Producto();
-    console.log(lista);
-    console.log(idProducto);
+
     for (let i = 0; i < lista.length; i++) {
         let p = lista[i];
         if(p.codProducto== idProducto){

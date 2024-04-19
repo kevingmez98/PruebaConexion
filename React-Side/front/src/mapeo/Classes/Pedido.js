@@ -1,13 +1,13 @@
 export default class Pedido {
-    constructor(codigoPedido, documentoCliente, tipoDocumento, codigoRepresentante, codigoPago, estado, fechaPedido, calificacion) {
-        this._codigoPedido = codigoPedido;
-        this._documentoCliente = documentoCliente;
-        this._tipoDocumento = tipoDocumento;
-        this._codigoRepresentante = codigoRepresentante;
-        this._codigoPago = codigoPago;
-        this._estado = estado;
-        this._fechaPedido = fechaPedido;
-        this._calificacion = calificacion;
+    constructor() {
+        this._codigoPedido = "";
+        this._documentoCliente = "";
+        this._tipoDocumento = "";
+        this._codigoRepresentante = "";
+        this._codigoPago = "";
+        this._estado = "";
+        this._fechaPedido = "";
+        this._calificacion = "";
 
         this._items = [];
     }
@@ -52,6 +52,11 @@ export default class Pedido {
     }
 
     // Setters
+
+    set codigoPedido(codigo) {
+        this._codigoPedido = codigo;
+    }
+
 
     set documentoCliente(documentoCliente) {
         this._documentoCliente = documentoCliente;

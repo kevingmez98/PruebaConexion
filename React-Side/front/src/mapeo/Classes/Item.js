@@ -1,60 +1,77 @@
 export default class Item {
 
-    constructor(codigoProducto,cantidad ){
-        this._codigoProducto = codigoProducto;
-        this._cantidad = cantidad;
-        
+    constructor() {
+        this._codigoItem = "";
+        this._codigoPedido = "";
+        this._codRegion = "";
+        this._codProducto = "";
+        this._idCategoriaProducto = "";
+        this._cantidad = "";
+
+        //Este es un objeto tipo producto
+        this._producto = "";
     }
-  
-    // Getters
+
+    // Getter y setter para _codigoItem
     get codigoItem() {
-      return this._codigoItem;
+        return this._codigoItem;
     }
-  
+    set codigoItem(valor) {
+        this._codigoItem = valor;
+    }
+
+    // Getter y setter para _producto
+    get producto() {
+        return this._producto;
+    }
+    set producto(valor) {
+        this._producto = valor;
+    }
+    // Getter y setter para _codigoPedido
     get codigoPedido() {
-      return this._codigoPedido;
+        return this.codigoPedido;
     }
-  
-    get codigoRegion() {
-      return this._codigoRegion;
+    set codigoPedido(valor) {
+        this._codigoPedido = valor;
     }
-  
+    // Getter y setter para _codigoProducto
     get codigoProducto() {
-      return this._codigoProducto;
+        return this._codigoProducto;
     }
-  
+    set codigoProducto(valor) {
+        this._codigoProducto = valor;
+    }
+
+    // Getter y setter para _codRegion
+    get codRegion() {
+        return this._codRegion;
+    }
+    set codRegion(valor) {
+        this._codRegion = valor;
+    }
+
+    // Getter y setter para _codProducto
+    get codProducto() {
+        return this._codProducto;
+    }
+    set codProducto(valor) {
+        this._codProducto = valor;
+    }
+
+    // Getter y setter para _idCategoriaProducto
     get idCategoriaProducto() {
-      return this._idCategoriaProducto;
+        return this._idCategoriaProducto;
     }
-  
+    set idCategoriaProducto(valor) {
+        this._idCategoriaProducto = valor;
+    }
+
+    // Getter y setter para _cantidad
     get cantidad() {
-      return this._cantidad;
+        return this._cantidad;
     }
-  
-    // Setters
-    set codigoItem(codigoItem) {
-      this._codigoItem = codigoItem;
+    set cantidad(valor) {
+        this._cantidad = valor;
     }
-  
-    set codigoPedido(codigoPedido) {
-      this._codigoPedido = codigoPedido;
-    }
-  
-    set codigoRegion(codigoRegion) {
-      this._codigoRegion = codigoRegion;
-    }
-  
-    set codigoProducto(codigoProducto) {
-      this._codigoProducto = codigoProducto;
-    }
-  
-    set idCategoriaProducto(idCategoriaProducto) {
-      this._idCategoriaProducto = idCategoriaProducto;
-    }
-  
-    set cantidad(cantidad) {
-      this._cantidad = cantidad;
-    }
-  }
-  
-  
+}
+
