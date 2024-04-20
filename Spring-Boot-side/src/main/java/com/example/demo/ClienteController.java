@@ -107,4 +107,30 @@ public class ClienteController {
          return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
           
         }
+        @PostMapping(value="/Pedidos",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity getPedidos(@RequestBody SerialPOJO Serial){
+         
+         Pair<JSONObject,Conexion> respuesta=clienteservice.getpedidos(Serial.Serial);
+         if(respuesta.getValue0()!=null){
+            return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
+         }
+         JSONObject error = new JSONObject();
+         error.put("errors",respuesta.getValue1().message);
+
+         return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+          
+        }
+        @PostMapping(value="/itemspedido",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity getItemsPedido(@RequestBody SerialPOJO Serial){
+         
+         Pair<JSONObject,Conexion> respuesta=clienteservice.getItemspedidos(Serial);
+         if(respuesta.getValue0()!=null){
+            return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
+         }
+         JSONObject error = new JSONObject();
+         error.put("errors",respuesta.getValue1().message);
+
+         return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+          
+        }
 }

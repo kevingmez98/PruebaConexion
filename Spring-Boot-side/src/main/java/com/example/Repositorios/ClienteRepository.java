@@ -11,6 +11,7 @@ import java.time.ZoneId;
 
 import com.example.ConnectionPool.Conexion;
 import com.example.Utils.CLIENTEPOJO;
+import com.example.Utils.ITEM;
 import com.example.Utils.PEDIDOPOJO;
 
 public class ClienteRepository {
@@ -117,6 +118,47 @@ try {
 }
 return null;
 }
+public ResultSet ConsultarPedidos(Conexion solicitante){
+    try {
+        
+        String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from natame.cliente C where  C.n_username='"+solicitante.user+"'";
+        PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+        ResultSet rs=stmt.executeQuery();
+        rs.next();
+        //Se obtienen los datos necesarios para realizar el pedido
+        String documentocliente=rs.getString("K_DOC_CLIENTE");
+        String tipoDocCliente=rs.getString("I_TIPO_DOC");
+        rs.close();
+        stmt.close();
+        sql="SELECT pedido.K_COD_PEDIDO,pedido.K_COD_PAGO,pedido.I_ESTADO,pedido.F_PEDIDO,pedido.Q_CALIFICACION from natame.pedido pedido where pedido.K_DOC_CLIENTE=? AND pedido.I_TIPO_DOC=? ";
+        stmt=solicitante.getConexion().prepareStatement(sql);
+        stmt.setString(1,documentocliente);
+        stmt.setString(2,tipoDocCliente);
+        rs=stmt.executeQuery();
+        return rs;
+        
+        
+    } catch (Exception e) {
+        System.out.println("Fallo la recuperacion de los pedidos");
+        System.out.println(e.getMessage());
+        solicitante.message=e.getMessage();
+    }
+    return null;
+    }
+public ResultSet ConsultarItemspedido(Conexion solicitante,String codpedido){
+        try {
+            System.out.println(codpedido);
+            String sql= "SELECT item.k_cod_pedido,region.n_nom_region,producto.n_nom_producto,item.q_cantidad from natame.item item,natame.region region,natame.producto producto where item.k_cod_region=region.k_cod_region and item.k_cod_producto=producto.k_cod_producto and item.I_ID_CAT_PRODUCTO=producto.I_ID_CAT_PRODUCTO and item.k_cod_pedido=?";
+            PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+            stmt.setString(1,codpedido);
+            return stmt.executeQuery();
+        } catch (Exception e) {
+            System.out.println("Fallo la recuperacion de los pedidos");
+            System.out.println(e.getMessage());
+            solicitante.message=e.getMessage();
+        }
+        return null;
+        }
 public ResultSet getdatosbasicos(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
@@ -196,7 +238,8 @@ public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
 
     }
 
-public void crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
+public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
+    //falta comprobar la disponibilidad de los productos en el inventario
     //Se crea el pedido primero
     try{
         String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from natame.cliente C where  C.n_username='"+solicitante.user+"'";
@@ -212,11 +255,10 @@ public void crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
 		LocalDateTime startOfDay = now.atStartOfDay();
 		java.util.Date hola=java.util.Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
 		Date today = new Date(hola.getTime());
-        rs.close();
-        stmt.close();
+        
         
 		//Se procede a insertar el pedido
-         sql= "INSERT INTO NATAME.PEDIDO(K_COD_PEDIDO,K_DOC_CLIENTE,I_TIPO_DOC,I_ESTADO,F_PEDIDO) VALUES ('1',?,?,?,?)";
+         sql= "INSERT INTO NATAME.PEDIDO(K_COD_PEDIDO,K_DOC_CLIENTE,I_TIPO_DOC,I_ESTADO,F_PEDIDO) VALUES (NATAME.PEDIDO_SEQ.NEXTVAL,?,?,?,?)";
          stmt=solicitante.getConexion().prepareStatement(sql);
          stmt.setString(1, documentocliente);
          stmt.setString(2, tipoDocCliente);
@@ -228,20 +270,30 @@ public void crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
 
     }catch(Exception e){
         e.printStackTrace();
+        return e.getMessage();
     }
-    // Obtener el id del ultimo pedido realizado por el cliente
+    // Insertar Items
     try {
-        
-        
+        String sql="INSERT into natame.ITEM(item.k_cod_item, item.k_cod_pedido, item.k_cod_region, item.k_cod_producto, item.i_id_cat_producto,Q_cantidad) "+
+        "values(NATAME.ITEM_SEQ.NEXTVAL,NATAME.PEDIDO_SEQ.CURRVAL,?,?,?,?)";
+        PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
+        for(ITEM e :pedido.get_items()){
+            stmt.setString(1,e.get_region());
+            stmt.setString(2,e.get_codigoProducto());
+            stmt.setString(3,e.get_catProducto());
+            stmt.setDouble(4, e.get_cantidad());
+            stmt.executeUpdate();
+        }
         
         
     } catch (Exception e) {
         System.out.println("Fallo la creacion de los items");
         System.out.println(e.getMessage());
         solicitante.message=e.getMessage();
+        return e.getMessage();
     }
     
-    
+    return null;
     
     }
 }

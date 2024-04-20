@@ -52,7 +52,7 @@ public Conexion getConexionbyserial(String serial){
 }
 public ArrayList<ArrayList<String>> getRegiones() {
     if(regiones.isEmpty()){
-        Conexion natame= pool.getPool().createConnection("natame","NATAME");
+        Conexion natame= pool.getPool().createConnection("natame","natame");
        ResultSet rs= natame.ConsultarRegiones(natame);
        int i=0;
        ArrayList<String> nombreRegiones=new ArrayList<>();

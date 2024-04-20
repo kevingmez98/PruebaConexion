@@ -6,11 +6,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ITEM {
 private String _codigoProducto;
 private String _catProducto;
+private String _region;
 private int _cantidad;
 @JsonCreator
-public ITEM(String _codigoProducto, int _cantidad) {
+public ITEM(String _codigoProducto, int _cantidad,String _catProducto,String _region) {
     this._codigoProducto = _codigoProducto;
     this._cantidad = _cantidad;
+}
+public String get_catProducto() {
+    return _catProducto;
+}
+public String get_region() {
+    return _region;
+}
+public void set_region(String _region) {
+    this._region = _region;
+}
+public void set_catProducto(String _catProducto) {
+    this._catProducto = _catProducto;
 }
 
 public String get_codigoProducto() {

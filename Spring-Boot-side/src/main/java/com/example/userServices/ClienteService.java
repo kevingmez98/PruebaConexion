@@ -13,6 +13,7 @@ import com.example.Repositorios.ClienteRepository;
 import com.example.Utils.CLIENTEPOJO;
 import com.example.Utils.JsonManager;
 import com.example.Utils.PEDIDOPOJO;
+import com.example.Utils.SerialPOJO;
 
 public class ClienteService {
     
@@ -48,6 +49,28 @@ public class ClienteService {
         return new Pair<JSONObject,Conexion>(resultado,solicitante);
     }catch(Exception e){
         System.out.println("Error en cliente service - Productos por region");
+    }
+        return new Pair<JSONObject,Conexion>(null,solicitante);
+    }
+    public Pair<JSONObject,Conexion> getpedidos(String serial){
+        Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
+         JSONObject resultado =new JSONObject();
+        try{ 
+             resultado=JsonManager.convert(ClienteRepository.getRepositorio().ConsultarPedidos(solicitante),solicitante);
+        return new Pair<JSONObject,Conexion>(resultado,solicitante);
+    }catch(Exception e){
+        System.out.println("Error en cliente service - Rep asignado");
+    }
+        return new Pair<JSONObject,Conexion>(null,solicitante);
+    }
+    public Pair<JSONObject,Conexion> getItemspedidos(SerialPOJO serial){
+        Conexion solicitante=Pool.getPool().getConexionbyserial(serial.Serial);
+         JSONObject resultado =new JSONObject();
+        try{ 
+             resultado=JsonManager.convert(ClienteRepository.getRepositorio().ConsultarItemspedido(solicitante,serial.Utilitary),solicitante);
+        return new Pair<JSONObject,Conexion>(resultado,solicitante);
+    }catch(Exception e){
+        System.out.println("Error en cliente service - Rep asignado");
     }
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
