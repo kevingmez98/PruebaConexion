@@ -3,19 +3,34 @@
 
 import Cliente from "../Classes/Cliente";
 
+// Define un mapeo de nombres de campo entre la base de datos y la aplicación
+const campoMap = {
+    n_username: 'username',
+    k_doc_cliente: 'docCliente',
+    i_tipo_doc: 'tipoDoc',
+    k_cod_ciudad: 'codCiudad',
+    n_primer_nombre: 'primerNombre',
+    n_segundo_nombre: 'segundoNombre',
+    n_primer_apellido: 'primerApellido',
+    n_segundo_apellido: 'segundoApellido',
+    o_email: 'email',
+    q_num_telefono: 'numTelefono',
+    o_direccion: 'direccion',
+};
+
 //convierte datos traidos de Axios a clase de region
 function convertirDatos(record) {
     let cliente = new Cliente();
-    cliente.docCliente = record[0];
-    cliente.tipoDoc = record[1];
-    cliente.primerNombre = record[2];
-    cliente.segundoNombre = record[3];
-    cliente.primerApellido = record[4];
-    cliente.segundoApellido = record[5];
-    
-    cliente.email = record[6];
-    cliente.numTelefono = record[7];
-    cliente.direccion = record[8];
+    for (let campoDb in campoMap) {
+
+        /*Se verifica si record tiene una propiedad que coincida con el valor del map evaluado*/
+        if (record[campoDb] !== undefined) {
+
+            //Se recupera el valor del map que pertence al de la clase que se mapea
+            const campoApp = campoMap[campoDb];
+            cliente[campoApp] = record[campoDb];
+        }
+    }
     
     return cliente;
 }

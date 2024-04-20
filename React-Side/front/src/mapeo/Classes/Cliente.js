@@ -3,7 +3,7 @@ export default class Cliente {
         this._username = "";
         this._docCliente = "";
         this._tipoDoc = "";
-        
+        this._codCiudad = "";
         this._primerNombre = "";
         this._segundoNombre = "";
         this._primerApellido = "";
@@ -21,6 +21,14 @@ export default class Cliente {
     set username(value) {
         this._username = value;
     }
+        // Getter y setter para _codCiudad
+        get codCiudad() {
+            return this._u;
+        }
+        set codCiudad(value) {
+            this._codCiudad = value;
+        }
+    
 
     // Getter y setter para _docCliente
     get docCliente() {

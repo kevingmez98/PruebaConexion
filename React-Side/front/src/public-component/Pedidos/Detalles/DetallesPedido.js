@@ -157,15 +157,11 @@ function DetallesPedido({ handlePedido, idPedido }) {
 
 
         } catch (error) {
-            // Manejamos cualquier error que pueda ocurrir
             console.error('Error al obtener los datos:', error);
         }
-    }, [idPedido]); // Asegúrate de incluir idPedido como una dependencia
+    }, [idPedido]); 
 
     
-
-
-
     return (
         <React.Fragment>
             <Alert variant="light">Ver detalles del pedido
