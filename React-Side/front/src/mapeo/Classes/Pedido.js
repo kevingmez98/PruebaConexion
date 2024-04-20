@@ -17,6 +17,11 @@ export default class Pedido {
         this._items.push(item);
     }
 
+    //metodo para obtener items
+    get items(){
+        return this._items;
+    }
+
 
     // Getters
     get codigoPedido() {

@@ -107,7 +107,7 @@ function RealizarCompraCl() {
             //Records o resultados
             let { records, fields } = dataJson;
             //Se convierten los records en productos
-            let productos = convertirProductos(records);
+            let productos = convertirProductos(records,fields);
 
             //Se divide el array de productos(records) en grupos de 3
             let listaDividida = dividirArray(productos, 3);

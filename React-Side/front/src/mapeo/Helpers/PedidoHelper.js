@@ -15,21 +15,35 @@ const campoMap = {
     calificacion: 'calificacion'
 };
 
-//convierte datos traidos de Axios a clase de producto
-function convertirDatos(record) {
+//convierte datos traidos de Axios a clase de pedido
+function convertirDatos(record,fields) {
     let pedido = new Pedido();
  
+   // Verifica si se proporciona una lista de campos
+   if (Array.isArray(fields)) {
+    // Itera sobre los campos y asigna los valores correspondientes
+    fields.forEach((campoDb, index) => {
+        // Verifica si el índice está dentro del rango de la lista de campos
+        if (index < record.length) {
+            // Verifica si el campo mapeado está en el campo de fields
+            if (campoDb.name.toLowerCase() in campoMap) {
+                //Se asigna el campo corresponiente en records
+                const campoApp = campoMap[campoDb.name.toLowerCase()];
+                pedido[campoApp] = record[index];
+            }
+        }
+    });
+} else {
     // Itera sobre las claves del mapeo
     for (let campoDb in campoMap) {
-        
-        /*Se verifica si record tiene una propiedad que coincida con el valor del map evaluado*/
+        // Verifica si el campo mapeado está en el registro
         if (record[campoDb] !== undefined) {
-
-            //Se recupera el valor del map que pertence al de la clase que se mapea
             const campoApp = campoMap[campoDb];
             pedido[campoApp] = record[campoDb];
         }
     }
+}
+
     return pedido;
 }
 

@@ -109,19 +109,19 @@ function CarritoComponent({isCliente}) {
         let pedido = new Pedido();
 
         for (let i = 0; i < listaProd.length; i++) {
-            let item = new Item(listaProd[i].codProducto, listaProd[i].cantidad);
+            let item = new Item();
+            item.codProducto = listaProd[i].codProducto;
+            item.cantidad = listaProd[i].cantidad;
             pedido.agregarItem(item);
         }
 
-        console.log(pedido);
         var peticion = () => {
             setMessage("");
             if (isCliente) {
                 pedido.documentoCliente=carrito.idCliente;
-                console.log(pedido);
        
                 //Se hace pago como cliente se envia solamente el serial
-               Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido._items, "Serial": sessionStorage.getItem("Serial") })
+               Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido.items, "Serial": sessionStorage.getItem("Serial") })
                     .then((response) => {
 
                         setMessage("Carrito enviado");
