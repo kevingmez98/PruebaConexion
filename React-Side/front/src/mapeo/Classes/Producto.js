@@ -8,7 +8,8 @@ export default class Producto {
         this._idCatProSup = "";
         this._cantidadStock = "";
     }
-    // Getter y setter para _cod_producto
+
+    // Getter y setter para _codProducto
     get codProducto() {
         return this._codProducto;
     }
@@ -16,7 +17,7 @@ export default class Producto {
         this._codProducto = value;
     }
 
-    // Getter y setter para _id_cat_producto
+    // Getter y setter para _idCatProducto
     get idCatProducto() {
         return this._idCatProducto;
     }
@@ -24,16 +25,7 @@ export default class Producto {
         this._idCatProducto = value;
     }
 
-    // Getter y setter para _id_cat_producto_sup
-    get idCatProSup() {
-        return this._idCatProSup;
-    }
-    set idCatProSup(value) {
-        this._idCatProSup = value;
-    }
-
-
-    // Getter y setter para _nom_producto
+    // Getter y setter para _nomProducto
     get nomProducto() {
         return this._nomProducto;
     }
@@ -41,17 +33,23 @@ export default class Producto {
         this._nomProducto = value;
     }
 
-    //Getter y setter para precio
+    // Getter y setter para _precioUnitario
     get precioUnitario() {
         return this._precioUnitario;
     }
-
-    set precioUnitario(precio) {
-        this._precioUnitario = precio;
+    set precioUnitario(value) {
+        this._precioUnitario = value;
     }
 
-    
-    // Getter y setter para cantidad stock
+    // Getter y setter para _idCatProSup
+    get idCatProSup() {
+        return this._idCatProSup;
+    }
+    set idCatProSup(value) {
+        this._idCatProSup = value;
+    }
+
+    // Getter y setter para _cantidadStock
     get cantidadStock() {
         return this._cantidadStock;
     }

@@ -242,9 +242,10 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     //falta comprobar la disponibilidad de los productos en el inventario
     //Se crea el pedido primero
     try{
-        String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from natame.cliente C where  C.n_username='"+solicitante.user+"'";
+        String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from natame.cliente C where UPPER(C.n_username)=?";
         PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
-        ResultSet rs=stmt.executeQuery();
+        stmt.setString(1, solicitante.user.toUpperCase()); // Establecer el parámetro de manera segura
+        ResultSet rs=stmt.executeQuery();   
         rs.next();
         //Se obtienen los datos necesarios para realizar el pedido
         String documentocliente=rs.getString("K_DOC_CLIENTE");
@@ -266,7 +267,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
          stmt.setDate(4, today);
          stmt.executeUpdate();
          
-         solicitante.getConexion().commit();
+         //solicitante.getConexion().commit();
 
     }catch(Exception e){
         e.printStackTrace();
@@ -285,14 +286,14 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
             stmt.executeUpdate();
         }
         
-        
+         solicitante.getConexion().commit();
     } catch (Exception e) {
         System.out.println("Fallo la creacion de los items");
         System.out.println(e.getMessage());
         solicitante.message=e.getMessage();
         return e.getMessage();
     }
-    
+   
     return null;
     
     }

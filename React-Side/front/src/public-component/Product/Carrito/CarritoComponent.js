@@ -102,16 +102,24 @@ function CarritoComponent({isCliente}) {
     };
 
 
-    function pagar() {
+    function crearPedido() {
         let carrito = obtenerCarrito();
         let listaProd = carrito.productos;
-
         let pedido = new Pedido();
-
+        console.log(listaProd[0].codProducto);
         for (let i = 0; i < listaProd.length; i++) {
             let item = new Item();
-            item.codProducto = listaProd[i].codProducto;
+
+            /*Debido a la conversion de productos a JSON se usa el nombre privado de las variables, 
+            no se puede acceder al getter y setter al no ser objetos tipo producto. 
+            Convertirlos en este punto no aporta nada.*/
+
+   
+            item.codProducto = listaProd[i].producto._codProducto;
             item.cantidad = listaProd[i].cantidad;
+            item.codRegion = carrito.region;
+            item.idCategoriaProducto = listaProd[i].producto._idCatProducto;
+            item.producto = listaProd[i].producto;
             pedido.agregarItem(item);
         }
 
@@ -121,7 +129,7 @@ function CarritoComponent({isCliente}) {
                 pedido.documentoCliente=carrito.idCliente;
        
                 //Se hace pago como cliente se envia solamente el serial
-               Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido.items, "Serial": sessionStorage.getItem("Serial") })
+                Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido.items, "Serial": sessionStorage.getItem("Serial") })
                     .then((response) => {
 
                         setMessage("Carrito enviado");
@@ -131,7 +139,7 @@ function CarritoComponent({isCliente}) {
                     ).catch((error) => {
                         setMessage(error.response.data.errors)
                     })
-                    
+
                 alert("pago enviado como cliente. Serial "+sessionStorage.getItem("Serial")+" id/serial: "+carrito.idCliente);
             }else{
                 //Se hace pago como representante. Se envia la sesion del representante y el id del cliente
@@ -159,7 +167,7 @@ function CarritoComponent({isCliente}) {
             {/*Mensaje de error */}
             <p style={{ color: 'red' }}>{ErroMessage}</p>
             <p>Precio total: {carrito && carrito.total ? carrito.total : 0}</p>
-            <Button onClick={pagar}>Pagar</Button>
+            <Button onClick={crearPedido}>Realizar pedido</Button>
             {/*Recorrer la lista de productos agregados al carrito */}
             {listaProductos.map((grupoProd, index) => (
                 <Row key={index}>

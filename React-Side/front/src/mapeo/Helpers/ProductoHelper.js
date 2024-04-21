@@ -8,7 +8,7 @@ const campoMap = {
     k_cod_producto: 'codProducto',
     n_nom_producto: 'nomProducto',
     i_id_cat_producto: 'idCatProducto',
-    i_id_cat_pro_sup: 'idCatProSuo',
+    i_id_cat_pro_sup: 'idCatProSup',
     q_precio_unitario: 'precioUnitario',
     q_cantidad_en_stock: 'cantidadStock',
 };

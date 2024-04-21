@@ -210,10 +210,8 @@ function RealizarCompraCl() {
     //Funcion para cargar un producto al carrito
     const cargarProducto = (productoId, formId) => {
         try {
-            console.log(productoId);
             //Congelar botones
             setLoading(true);
-            console.log(productoId)
             //Obtener cantidad del formulario
             const prodForm = document.getElementById(formId);
             const cant = prodForm.elements["cantidad"].value;
@@ -226,13 +224,12 @@ function RealizarCompraCl() {
                     break;
                 }
              }
-            console.log(producto);
             if (cant > 0) {
                 setTimeout(() => {
                     //Guardar en el carrito
                     setLoading(false);
                 }, 1000); // Tiempo de espera
-                actualizarCarrito(window.sessionStorage.getItem("Serial") , producto.nomProducto, productoId, cant, producto.precioUnitario);
+                actualizarCarrito(window.sessionStorage.getItem("Serial") , producto, regionActiva, cant, producto.precioUnitario);
                 alert(`Producto ${producto.nomProducto} agregado con ${cant} unidades`);
                 prodForm.elements["cantidad"].value = "";
             } else {

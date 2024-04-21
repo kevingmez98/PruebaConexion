@@ -1,5 +1,5 @@
 
-export const actualizarCarrito = async (idCliente, nomProducto, idProducto, cantidad,precio, reemplazar) => {
+export const actualizarCarrito = async (idCliente,producto,region, cantidad,precio, reemplazar) => {
     try {
         //En lugar de sumar el valor de la cantidad se reemplaza deltodo
         if(!reemplazar){
@@ -17,7 +17,7 @@ export const actualizarCarrito = async (idCliente, nomProducto, idProducto, cant
         let cant;
 
         //Se busca el producto en el carrito
-        const indiceProducto = carritoActual.productos.findIndex(item => item.codProducto === idProducto);
+        const indiceProducto = carritoActual.productos.findIndex(item => item.producto.codProducto === producto.codProducto);
 
         // Se obtiene primero cual sería la cantidad total del producto si existe o no en el carrito
         if (indiceProducto !== -1) {
@@ -28,7 +28,7 @@ export const actualizarCarrito = async (idCliente, nomProducto, idProducto, cant
         }
 
         //Se valida que el producto esté en inventario
-        await validarProducto(idProducto, cant);
+        await validarProducto(producto.codProducto, cant);
 
         // Si el producto ya está en el carrito, aumentar la cantidad
         if (indiceProducto !== -1) {
@@ -46,11 +46,14 @@ export const actualizarCarrito = async (idCliente, nomProducto, idProducto, cant
            
 
         } else {
-            carritoActual.productos.push({ codProducto: idProducto, nomProducto: nomProducto, cantidad: parseInt(cantidad),precioUnitario:parseInt(precio) });
+            carritoActual.productos.push({ producto:producto, cantidad: parseInt(cantidad),precioUnitario:parseInt(precio)});
         }
 
         //Calcular el precio
         carritoActual.total= calcularTotalCarrito(carritoActual.productos);
+
+        //Darle la region
+        carritoActual.region = region;
         //Se actualiza el carrito en sesion
         sessionStorage.setItem(claveCarrito, JSON.stringify(carritoActual));  
         return true;   
@@ -64,8 +67,6 @@ export const calcularTotalCarrito= (listaProductos) =>{
     let productos = listaProductos;
 
     let total= 0;
-
-    console.log(productos.length);
 
     for (let i = 0; i < productos.length; i++) {
         const prod = productos[i];
