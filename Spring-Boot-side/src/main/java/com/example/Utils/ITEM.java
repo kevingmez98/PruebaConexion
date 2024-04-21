@@ -9,9 +9,11 @@ private String _catProducto;
 private String _region;
 private int _cantidad;
 @JsonCreator
-public ITEM(String _codigoProducto, int _cantidad,String _catProducto,String _region) {
-    this._codigoProducto = _codigoProducto;
+public ITEM(String _codProducto, int _cantidad,String _idCategoriaProducto,String _codRegion) {
+    this._codigoProducto = _codProducto;
     this._cantidad = _cantidad;
+    this._region=_codRegion;
+    this._catProducto=_idCategoriaProducto;
 }
 public String get_catProducto() {
     return _catProducto;
