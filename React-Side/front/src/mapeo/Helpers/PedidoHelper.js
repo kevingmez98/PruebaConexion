@@ -48,10 +48,10 @@ function convertirDatos(record,fields) {
 }
 
 //Convierte muchos records de axios a una lista de pedidos
-function convertirMuchosDatos(records) {
+function convertirMuchosDatos(records,fields) {
     let listaPedidos = [];
     records.map((rec, index) => (
-        listaPedidos.push(convertirDatos(rec))
+        listaPedidos.push(convertirDatos(rec,fields))
     ))
     return listaPedidos;
 }

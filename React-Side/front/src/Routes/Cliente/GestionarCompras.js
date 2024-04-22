@@ -7,9 +7,6 @@ import DetallesPedido from '../../public-component/Pedidos/Detalles/DetallesPedi
 import PagoComponent from '../../public-component/Pedidos/Pago/PagoComponent';
 function GestionarCompras() {
 
-    //Mensaje de error
-    const [ErroMessage, setMessage] = React.useState('');
-
     //pedido elegido para ver detalles
     const [pedidoElegido, setPedidoElegido] = useState('');
 

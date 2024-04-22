@@ -66,7 +66,7 @@ function PagoComponent({ idPedido }) {
             // Se consiguen los datos del cliente
             let cliente = convertirClientes(clienteTemp)[0];
             setCliente(cliente);
-            setPedidoSel = idPedido;
+            setPedidoSel(idPedido);
 
         } catch (error) {
             // Manejamos cualquier error que pueda ocurrir
@@ -96,7 +96,7 @@ function PagoComponent({ idPedido }) {
         <React.Fragment>
             <Alert variant="light">Realizar pago del pedido
                 {pedidoSel && (
-                    pedidoSel
+                   ' '+ pedidoSel
                 )}
             </Alert>
             <br/>

@@ -10,6 +10,7 @@ import SimpleProductCard from '../../../public-component/Product/CardProduct/Sim
 
 import { convertirMuchosDatos as convertirItems, asignarProductos } from '../../../mapeo/Helpers/ItemHelper';
 import { convertirMuchosDatos as convertirProductos } from '../../../mapeo/Helpers/ProductoHelper';
+import { convertirMuchosDatos as convertirRegiones } from '../../../mapeo/Helpers/RegionHelper';
 /*
 HandlePedido es un handler de un componente padre para pasarle cuando se elije un pedido para pagar
 
@@ -25,148 +26,86 @@ function DetallesPedido({ handlePedido, idPedido }) {
     //codigo del pedido seleccionado
     const [pedidoSel, setPedidoSel] = useState('');
 
+    //Mensaje de error
+    const [ErroMessage, setMessage] = useState('');
 
-    //Variable temporal con items
+    //Region de los items
+    const [region, setRegion] = useState('');
 
-    const itemsTemp = [
-        {
-            "k_cod_item": "102",
-            "n_nom_producto": "Papitas",
-            "q_cantidad": "4",
-            "k_cod_producto": "12",
-            "k_cod_pedido": idPedido,
-            "q_precio_unitario": "4400"
-
-        },
-        {
-            "k_cod_item": "1004",
-            "n_nom_producto": "gaseosa",
-            "q_cantidad": "4",
-            "k_cod_producto": "166",
-            "k_cod_pedido": idPedido,
-            "q_precio_unitario": "4400"
-        },
-        {
-            "k_cod_item": "102",
-            "n_nom_producto": "Papitas_2",
-            "k_cod_producto": "14",
-            "q_cantidad": "3",
-            "k_cod_pedido": idPedido,
-
-            "q_precio_unitario": "4400"
-
-        },
-        {
-            "k_cod_item": "1404",
-            "n_nom_producto": "Platanos",
-            "k_cod_producto": "15",
-            "q_cantidad": "14",
-            "k_cod_pedido": idPedido,
-
-            "q_precio_unitario": "4400"
-        },
-        {
-            "k_cod_item": "1023",
-            "n_nom_producto": "Jabon",
-            "q_cantidad": "1",
-            "k_cod_producto": "125",
-            "k_cod_pedido": idPedido,
-
-            "q_precio_unitario": "4400"
-
-        },
-        {
-            "k_cod_item": "1304",
-            "n_nom_producto": "Dinosaurio gigante",
-            "k_cod_producto": "1255",
-            "q_cantidad": "33",
-            "k_cod_pedido": idPedido,
-
-            "q_precio_unitario": "4400"
-        },
-        {
-            "k_cod_item": "6059",
-            "n_nom_producto": "Un cohete",
-            "q_cantidad": "55",
-            "k_cod_producto": "12493",
-            "k_cod_pedido": idPedido,
-            "q_precio_unitario": "4400"
-        }
-    ];
-
-
-
+   
     /* Funcion para pasar al padre el pedido que se pagaria*/
     const handlePagoPedido = () => {
-        handlePedido(idPedido,true);
+        handlePedido(idPedido, true);
     }
-
-    //Use effect inicial para cuando cargue la pagina
-    useEffect(() => {
-        try {
-            setPedidoSel(idPedido);
-            // Se consiguen los datos de los pedidos
-            //Aca se haria la peticion
-
-            //Acá se convierte la peticion a instancias de item
-            let petItems = convertirItems(itemsTemp);
-
-            /*
-            Se convierten los datos disponibles de productos. Acá podria haber una consulta con los productos de items
-            de no haberla se tendrian que incluir en la consulta de items
-            */
-            let petProductos = convertirProductos(itemsTemp);
-
-            //Se asignan los productos a los items por medio del helper
-            petItems = asignarProductos(petProductos, petItems);
-            setItems(petItems);
-
-            //Se organizan los items en grupos de 3 para mostrarse en la vista
-            setItemsOrg(dividirArray(petItems, 3));
-
-
-        } catch (error) {
-            // Manejamos cualquier error que pueda ocurrir
-            console.error('Error al obtener los datos:', error);
-        }
-
-    }, []);
 
     //UseEffect para verificar el cambio en idPedido
     useEffect(() => {
-        try {
-            setPedidoSel(idPedido);
-            // Se consiguen los datos de los pedidos
-            //Aca se haria la peticion
+        const traerItemsPedido = async () => {
+            try {
 
-            //Acá se convierte la peticion a instancias de item
-            let petItems = convertirItems(itemsTemp);
+                //Se asigna el id del pedido recibido
+                setPedidoSel(idPedido);
 
-            /*
-            Se convierten los datos disponibles de productos. Acá podria haber una consulta con los productos de items
-            de no haberla se tendrian que incluir en la consulta de items
-            */
-            let petProductos = convertirProductos(itemsTemp);
+                // Esperamos la resolución de la promesa usando await
+                const data = await peticionItems();
 
-            //Se asignan los productos a los items por medio del helper
-            petItems = asignarProductos(petProductos, petItems);
-            setItems(petItems);
+                // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
 
-            //Se organizan los items en grupos de 3 para mostrarse en la vista
-            setItemsOrg(dividirArray(petItems, 3));
+                //Acá se convierte la peticion a instancias de item
+                let petItems = convertirItems(data.records, data.fields);
+
+                /*
+                Se convierten los datos disponibles de productos.
+                */
+                let petProductos = convertirProductos(data.records, data.fields);
+
+                //Se asignan los productos a los items por medio del helper
+                petItems = asignarProductos(petProductos, petItems);
+                setItems(petItems);
+                
+                //se convierten los datos disponibles de region a un conjunto de region
+                let region = convertirRegiones(data.records, data.fields)[0];
+                setRegion(region);
+
+                //Se organizan los items en grupos de 3 para mostrarse en la vista
+                setItemsOrg(dividirArray(petItems, 3));
+
+            } catch (error) {
+                // Manejamos cualquier error que pueda ocurrir
+                console.error('Error al obtener los datos:', error);
+            }
+        };
+        traerItemsPedido();
+    }, [idPedido]);
+
+    //Peticion para traer la lista de items
+    var peticionItems = () => {
+        return new Promise((resolve, reject) => {
+            setMessage("");
+            Axios.post('http://localhost:8080/cliente/itemspedido', { "Serial": window.sessionStorage.getItem("Serial"), "Utilitary": idPedido })
+                .then((response) => {
+                    // Resolvemos la promesa con los datos recibidos
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    // Rechazamos la promesa con el mensaje de error
+                    setMessage(error.response.data.errors);
+
+                });
+        });
+    };
 
 
-        } catch (error) {
-            console.error('Error al obtener los datos:', error);
-        }
-    }, [idPedido]); 
 
-    
+
     return (
         <React.Fragment>
-            <Alert variant="light">Ver detalles del pedido
+            <Alert variant="light">Ver detalles del pedido 
                 {pedidoSel && (
-                    pedidoSel
+                    ' '+pedidoSel
+                )} de la región
+                  {region && (
+                    ' '+region.nomRegion
                 )}
             </Alert>
             <Button variant="outline-info" size="lg" onClick={() => handlePagoPedido()}>
