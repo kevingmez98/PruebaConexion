@@ -74,6 +74,17 @@ public class ClienteService {
     }
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
+    public Pair<JSONObject,Conexion> getdatos(SerialPOJO serial){
+        Conexion solicitante=Pool.getPool().getConexionbyserial(serial.Serial);
+         JSONObject resultado =new JSONObject();
+        try{ 
+             resultado=JsonManager.convert(ClienteRepository.getRepositorio().getdatosdepago(solicitante),solicitante);
+        return new Pair<JSONObject,Conexion>(resultado,solicitante);
+    }catch(Exception e){
+        System.out.println("Error en cliente service - Rep asignado");
+    }
+        return new Pair<JSONObject,Conexion>(null,solicitante);
+    }
 
     public ArrayList<ArrayList<String>> ObtenerRegiones(){
         ArrayList<ArrayList<String>> Regiones=Pool.getPool().getRegiones();

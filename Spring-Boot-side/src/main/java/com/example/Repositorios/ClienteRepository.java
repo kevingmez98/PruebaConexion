@@ -186,6 +186,22 @@ try {
 }
 return null;
 }
+public ResultSet getdatosdepago(Conexion solicitante){
+    System.out.println(solicitante.user);
+try {
+    String sql= "SELECT cliente.k_doc_cliente, cliente.i_tipo_doc,cliente.k_cod_ciudad,cliente.n_primer_nombre,cliente.n_segundo_nombre,cliente.n_primer_apellido,cliente.n_segundo_apellido,cliente.o_email,cliente.q_num_telefono,cliente.o_direccion from natame.cliente cliente where cliente.n_username=?";
+    PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+    stmt.setString(1,solicitante.user.toUpperCase());
+    ResultSet rs=stmt.executeQuery();
+    return rs;
+    
+} catch (Exception e) {
+    System.out.println("Fallo la recuperacion de los datos de pago del cliente");
+    System.out.println(e.getMessage());
+    solicitante.message=e.getMessage();
+}
+return null;
+}
 //Insert para crear el cliente nuevo
 public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
     
