@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import TablaPedidosCliente from "../../public-component/Pedidos/Tabla/TablaPedidosCliente";
 import DetallesPedido from '../../public-component/Pedidos/Detalles/DetallesPedido';
 import PagoComponent from '../../public-component/Pedidos/Pago/PagoComponent';
@@ -57,7 +59,13 @@ function GestionarCompras() {
                     <Button variant="outline-secondary" onClick={cambiarVista}>
                         {isPagarSelect ? 'Volver a mis pedidos' : 'VER PAGO'}
                     </Button>
-                    <PagoComponent codPedido={pedidoElegido} idPedido={pedidoElegido} />
+                    <Row>
+                        <Col></Col>
+                        <Col className='div-pago'>
+                            <PagoComponent codPedido={pedidoElegido} idPedido={pedidoElegido} />
+                        </Col>
+                        <Col></Col>
+                    </Row>
                 </React.Fragment>
             ) : null}
 

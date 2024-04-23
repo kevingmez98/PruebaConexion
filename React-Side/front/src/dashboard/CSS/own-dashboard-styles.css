@@ -48,3 +48,9 @@
 .category-wrapper{
     width: 100%;
 }
+
+.div-pago{
+    padding: 2%;
+    border-style: double;
+    background-color: #d1d1d1;
+}

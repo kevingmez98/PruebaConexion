@@ -36,8 +36,10 @@ function PagoComponent({ idPedido }) {
         o_email: 'Eso@gmail.com',
         q_num_telefono: '304348384',
         o_direccion: 'Cll 130'
-    }]
+    }];
 
+    //Mensaje de error
+    const [ErroMessage, setMessage] = React.useState('');
 
     //codigo del pedido seleccionado
     const [pedidoSel, setPedidoSel] = useState('');
@@ -48,30 +50,47 @@ function PagoComponent({ idPedido }) {
     //Metodo de pago seleccionado 
     const [metodoPago, setMetodo] = useState('');
 
+    //Direccion de un cliente, este campo es porque se puede editar para el pago
+    const [direccionCliente, setDireccion] = useState('');
+
     // Constante que cambia el valor del cliente activo
     const handleMetodoPago = () => {
         const valorInput = document.getElementById("metodoSel").value;
         setMetodo(valorInput);
-        alert('Pagando ' + pedidoSel);
     }
 
     //Constante que maneja el cambio del pedido
-    const handlePago = () =>{
-        alert("AAcá se paga!");
+    const handlePago = () => {
+        if (direccionCliente && metodoPago) {
+            // Busca el objeto en metodosPago que coincida con el valor seleccionado
+            const metodoSeleccionado = metodosPago.find(metodo => metodo.value === metodoPago);
+
+            alert("entregando a " + direccionCliente + " va a pagar con " + metodoSeleccionado.nombre);
+        } else {
+            alert("Verifique los campos");
+        }
+
     }
 
     //Use effect inicial para cuando cargue la pagina
     React.useEffect(() => {
-        try {
-            // Se consiguen los datos del cliente
-            let cliente = convertirClientes(clienteTemp)[0];
-            setCliente(cliente);
-            setPedidoSel(idPedido);
+        const traerDatos = async () => {
+            try {
+                //Se espera la promesa de peticion cliente
+                const dataCl = await peticionCliente();
+                // Se consiguen los datos del cliente
+                let cl = convertirClientes(dataCl.records, dataCl.fields)[0];
+                setCliente(cl);
+                setDireccion(cl.direccion);
+                setPedidoSel(idPedido);
 
-        } catch (error) {
-            // Manejamos cualquier error que pueda ocurrir
-            console.error('Error al obtener los datos:', error);
-        }
+            } catch (error) {
+                // Manejamos cualquier error que pueda ocurrir
+                console.error('Error al obtener los datos:', error);
+                setMessage(error);
+            }
+        };
+        traerDatos();
 
     }, []);
 
@@ -85,25 +104,43 @@ function PagoComponent({ idPedido }) {
         }
     }, [idPedido]);
 
+    //Handler de la dirección del cliente
+    const handleDireccion = (event) => {
+        setDireccion(event.target.value);
+    }
 
-    /*
-        Primero se elige el medio de pago
-        Luego se verifica la información del cliente
-        Luego se hace la confirmación de pago
-    */
+    //Peticion para conseguir datos del cliente
+    var peticionCliente = () => {
+        return new Promise((resolve, reject) => {
+            setMessage("");
+            Axios.post('http://localhost:8080/cliente/datos', { "Serial": window.sessionStorage.getItem("Serial") })
+                .then((response) => {
+                    // Resolvemos la promesa con los datos recibidos
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    // Rechazamos la promesa con el mensaje de error
+                    setMessage(error.response.data.errors);
+                });
+        });
+    }
 
     return (
         <React.Fragment>
             <Alert variant="light">Realizar pago del pedido
                 {pedidoSel && (
-                   ' '+ pedidoSel
+                    ' ' + pedidoSel
                 )}
             </Alert>
-            <br/>
+            {ErroMessage && (
+                <Alert variant="danger">{ErroMessage}</Alert>
+            )}
+            <br />
             {/*Formulario de seleccion de metodo de pago */}
             <Form>
                 <Form.Label>Metodo de pago:</Form.Label>
-                <Form.Select id='metodoSel'>
+                <Form.Select id='metodoSel' onChange={handleMetodoPago} required>
+                    <option>Seleccione</option>
                     {metodosPago && metodosPago.map((metodo, index) => (
                         <option key={index} value={metodo.value}>
                             {metodo.nombre}
@@ -111,68 +148,75 @@ function PagoComponent({ idPedido }) {
                     ))};
                 </Form.Select>
                 <br />
-                <div className="d-grid gap-2">
-                    <Button variant="primary" onClick={handleMetodoPago} size="lg">Seleccionar</Button>
-                </div>
             </Form>
-
+            <br />
+            <br />
 
             {/*Formulario con datos del cliente y metodo para confirmar pago*/}
             <Form>
-                <Row>
+                <Row className="mb-3">
                     <Col>
                         <Form.Group>
-                            <Form.Label>Tipo documento:</Form.Label>
-                            <Form.Label>{cliente.tipoDoc}</Form.Label>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Documento:</Form.Label>
-                            <Form.Label>{cliente.docCliente}</Form.Label>
+                            <Form.Label className='mb-0'>Tipo documento: </Form.Label>
+                            <span className="ms-2">{cliente.tipoDoc}</span>
                         </Form.Group>
                     </Col>
                 </Row>
-                <Row>
+                <Row className="mb-3">
                     <Col>
                         <Form.Group>
-                            <Form.Label>Nombre:</Form.Label>
-                            <Form.Label>
+                            <Form.Label className='mb-0'>Documento: </Form.Label>
+                            <span className="ms-2">  {cliente.docCliente}</span>
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Group>
+                            <Form.Label className='mb-0'>Nombre:</Form.Label>
+                            <span className="ms-2">
                                 {cliente.primerNombre} {cliente.segundoNombre} {cliente.primerApellido} {cliente.segundoApellido}
-                            </Form.Label>
+                            </span>
                         </Form.Group>
                     </Col>
                 </Row>
-                <Row>
+                <Row className="mb-3">
                     <Col>
                         <Form.Group>
-                            <Form.Label>Email: </Form.Label>
-                            <Form.Label>
+                            <Form.Label className='mb-0'>Email: </Form.Label>
+                            <span className="ms-2">
                                 {cliente.email}
-                            </Form.Label>
+                            </span>
                         </Form.Group>
                     </Col>
                 </Row>
-                <Row>
+                <Row className="mb-3">
                     <Col>
 
                         <Form.Group>
-                            <Form.Label>Numero de telefono </Form.Label>
-                            <Form.Label>
+                            <Form.Label className='mb-0'>Numero de telefono: </Form.Label>
+                            <span className="ms-2">
                                 {cliente.numTelefono}
-                            </Form.Label>
+                            </span>
                         </Form.Group>
                     </Col>
                 </Row>
-                <Row>
+                <Row className="mb-3">
                     <Col>
 
                         <Form.Group>
-                            <Form.Label>Dirección: </Form.Label>
-                            <Form.Label>
-                                {cliente.direccion}
-                            </Form.Label>
+                            <Form.Label className='mb-0'>Dirección de entrega: </Form.Label>
+                            <Form.Control
+                                id="dir-cliente"
+                                value={direccionCliente}
+                                onChange={handleDireccion}
+                                required>
+                            </Form.Control>
                         </Form.Group>
                     </Col>
                 </Row>
+                <br />
                 <div className="d-grid gap-2">
                     <Button variant="outline-success" onClick={handlePago} size="lg">Realizar pago</Button>
                 </div>

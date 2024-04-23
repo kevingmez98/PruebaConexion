@@ -12,6 +12,7 @@ import SimpleModal from '../../public-component/Modal/SimpleModal';
 import { convertirFormatoRegion } from '../../mapeo/Helpers/RegionHelper';
 import { convertirMuchosDatos as convertirProductos, buscarProducto } from '../../mapeo/Helpers/ProductoHelper';
 
+
 import { dividirArray } from '../../public-component/Common-functions/ArrayFunct';
 import CategoryFilter from '../../public-component/Product/CategoryComponent/CategoryFilter';
 
@@ -39,6 +40,9 @@ function RealizarCompraCl() {
 
     //Una lista que guardará la lista de productos si se filtran por nombre
     var [listaProdTemp, setListaProdTemp] = React.useState([]);
+
+    //Lista de inventarios
+    var [listaInventario, setListaInventario] = useState([]);
 
     //Variable que guarda el valor puesto en el filtro por nombre
     var [nomFiltro, setNomFiltro] = React.useState('');
@@ -224,7 +228,7 @@ function RealizarCompraCl() {
                     break;
                 }
              }
-            if (cant > 0) {
+            if (cant > 0 && cant<= producto.cantidadStock) {
                 setTimeout(() => {
                     //Guardar en el carrito
                     setLoading(false);
@@ -308,8 +312,8 @@ function RealizarCompraCl() {
                                 <SimpleProductCard idProd={producto.codProducto} nomProducto={producto.nomProducto} precio={producto.precioUnitario}>
                                     <Form id={`form-prod-${index}-${i}`}>
                                         <Form.Group className="mb-3">
-                                            <Form.Label>Cantidad</Form.Label>
-                                            <Form.Control size="sm" type="number" min="1" name="cantidad" />
+                                            <Form.Label>Cantidad max {producto.cantidadStock}</Form.Label>
+                                            <Form.Control size="sm" type="number" min="1" name="cantidad" max={parseInt(producto.cantidadStock)}/>
                                         </Form.Group>
                                         <Form.Group className="mb-3">
                                             <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}
