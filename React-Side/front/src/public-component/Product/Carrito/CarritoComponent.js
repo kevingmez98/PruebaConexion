@@ -120,7 +120,7 @@ function CarritoComponent({isCliente}) {
             item.codRegion = carrito.region;
             item.idCategoriaProducto = listaProd[i].producto._idCatProducto;
             item.producto = listaProd[i].producto;
-            pedido.agregarItem(item);
+            pedido.agregarItem(item);   
         }
 
         var peticion = () => {

@@ -121,8 +121,9 @@ return null;
 public ResultSet ConsultarPedidos(Conexion solicitante){
     try {
         
-        String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from natame.cliente C where  C.n_username='"+solicitante.user+"'";
+        String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from natame.cliente C where UPPER(C.n_username)=?";
         PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+        stmt.setString(1,solicitante.user.toUpperCase());
         ResultSet rs=stmt.executeQuery();
         rs.next();
         //Se obtienen los datos necesarios para realizar el pedido
@@ -148,7 +149,11 @@ public ResultSet ConsultarPedidos(Conexion solicitante){
 public ResultSet ConsultarItemspedido(Conexion solicitante,String codpedido){
         try {
             System.out.println(codpedido);
-            String sql= "SELECT item.k_cod_pedido,region.n_nom_region,producto.n_nom_producto,item.q_cantidad from natame.item item,natame.region region,natame.producto producto where item.k_cod_region=region.k_cod_region and item.k_cod_producto=producto.k_cod_producto and item.I_ID_CAT_PRODUCTO=producto.I_ID_CAT_PRODUCTO and item.k_cod_pedido=?";
+            String sql= "SELECT item.k_cod_pedido,region.n_nom_region,producto.n_nom_producto,item.q_cantidad "+
+            "from natame.item item,natame.region region,natame.producto producto "+
+            "where item.k_cod_region=region.k_cod_region and item.k_cod_producto=producto.k_cod_producto "+
+            "and item.I_ID_CAT_PRODUCTO=producto.I_ID_CAT_PRODUCTO and item.k_cod_pedido=?";
+            
             PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
             stmt.setString(1,codpedido);
             return stmt.executeQuery();

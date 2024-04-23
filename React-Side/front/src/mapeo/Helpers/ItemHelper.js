@@ -1,6 +1,7 @@
 //ItemHelper contiene metodos de ayuda para manejar el mapeo
 
 import Item from "../Classes/Item"
+import Producto from "../Classes/Producto";
 
 // Define un mapeo de nombres de campo entre la base de datos y la aplicación
 const campoMap = {
@@ -9,7 +10,7 @@ const campoMap = {
     k_cod_region: 'codRegion',
     k_cod_producto: 'codProducto',
     i_id_cat_producto: 'idCategoriaProducto',
-    q_cantidad: 'cantidad'
+    q_cantidad: 'cantidad',
 };
 
 //convierte datos traidos de Axios a clase de producto
@@ -44,10 +45,10 @@ function convertirDatos(record,fields) {
 }
 
 //Convierte muchos records de axios a una lista de pedidos
-function convertirMuchosDatos(records) {
+function convertirMuchosDatos(records,fields) {
     let listaItems = [];
     records.map((rec, index) => (
-        listaItems.push(convertirDatos(rec))
+        listaItems.push(convertirDatos(rec, fields))
     ))
     return listaItems;
 }
@@ -57,17 +58,10 @@ function asignarProductos(listaProd, listaItems) {
     // Itera sobre los items
     for (let i = 0; i < listaItems.length; i++) {
         const item = listaItems[i];
-
-        // Encuentra el producto correspondiente al código del producto del item
-        const productoAsociado = listaProd.find(producto => producto.codProducto === item.codProducto);
-       
-        // Si se encuentra el producto correspondiente se asigna
-        if (productoAsociado) {
-            item.producto = productoAsociado;
-        }
+        //Se asigna el producto simplemente por orden de lista ya que se supone la misma es de la de productos
+        item.producto = listaProd[i];
     }
     return listaItems;
 }
-
 
 export { convertirDatos, convertirMuchosDatos, asignarProductos }
