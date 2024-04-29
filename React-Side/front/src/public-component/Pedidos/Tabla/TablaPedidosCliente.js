@@ -1,6 +1,6 @@
 //TablaPedidosCliente muestra los pedidos de un cliente
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { convertirMuchosDatos } from "../../../mapeo/Helpers/PedidoHelper";
 
@@ -30,8 +30,8 @@ function TablaPedidosCliente({ handlePedido }) {
     ];
 
     /* Funcion para pasar al padre el pedido que se escoje */
-    const handlePedidoElegido = (idPedido, isPago) => {
-        handlePedido(idPedido, isPago);
+    const handlePedidoElegido = (idPedido, isPago, estado, calificacion) => {
+        handlePedido(idPedido, isPago, estado, calificacion);
     }
 
     //Use effect inicial para cuando cargue la pagina
@@ -90,10 +90,10 @@ function TablaPedidosCliente({ handlePedido }) {
                             <TableCell>{pedido.codigoPedido}</TableCell>
                             <TableCell>{pedido.estado}</TableCell>
                             <TableCell>
-                                <Button variant="outline-light" onClick={() => handlePedidoElegido(pedido.codigoPedido, false)}>Ver detalles</Button>
+                                <Button variant="outline-light" onClick={() => handlePedidoElegido(pedido.codigoPedido, false, pedido.estado, pedido.calificacion )}>Ver detalles</Button>
                             </TableCell>
                             <TableCell>
-                                <Button variant="outline-success" onClick={() => handlePedidoElegido(pedido.codigoPedido, true)}>Pagar</Button>
+                                <Button variant="outline-success" onClick={() => handlePedidoElegido(pedido.codigoPedido, true, pedido.estado)}>Pagar</Button>
                             </TableCell>
                         </tr>
                     ))}

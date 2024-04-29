@@ -66,6 +66,8 @@ function PagoComponent({ idPedido }) {
             const metodoSeleccionado = metodosPago.find(metodo => metodo.value === metodoPago);
 
             alert("entregando a " + direccionCliente + " va a pagar con " + metodoSeleccionado.nombre);
+            window.location.reload();
+
         } else {
             alert("Verifique los campos");
         }

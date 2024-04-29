@@ -18,6 +18,12 @@ function GestionarCompras() {
     //boolean para mostrar el pago
     const [isPagarSelect, setPagarSelect] = useState(false);
 
+    //estado del pedido que se selecciona
+    const [estadoPedido, setEstadoPedido] = useState('');
+
+    //Calificación del pedido que se selecciona
+    const [calificacionPed, setCalificacion] = useState('');
+
     // Función para volver a la vissta de tabla
     const cambiarVista = () => {
         setPedidoSelect(false);
@@ -26,15 +32,18 @@ function GestionarCompras() {
 
 
     //Constante que cambia el valor del id del pedido elegido
-    const handlePedidoElegido = async (idPedido, isPagar) => {
+    const handlePedidoElegido = async (idPedido, isPagar, estado, calificacion) => {
         if (isPagar) {
-            setPedidoElegido(idPedido);
             setPedidoSelect(false);
             setPagarSelect(true);
         } else {
-            setPedidoElegido(idPedido);
             setPedidoSelect(true);
             setPagarSelect(false);
+        }
+        setPedidoElegido(idPedido);
+        setEstadoPedido(estado);
+        if(calificacion){
+            setCalificacion(calificacion);
         }
     }
 
@@ -51,7 +60,7 @@ function GestionarCompras() {
                     <Button variant="outline-secondary" onClick={cambiarVista}>
                         {isPedidoSelect ? 'Volver a mis pedidos' : 'Ver detalle'}
                     </Button>
-                    <DetallesPedido handlePedido={handlePedidoElegido} idPedido={pedidoElegido}></DetallesPedido>
+                    <DetallesPedido handlePedido={handlePedidoElegido} idPedido={pedidoElegido} estadoPedido={estadoPedido} calificacion={calificacionPed}></DetallesPedido>
                 </React.Fragment>
             ) : isPagarSelect ? (
                 <React.Fragment>

@@ -11,11 +11,12 @@ import SimpleProductCard from '../../../public-component/Product/CardProduct/Sim
 import { convertirMuchosDatos as convertirItems, asignarProductos } from '../../../mapeo/Helpers/ItemHelper';
 import { convertirMuchosDatos as convertirProductos } from '../../../mapeo/Helpers/ProductoHelper';
 import { convertirMuchosDatos as convertirRegiones } from '../../../mapeo/Helpers/RegionHelper';
+import CalificacionComponent from '../Calificacion/CalificacionComponent';
 /*
 HandlePedido es un handler de un componente padre para pasarle cuando se elije un pedido para pagar
 
 */
-function DetallesPedido({ handlePedido, idPedido }) {
+function DetallesPedido({ handlePedido, idPedido, estadoPedido, calificacion }) {
 
     //Items del pedido
     const [items, setItems] = useState([]);
@@ -26,13 +27,21 @@ function DetallesPedido({ handlePedido, idPedido }) {
     //codigo del pedido seleccionado
     const [pedidoSel, setPedidoSel] = useState('');
 
+    //Estado pedido
+    //Estado en el que se encuentra el pedido: Pendiente de pago ('P'), finalizada ('F') o sin calificar ('S')
+
+    const [estadoSel, setEstadoSel] = useState('');
+
+    //Estado pedido
+    const [calificacionPedido, setCalificacion] = useState('');
+
     //Mensaje de error
     const [ErroMessage, setMessage] = useState('');
 
     //Region de los items
     const [region, setRegion] = useState('');
 
-   
+
     /* Funcion para pasar al padre el pedido que se pagaria*/
     const handlePagoPedido = () => {
         handlePedido(idPedido, true);
@@ -45,6 +54,12 @@ function DetallesPedido({ handlePedido, idPedido }) {
 
                 //Se asigna el id del pedido recibido
                 setPedidoSel(idPedido);
+
+                //Se asigna el estado del pedido
+                setEstadoSel(estadoPedido);
+
+                //Se asigna la calificacion del pedido
+                setCalificacion(calificacion);
 
                 // Esperamos la resolución de la promesa usando await
                 const data = await peticionItems();
@@ -62,7 +77,7 @@ function DetallesPedido({ handlePedido, idPedido }) {
                 //Se asignan los productos a los items por medio del helper
                 petItems = asignarProductos(petProductos, petItems);
                 setItems(petItems);
-                
+
                 //se convierten los datos disponibles de region a un conjunto de region
                 let region = convertirRegiones(data.records, data.fields)[0];
                 setRegion(region);
@@ -100,21 +115,52 @@ function DetallesPedido({ handlePedido, idPedido }) {
 
     return (
         <React.Fragment>
-            <Alert variant="light">Ver detalles del pedido 
+            <Alert variant="light">Ver detalles del pedido
                 {pedidoSel && (
-                    ' '+pedidoSel
-                )} de la región
-                  {region && (
-                    ' '+region.nomRegion
+                    ' ' + pedidoSel
+                )} de la
+                {region && (
+                    ' ' + region.nomRegion
                 )}
             </Alert>
-            <Button variant="outline-info" size="lg" onClick={() => handlePagoPedido()}>
-                Pagar pedido
-            </Button>
+            {ErroMessage && (
+                <Alert variant="danger">{ErroMessage}</Alert>
+            )}
+            <Row>
+                <Col></Col>
+                <Col>
+
+                    {estadoPedido == 'F' ? (
+                        /*Estado finalizado, se muestra solo la calificación e items*/
+                        <React.Fragment>
+                            <h3>Finalizado</h3>
+                            <h3>Puntuación: {calificacion}</h3>
+                        </React.Fragment>
+                    ) : estadoPedido == 'P' ? (
+                        /*Estado pendiente, se muestra solo boton para pagar e items*/
+                        <React.Fragment>
+                            <h3>Pendiente</h3>
+                            <Button variant="outline-info" size="lg" onClick={() => handlePagoPedido()}>
+                                Pagar pedido
+                            </Button>
+                        </React.Fragment>
+
+                    ) : estadoPedido == 'S' ? (
+                        /*Estado pendiente de calificación, se muestra solo calificacion e items*/
+                        <React.Fragment>
+                            <CalificacionComponent idPedido={pedidoSel} estadoPedido={estadoPedido}></CalificacionComponent>
+                        </React.Fragment>
+                    ) : null
+                    }
+                </Col>
+
+                <Col></Col>
+            </Row>
+
+            <h1>Productos del pedido</h1>
             {itemsOrg.length === 0 ? (
                 <p>No hay productos disponibles que cumplan con los criterios</p>
             ) : (
-
                 itemsOrg.map((grupoItem, index) => (
                     <Row key={index}>
                         {grupoItem.map((item, i) => (
