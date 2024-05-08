@@ -27,7 +27,7 @@ function SubCategory({ categoria, idCompPadre, handlerCategoria }) {
             {/*Se revisa que la categoria tenga o no una subcategoria */}
 
             {subCat && subCat.length > 0 ? (
-                <Dropdown as={ButtonGroup} drop="end">
+                <Dropdown as={ButtonGroup}>
                     <Form id={`f-h-${idCompPadre}`} className='switch-category'>
                         <Form.Check
                             type="switch"

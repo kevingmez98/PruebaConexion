@@ -28,41 +28,42 @@ function CategorySelect({ categorias, handlerPadre }) {
 
     return (
         <React.Fragment >
-            {listaCatPrincipales && listaCatPrincipales.map((categoria, idx) =>
-                <Row key={idx}>
-                    <Col>
-                    <Dropdown as={ButtonGroup} drop="end" key={`k-drop-${idx}`} className='btn-group'>
-                        <Form id={`f-cat-${idx}`} className='switch-category'>
-                            <Form.Check
-                                type="switch"
-                                name={`sw-${idx}`}
-                                label={categoria.nomCat}
-                                onChange={() => handleCategory(`f-cat-${idx}`, categoria.idCatProducto, categoria.idCatProSup, `sw-${idx}`)}
-                            />
-                        </Form>
-                        {categoria.obtenerSubcategorias() && categoria.obtenerSubcategorias().length > 0 ? (
-                            <React.Fragment>
-                                <Dropdown.Toggle split variant="outline-secondary" id="dropdown-split-basic" className='own-drop-tog' />
-                                <Dropdown.Menu>
-                                    {categoria.obtenerSubcategorias().map((sub, ix) => (
-                                        <React.Fragment key={ix + idx}>
-                                            <SubCategory categoria={sub} idCompPadre={`${idx}-${ix}`} handlerCategoria={handleCategory}></SubCategory>
-                                        </React.Fragment>
+            <Row>
+                {listaCatPrincipales && listaCatPrincipales.map((categoria, idx) =>
+                    <Col key={idx}>
+                        <Dropdown as={ButtonGroup} key={`k-drop-${idx}`} className='btn-group'>
+                            <Form id={`f-cat-${idx}`} className='switch-category'>
+                                <Form.Check
+                                    type="switch"
+                                    name={`sw-${idx}`}
+                                    label={categoria.nomCat}
+                                    onChange={() => handleCategory(`f-cat-${idx}`, categoria.idCatProducto, categoria.idCatProSup, `sw-${idx}`)}
+                                />
+                            </Form>
+                            {categoria.obtenerSubcategorias() && categoria.obtenerSubcategorias().length > 0 ? (
+                                <React.Fragment>
+                                    <Dropdown.Toggle split variant="outline-secondary" id={`dropdown-split-${idx}`} className='own-drop-tog' />
+                                    <Dropdown.Menu>
+                                        {categoria.obtenerSubcategorias().map((sub, ix) => (
+                                            <React.Fragment key={ix + idx}>
+                                                <SubCategory categoria={sub} idCompPadre={`${idx}-${ix}`} handlerCategoria={handleCategory}></SubCategory>
+                                            </React.Fragment>
 
-                                    ))}
-                                </Dropdown.Menu>
-                            </React.Fragment>
-                        ) :
+                                        ))}
+                                    </Dropdown.Menu>
+                                </React.Fragment>
+                            ) :
 
-                            <br />
-                        }
+                                <br />
+                            }
 
 
-                    </Dropdown>
-                    </Col>      
-                </Row>
-            )
-            }
+                        </Dropdown>
+                    </Col>
+
+                )
+                }
+            </Row>
             <br />
         </React.Fragment >
     );

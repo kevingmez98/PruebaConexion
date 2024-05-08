@@ -35,7 +35,6 @@ function organizarCategorias(categorias) {
         categoriasMap.set(categoria.idCatProducto, categoria);
     });
 
-
     // Recorrer nuevamente para organizar las subcategorías
     categorias.forEach(categoria => {
         // Si la categoría tiene una categoría padre válida, agregarla como subcategoría
@@ -49,13 +48,6 @@ function organizarCategorias(categorias) {
 
     // Filtrar las categorías principales, es decir, aquellas sin categoria padre
     let categoriasPrincipales = categorias.filter(categoria => categoria.idCatProSup === null);
-
-    // Agregar categorías sin padres (no null) al final de la lista de categorías principales
-    categorias.forEach(categoria => {
-        if (!categoriasMap.has(categoria._idCatProSup)) {
-            categoriasPrincipales.push(categoria);
-        }
-    });
 
     //Las categorias principales ya tienen sus subcategorias
     return categoriasPrincipales;

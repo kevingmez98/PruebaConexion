@@ -41,8 +41,6 @@ function RealizarCompraCl() {
     //Una lista que guardará la lista de productos si se filtran por nombre
     var [listaProdTemp, setListaProdTemp] = React.useState([]);
 
-    //Lista de inventarios
-    var [listaInventario, setListaInventario] = useState([]);
 
     //Variable que guarda el valor puesto en el filtro por nombre
     var [nomFiltro, setNomFiltro] = React.useState('');
@@ -262,9 +260,7 @@ function RealizarCompraCl() {
                         <Button variant="primary" onClick={handleRegionActiva}>Seleccionar</Button>
                     </div>
                     <br/>
-                    {regionActiva && (
                           <Alert variant="warning">Cambiar de región borrará el carrito</Alert>
-                    )}
                   
                 </Form>
             </SimpleModal>

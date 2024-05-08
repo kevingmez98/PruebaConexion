@@ -277,9 +277,7 @@ function RealizarVenta() {
                     </Form.Select>
                     <br />
                     <div className="d-grid gap-2">
-                        {clienteActivo && (
-                            <Alert variant="warning">Cambiar de cliente borrará el carrito</Alert>
-                        )}
+                        <Alert variant="warning">Cambiar de cliente borrará el carrito</Alert>
                         <Button variant="primary" onClick={handleClienteActivo} size="lg">Seleccionar</Button>
                     </div>
                     <p></p>

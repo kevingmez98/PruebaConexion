@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { Navigate } from 'react-router-dom'
 import Axios from 'axios';
 
 import SideBarComponent from "./SideBar/SideBarComponent";
@@ -15,25 +16,36 @@ import './CSS/own-dashboard-styles.css';
 
 function DashBoardPage() {
 
-     //Ocultar y mostrar la barra lateral (responsive)
-     const [isOpen, setIsOpen] = useState(false);
+    //Ocultar y mostrar la barra lateral (responsive)
+    const [isOpen, setIsOpen] = useState(false);
 
-     //Nombre del usuario activo
-     const [nombre, setNombre] = useState('');
-     
+    //Nombre del usuario activo
+    const [nombre, setNombre] = useState('');
+
     //Mensaje de error
     const [ErroMessage, setMessage] = React.useState('');
 
+    //Para saber si se debe redirigir
+    const [redirigirALogin, setRedirigirALogin] = useState(false);
+
+    //UseEfect inicial
     useEffect(() => {
+
+        //Verificar si existe el serial
+        if (!sessionStorage['Serial']) {
+            setRedirigirALogin(true);
+            return;
+        }
+
         //Se llama la peticion de usuario
         async function fetchData() {
-                // Esperamos la resolución de la promesa usando await
-                const data = await peticionUser();
-                // Una vez que la promesa se resuelve, se crea un objeto Persona y se le asigna el nombre
-                //Solo se espera recibir un usuario, por eso se usa el primer resultado
-                let persona = convertirDatosParcial(data.records[0]);
+            // Esperamos la resolución de la promesa usando await
+            const data = await peticionUser();
+            // Una vez que la promesa se resuelve, se crea un objeto Persona y se le asigna el nombre
+            //Solo se espera recibir un usuario, por eso se usa el primer resultado
+            let persona = convertirDatosParcial(data.records[0]);
 
-                setNombre(persona.primerNombre+" "+persona.segundoNombre+ " "+persona.primerApellido+ " "+persona.segundoApellido);
+            setNombre(persona.primerNombre + " " + persona.segundoNombre + " " + persona.primerApellido + " " + persona.segundoApellido);
         }
 
         // Asignar una clase al body al montar el componente
@@ -56,7 +68,7 @@ function DashBoardPage() {
     var peticionUser = () => {
         return new Promise((resolve, reject) => {
             setMessage("");
-            Axios.post('http://localhost:8080/Login/datosbasicos', { "Serial": window.sessionStorage.getItem("Serial")})
+            Axios.post('http://localhost:8080/Login/datosbasicos', { "Serial": window.sessionStorage.getItem("Serial") })
                 .then((response) => {
                     // Resolvemos la promesa con los datos recibidos
                     resolve(response.data);
@@ -64,10 +76,14 @@ function DashBoardPage() {
                 .catch((error) => {
                     // Rechazamos la promesa con el mensaje de error
                     setMessage(error.response.data.errors);
-
                 });
         });
     };
+
+    // Renderizar Navigate si se debe redirigir
+    if (redirigirALogin) {
+        return <Navigate to='/' />;
+    }
     return (
         <div className="container-fluid display-table">
             <div className="row display-table-row">
@@ -93,7 +109,7 @@ function DashBoardPage() {
                     </Navbar>
 
                     <div className="user-dashboard">
-                        <Container> 
+                        <Container>
                             <Outlet></Outlet>
                         </Container>
                     </div>

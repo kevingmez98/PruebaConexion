@@ -1,7 +1,42 @@
 import SideBarBtn from "./SideBarBtn";
 import AccordionGroup from "./AccordionGroup";
-import { faEnvelope, faPenNib, faHouse, faUser, faCircleUser, faCartShopping, faHandshake, faUsers, faWarehouse, faSignOut} from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom';
+import Axios from 'axios';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEnvelope, faPenNib, faHouse, faUser, faCircleUser, faCartShopping, faHandshake, faUsers, faWarehouse, faSignOut } from '@fortawesome/free-solid-svg-icons'
 function SideBar() {
+
+    // Función para cerrar sesión
+    const handleCerrarSesion = async () => {
+        try {
+            // Realiza la petición para cerrar sesión
+            //await peticionCierre("AND");
+
+            // Si la petición se realiza con éxito, Elimina el sessionstorage
+            window.sessionStorage.removeItem("Serial");
+
+        } catch (error) {
+            // Maneja cualquier error que pueda ocurrir durante la petición
+            console.error("Error al cerrar sesión:", error);
+        }
+    };
+
+    //Peticion para cerrar la sesion
+    var peticionCierre = (region, idCat, idSub) => {
+        return new Promise((resolve, reject) => {
+            Axios.post('http://localhost:8080/cerrar', { "serial": window.sessionStorage.getItem("Serial"), "region": region, "categoria": idCat, "subcategoria": idSub })
+                .then((response) => {
+                    // Resolvemos la promesa con los datos recibidos
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    // Rechazamos la promesa con el mensaje de error
+                    alert(error.response.data.errors);
+
+                });
+        });
+    };
     return (
         <div className="navi">
             <ul>
@@ -11,7 +46,7 @@ function SideBar() {
                 <li>
                     <SideBarBtn nombreBtn={"Perfil"} icon={faUser} route={"/profile"}></SideBarBtn>
                 </li>
-                <li>        
+                <li>
                     <AccordionGroup icon={faCircleUser} nombreBtn={"Representante de ventas"} nombreGrupo={"representante-ventas"}>
                         <SideBarBtn nombreBtn={"Realizar venta"} icon={faPenNib} route={"/realizar-venta"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Ver carrito"} icon={faCartShopping} route={"/ver-carrito"}></SideBarBtn>
@@ -34,7 +69,10 @@ function SideBar() {
                     </AccordionGroup>
                 </li>
                 <li>
-                    <SideBarBtn nombreBtn={"Cerrar sesión"} icon={faSignOut} route={"/"}></SideBarBtn>
+                    <Link to={"/"} onClick={handleCerrarSesion}>
+                        <FontAwesomeIcon icon={faSignOut} />
+                        <span className="d-none d-sm-block d-none.d-sm-block">Cerrar sesión</span>
+                    </Link>
                 </li>
             </ul>
         </div>
