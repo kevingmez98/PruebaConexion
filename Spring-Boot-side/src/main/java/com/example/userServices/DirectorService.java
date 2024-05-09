@@ -8,6 +8,9 @@ import com.example.ConnectionPool.Pool;
 import com.example.Repositorios.DirectorRepository;
 import com.example.Utils.JsonManager;
 
+/*
+ * Clase que implementa todas las funcionalidades que un director puede realizar dentro de la aplicacion
+ */
 public class DirectorService {
     public Pair<JSONObject,Conexion> getRepresentantesacargo(String serial){
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);

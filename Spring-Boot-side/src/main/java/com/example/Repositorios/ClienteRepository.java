@@ -20,6 +20,7 @@ static private ClienteRepository repositorio;
     ClienteRepository(){
 
     }
+    /*Implementacion del patron singleton para los repositorios */
     public static ClienteRepository getRepositorio(){
         if(repositorio==null){
             repositorio=new ClienteRepository();
@@ -28,7 +29,11 @@ static private ClienteRepository repositorio;
         return repositorio;
     }
 
-    
+    /*
+     * Metodo para consultar el representante asignado al cliente logead
+     * PARAMETROS DE ENTRADA: Conexion solicitante
+     * PARAMETROS DE SALIDA:  ResultSet rs;
+     */
 public ResultSet ConsultarRepresentanteAsignado(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
@@ -55,6 +60,14 @@ try {
 return null;
 }
 
+/*
+     * Metodo para consultarp productos de una region, segun categoria y subcategoria
+     * PARAMETROS DE ENTRADA: Conexion solicitante,
+     *                        String region,
+     *                        String categoria,
+     *                        String subcategoria
+     * PARAMETROS DE SALIDA:  ResultSet rs;
+     */
 public ResultSet ConsultarProductosRegion(Conexion solicitante,String region, String categoria, String subcategoria){
     System.out.println(solicitante.user);
     System.out.println(region); 
@@ -100,6 +113,11 @@ try {
 return null;
 }
 
+/*
+     * Metodo para consultar las categorias de la region del cliente logeado
+     * PARAMETROS DE ENTRADA: Conexion solicitante
+     * PARAMETROS DE SALIDA:  ResultSet rs;
+     */
 public ResultSet ConsultarCategorias(Conexion solicitante){
 try {
     int parametros=0;
@@ -118,6 +136,11 @@ try {
 }
 return null;
 }
+/*
+     * Metodo para consultar los pedidos del cliente logeado
+     * PARAMETROS DE ENTRADA: Conexion solicitante
+     * PARAMETROS DE SALIDA:  ResultSet rs;
+     */
 public ResultSet ConsultarPedidos(Conexion solicitante){
     try {
         
@@ -146,6 +169,12 @@ public ResultSet ConsultarPedidos(Conexion solicitante){
     }
     return null;
     }
+    /*
+     * Metodo para consultar los items del pedido especificado
+     * PARAMETROS DE ENTRADA: Conexion solicitante
+     *                        String codpedido.
+     * PARAMETROS DE SALIDA:  ResultSet rs;
+     */
 public ResultSet ConsultarItemspedido(Conexion solicitante,String codpedido){
         try {
             System.out.println(codpedido);
@@ -164,6 +193,11 @@ public ResultSet ConsultarItemspedido(Conexion solicitante,String codpedido){
         }
         return null;
         }
+    /*
+     * Metodo para consultar los datos basicos del cliente
+     * PARAMETROS DE ENTRADA: Conexion solicitante
+     * PARAMETROS DE SALIDA:  ResultSet rs;
+     */
 public ResultSet getdatosbasicos(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
@@ -191,6 +225,11 @@ try {
 }
 return null;
 }
+/*
+     * Metodo para consultar los datos relacionados con el pago del cliente
+     * PARAMETROS DE ENTRADA: Conexion solicitante
+     * PARAMETROS DE SALIDA:  ResultSet rs;
+     */
 public ResultSet getdatosdepago(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
@@ -208,6 +247,12 @@ try {
 return null;
 }
 //Insert para crear el cliente nuevo
+/*
+     * Metodo para crear un nuevo Cliente en el sistema
+     * PARAMETROS DE ENTRADA: Conexion solicitante,
+     *                        CLIENTEPOJO cliente
+     * PARAMETROS DE SALIDA:  ResultSet rs;
+     */
 public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
     
     try{
@@ -259,6 +304,12 @@ public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
 
     }
 
+    /*
+     * Metodo para crear un nuevo pedido en el sistema
+     * PARAMETROS DE ENTRADA: Conexion solicitante,
+     *                        PEDIDOPOJO pedido
+     * PARAMETROS DE SALIDA:  ResultSet rs;
+     */
 public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     //falta comprobar la disponibilidad de los productos en el inventario
     //Se crea el pedido primero
@@ -318,6 +369,13 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     return null;
     
     }
+    /*
+     * Metodo para añadir una calificacion al pedido
+     * PARAMETROS DE ENTRADA: Conexion solicitante
+     *                        String idpedido,
+     *                        int calificacion
+     * PARAMETROS DE SALIDA:  ResultSet rs;
+     */
     public void crearCalificacion(Conexion solicitante,String idpedido,int calificacion){
     
         try{

@@ -11,6 +11,10 @@ static private DirectorRepository repositorio;
     DirectorRepository(){
 
     }
+    /*
+     * Implementacion del patron singleton para el repositorio del director
+
+     */
     public static DirectorRepository getRepositorio(){
         if(repositorio==null){
             repositorio=new DirectorRepository();
@@ -19,7 +23,11 @@ static private DirectorRepository repositorio;
         return repositorio;
     }
    
-
+    /*
+     * Consulta de todos los representantes en la region del usuario logeado
+     * PARAMETROS DE ENTRADA: Conexion solicitante
+     * PARAMETROS DE SALIDA; ResultSet rs
+     */
     public ResultSet consultarRepresentantesregion(Conexion solicitante){
         System.out.println(solicitante.user);
     try {

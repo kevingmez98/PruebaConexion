@@ -21,13 +21,18 @@ import org.javatuples.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/*Clase que contiene los metodos para que el representante pueda ejercer sus funciones desde la aplicacion */
 @RequestMapping(value="/representante")
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 public class RepresentanteController {
     private final RepresentanteService representanteservice=new RepresentanteService();
    
-        
+        /*
+         * Endpoint que retorna los clientes a cargo del representante logeado
+         * PARAMETROS DE ENTRADA: SerialPOJO Serial
+         * PARAMETROS DE SALIDA: ResponseEntity
+         */
         @PostMapping(value="/clientes",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity getClientes(@RequestBody SerialPOJO Serial){
          Pair<JSONObject,Conexion> respuesta= representanteservice.getClientesrepresentante(Serial.Serial);
@@ -40,6 +45,11 @@ public class RepresentanteController {
           
         }
         //End point que retorna las ciudades de la region del representante
+        /*
+         * Endpoint que retorna las ciudades de la region del representante logeado
+         * PARAMETROS DE ENTRADA: SerialPOJO Serial
+         * PARAMETROS DE SALIDA: ResponseEntity
+         */
         @PostMapping(value="/ciudades",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity getCiudades(@RequestBody SerialPOJO Serial){
          Pair<JSONObject,Conexion> respuesta= representanteservice.getciudades(Serial.Serial);
@@ -52,6 +62,11 @@ public class RepresentanteController {
           
         }
         //End point para crear un cliente, para conocer los campos de la peticion, revisar CLIENTEPOJO
+        /*
+         * Endpoint que llama a las funciones para registrar a un nuevo cliente en el sistema
+         * PARAMETROS DE ENTRADA: CLIENTEPOJO cliente
+         * PARAMETROS DE SALIDA: ResponseEntity
+         */
         @PostMapping(value="/crearCliente",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity getCiudades(@RequestBody CLIENTEPOJO cliente){
         if(cliente.getSerial()==null){

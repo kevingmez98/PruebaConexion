@@ -3,6 +3,9 @@ package com.example.ConnectionPool;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+/*
+ * Pool de conexiones que gestiona las conexiones activas y la creacion de nuevas conexiones
+ */
 public class Pool {
 static Pool  pool= null;
 
