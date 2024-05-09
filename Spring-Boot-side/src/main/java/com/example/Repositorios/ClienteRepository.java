@@ -318,4 +318,19 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     return null;
     
     }
+    public void crearCalificacion(Conexion solicitante,String idpedido,int calificacion){
+    
+        try{
+            String sql="UPDATE natame.pedido set q_calificacion=? where K_COD_PEDIDO=?";
+            PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+            stmt.setInt(1,calificacion);
+            stmt.setString(2,idpedido);
+            stmt.executeUpdate();
+            
+            
+        }catch(Exception e){
+            solicitante.message=e.getMessage();
+        }
+    
+        }
 }

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import com.example.ConnectionPool.Conexion;
 import com.example.ConnectionPool.Pool;
 import com.example.Repositorios.ClienteRepository;
+import com.example.Utils.CALIFICACIONPOJO;
 import com.example.Utils.CLIENTEPOJO;
 import com.example.Utils.JsonManager;
 import com.example.Utils.PEDIDOPOJO;
@@ -94,6 +95,12 @@ public class ClienteService {
     public void crearPedido(PEDIDOPOJO pedido){
         Conexion solicitante=Pool.getPool().getConexionbyserial(pedido.getSerial());
         ClienteRepository.getRepositorio().crearPedido(solicitante,pedido);
+    }
+    public String calificarPedido(CALIFICACIONPOJO calificacion){
+        Conexion solicitante=Pool.getPool().getConexionbyserial(calificacion.getSerial());
+        solicitante.message="";
+        ClienteRepository.getRepositorio().crearCalificacion(solicitante,calificacion.getIdpedido(),calificacion.getCalificacion());
+        return solicitante.message;
     }
     
 

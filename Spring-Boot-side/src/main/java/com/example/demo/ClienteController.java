@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ConnectionPool.Conexion;
+import com.example.Utils.CALIFICACIONPOJO;
 import com.example.Utils.ITEM;
 import com.example.Utils.PEDIDOPOJO;
 import com.example.Utils.SerialPOJO;
@@ -72,15 +73,7 @@ public class ClienteController {
          System.out.println(pedido.get_items().get(0).get_codigoProducto());
          System.out.println(pedido.getSerial());
          clienteservice.crearPedido(pedido);
-         /* 
-         Pair<JSONObject,Conexion> respuesta=  clienteservice.getProductosRegion(Serial.Serial);
-          System.out.println(pedido);
-         if(respuesta.getValue0()!=null){
-            return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
-         }
-         JSONObject error = new JSONObject();
-         error.put("errors",respuesta.getValue1().message);
-         */
+         
          return new ResponseEntity("error.toString()",HttpStatus.BAD_REQUEST);
         }
         @PostMapping(value="/Regiones",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
@@ -145,5 +138,23 @@ public class ClienteController {
 
          return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
           
+        }
+        @PostMapping(value="/calificacion",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity CalificarPedido(@RequestBody CALIFICACIONPOJO calificacion){
+         System.out.println(calificacion.getCalificacion());
+         System.out.println(calificacion.getIdpedido());
+         System.out.println(calificacion.getSerial());
+         String message=clienteservice.calificarPedido(calificacion);
+        
+        if(message!=""){
+         JSONObject error = new JSONObject();
+         error.put("errors",message);
+         return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+        }
+      
+         
+         
+         return new ResponseEntity("Se califico el pedido ekisde",HttpStatus.OK);
+         
         }
 }
