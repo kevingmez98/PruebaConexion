@@ -321,7 +321,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     public void crearCalificacion(Conexion solicitante,String idpedido,int calificacion){
     
         try{
-            String sql="UPDATE natame.pedido set q_calificacion=? where K_COD_PEDIDO=?";
+            String sql="UPDATE natame.pedido set q_calificacion=?,I_ESTADO='F' where K_COD_PEDIDO=?";
             PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
             stmt.setInt(1,calificacion);
             stmt.setString(2,idpedido);
