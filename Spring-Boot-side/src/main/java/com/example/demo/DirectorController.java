@@ -21,13 +21,18 @@ import org.javatuples.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/*
+ * Controlador para las acciones que pueden ser realizadas por el director de una region
+ */
 @RequestMapping(value="/Director")
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 public class DirectorController {
     private final DirectorService directorservice=new DirectorService();
    
-        
+        /*
+         * endpoint para obtener los representantes de una region a cargo del director
+         */
         @PostMapping(value="/representantesA",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity getClientes(@RequestBody SerialPOJO Serial){
          Pair<JSONObject,Conexion> respuesta= directorservice.getRepresentantesacargo(Serial.Serial);

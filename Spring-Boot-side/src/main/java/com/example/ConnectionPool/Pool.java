@@ -12,6 +12,8 @@ static Pool  pool= null;
 static ArrayList<ArrayList<String>> regiones=new ArrayList<ArrayList<String>>();
 static ArrayList<Conexion> ConexionesActivas = new ArrayList<Conexion>();
 private static Conexion system=new Conexion("adminsession","session123");
+
+
 public Pool(){
  
 }
@@ -81,7 +83,9 @@ public ArrayList<ArrayList<String>> getRegiones() {
 public static void setRegiones(ArrayList<ArrayList<String>> regiones) {
     Pool.regiones = regiones;
 }
-
+public static Conexion getSystem() {
+    return system;
+}
 
 
 

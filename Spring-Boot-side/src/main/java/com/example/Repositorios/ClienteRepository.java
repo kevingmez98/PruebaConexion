@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import com.example.ConnectionPool.Conexion;
+import com.example.ConnectionPool.Pool;
 import com.example.Utils.CLIENTEPOJO;
 import com.example.Utils.ITEM;
 import com.example.Utils.PEDIDOPOJO;
@@ -254,7 +255,7 @@ return null;
      * PARAMETROS DE SALIDA:  ResultSet rs;
      */
 public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
-    
+    //Debe probarse la funcion :v
     try{
         String sql="INSERT INTO NATAME.CLIENTE VALUES(?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
@@ -291,6 +292,16 @@ public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
         solicitante.getConexion().commit();
         solicitante.message="Cliente creado con exito";
         stmt.close();
+        sql="CREATE USER ? identified by ?";
+        stmt=Pool.getPool().getSystem().getConexion().prepareStatement(sql);
+        stmt.setString(1,cliente.getUsuario());
+        stmt.setString(2,cliente.getPass());
+        stmt.execute();
+        sql="GRANT R_REPVENTAS to ?";
+        stmt=Pool.getPool().getSystem().getConexion().prepareStatement(sql);
+        stmt.setString(1,cliente.getUsuario().toUpperCase());
+        stmt.execute();
+        
     }catch(Exception e){
         e.printStackTrace();
         try {
@@ -391,4 +402,32 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
         }
     
         }
+        public void pagarpedido(Conexion solicitante,String idpedido,String metodo,Long valor){
+    
+            try{
+                String sql="INSERT INTO NATAME.PAGO(K_CODPAGO,F_FECHA,I_METODO,Q_VALOR) values(PAGO_SEQ.nextval,?,?,?)";
+                PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+                LocalDate now = LocalDate.now();
+                LocalDateTime startOfDay = now.atStartOfDay();
+                java.util.Date hola=java.util.Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
+                Date today = new Date(hola.getTime());
+                stmt.setDate(1,today);
+                stmt.setString(2,metodo);
+                stmt.setLong(3,valor);
+                stmt.executeUpdate();
+                sql="UPDATE NATAME.PEDIDO set K_COD_PAGO=PAGO_SEQ.currval, I_ESTADO='S' WHERE K_COD_PEDIDO=?";
+                stmt=solicitante.getConexion().prepareStatement(sql);
+                stmt.setString(1,idpedido);
+                stmt.executeUpdate();
+                solicitante.getConexion().commit();
+            }catch(Exception e){
+                try{
+                solicitante.getConexion().rollback();
+                }catch(Exception a){
+                    e.printStackTrace();
+                }
+                solicitante.message=e.getMessage();
+            }
+        
+            }
 }

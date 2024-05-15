@@ -11,6 +11,9 @@ import com.example.Repositorios.RepresentanteRepository;
 import com.example.Utils.CLIENTEPOJO;
 import com.example.Utils.JsonManager;
 
+/*Clase que representa el servicio del representante con todas las funcionalidades que un representante puede realizar
+ * en la aplicacion
+ */
 public class RepresentanteService {
     public Pair<JSONObject,Conexion> getClientesrepresentante(String serial){
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);

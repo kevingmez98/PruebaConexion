@@ -10,6 +10,9 @@ static private RepresentanteRepository repositorio;
     RepresentanteRepository(){
 
     }
+    /*
+     * Implementacion del patron singleton para el repositorio del representante
+     */
     public static RepresentanteRepository getRepositorio(){
         if(repositorio==null){
             repositorio=new RepresentanteRepository();
@@ -18,7 +21,11 @@ static private RepresentanteRepository repositorio;
         return repositorio;
     }
     
-    
+    /*
+     * Consulta de los clientes del representante logeado
+     * PARAMETROS DE ENTRADA: Conexion solicitante
+     * PARAMETROS DE SALIDA:ResultSet rs.
+     */
     public ResultSet consultarClientesporRepresentante(Conexion solicitante){
         System.out.println(solicitante.user);
     try {
@@ -40,6 +47,11 @@ static private RepresentanteRepository repositorio;
     return null;
 }
 
+/*
+ *  Consulta de las ciudades de la region del representante logeado
+ * PARAMETROS DE ENTRADA: Conexion solicitante,
+ * PARAMETROS DE SALIDA: ResultSet rs;
+ */
 public ResultSet RecuperarCiudades(Conexion solicitante){
     System.out.println(solicitante.user);
 try {

@@ -18,12 +18,19 @@ import com.example.Utils.SerialPOJO;
 
 import org.javatuples.*;
 import org.json.JSONObject;
+/*
+ * LOGINCONTROLLER contiene los metodos necesarios para el sistema de autenticacion utilizado
+ */
 @RequestMapping(value="/Login")
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RestController
 public class LoginController {
     private final LoginService loginservice=new LoginService();
-    
+    /*
+     * endpoint recibe las credenciales del usuario y envia una respuesta en funcion del resultado de la autenticacion
+     * PARAMETROS DE ENTRADA: USERPOJO usuario
+     * PARAMETROS DE SALIDA: ResponseEntity
+     */
     @PostMapping(value="/Autenticar",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity autenticar(@RequestBody USERPOJO usuario){
       Triplet<Boolean,String,String> respuesta= loginservice.autenticar(usuario.user, usuario.pass);
