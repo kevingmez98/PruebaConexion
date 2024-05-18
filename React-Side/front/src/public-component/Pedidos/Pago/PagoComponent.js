@@ -12,7 +12,7 @@ import { convertirMuchosDatos as convertirClientes } from '../../../mapeo/Helper
 /*
 El codigo de pedido lo pasa el padre
 */
-function PagoComponent({ idPedido }) {
+function PagoComponent({ idPedido, totalPedido }) {
 
     //Metodos de pago
     // (''e'') Efectivo, (''t'') Tarjeta de credito o debito, (''p'') PSE, (''b'') Transferencia bancaria
@@ -23,20 +23,6 @@ function PagoComponent({ idPedido }) {
         { "value": "b", "nombre": "Transferencia bancaria" }
     ];
 
-    //Datos temporales de un cliente
-    const clienteTemp = [{
-        n_username: 'Cl',
-        k_doc_cliente: '2323',
-        i_tipo_doc: 'CC',
-        k_cod_ciudad: '1',
-        n_primer_nombre: 'BRAD',
-        n_segundo_nombre: '',
-        n_primer_apellido: 'Martinez',
-        n_segundo_apellido: '',
-        o_email: 'Eso@gmail.com',
-        q_num_telefono: '304348384',
-        o_direccion: 'Cll 130'
-    }];
 
     //Mensaje de error
     const [ErroMessage, setMessage] = React.useState('');
@@ -60,11 +46,12 @@ function PagoComponent({ idPedido }) {
     }
 
     //Constante que maneja el cambio del pedido
-    const handlePago = () => {
+    const handlePago = async() => {
         if (direccionCliente && metodoPago) {
             // Busca el objeto en metodosPago que coincida con el valor seleccionado
             const metodoSeleccionado = metodosPago.find(metodo => metodo.value === metodoPago);
-
+            console.log(metodoPago)
+            await peticionPago();
             alert("entregando a " + direccionCliente + " va a pagar con " + metodoSeleccionado.nombre);
             window.location.reload();
 
@@ -100,7 +87,6 @@ function PagoComponent({ idPedido }) {
     useEffect(() => {
         try {
             setPedidoSel(idPedido);
-            console.log(idPedido);
         } catch (error) {
             console.error('Error al obtener los datos:', error);
         }
@@ -127,6 +113,27 @@ function PagoComponent({ idPedido }) {
         });
     }
 
+    /*Peticion para realizar el pago. 
+        Envia el id del pedido, el precio total, el meetodo de pago y la sesión activa */
+    var peticionPago = () => {
+        return new Promise((resolve, reject) => {
+            setMessage("");
+            Axios.post('http://localhost:8080/cliente/PagarPedido', 
+                    {
+                     "codPedido":idPedido, "serial": window.sessionStorage.getItem("Serial"), "metodoP":metodoPago,
+                     "valor": totalPedido
+                     })
+                .then((response) => {
+                    // Resolvemos la promesa con los datos recibidos
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    // Rechazamos la promesa con el mensaje de error
+                    setMessage(error.response.data.errors);
+                });
+        });
+    }
+
     return (
         <React.Fragment>
             <Alert variant="light">Realizar pago del pedido
@@ -137,9 +144,11 @@ function PagoComponent({ idPedido }) {
             {ErroMessage && (
                 <Alert variant="danger">{ErroMessage}</Alert>
             )}
-            <br />
+            <hr />
             {/*Formulario de seleccion de metodo de pago */}
             <Form>
+                <Form.Label>Total a pagar: {totalPedido}</Form.Label>
+                <br/>
                 <Form.Label>Metodo de pago:</Form.Label>
                 <Form.Select id='metodoSel' onChange={handleMetodoPago} required>
                     <option>Seleccione</option>
@@ -149,13 +158,15 @@ function PagoComponent({ idPedido }) {
                         </option>
                     ))};
                 </Form.Select>
-                <br />
+
             </Form>
-            <br />
-            <br />
+            <hr />  
 
             {/*Formulario con datos del cliente y metodo para confirmar pago*/}
             <Form>
+                <label><strong>Datos del cliente</strong></label>
+                <br/>  
+                <br/>
                 <Row className="mb-3">
                     <Col>
                         <Form.Group>

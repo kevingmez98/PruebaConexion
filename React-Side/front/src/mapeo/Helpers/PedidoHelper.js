@@ -12,7 +12,7 @@ const campoMap = {
     k_cod_pago: 'codigoPago',
     i_estado: 'estado',
     fecha_pedido: 'fechaPedido',
-    calificacion: 'calificacion'
+    q_calificacion: 'calificacion'
 };
 
 //convierte datos traidos de Axios a clase de pedido

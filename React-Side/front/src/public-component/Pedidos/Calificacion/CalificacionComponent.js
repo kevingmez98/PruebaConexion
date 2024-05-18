@@ -43,12 +43,11 @@ function CalificacionComponent({ idPedido }) {
     }, [idPedido]);
 
     //Enviar la calificacion
-    const enviarCalificacion = () => {
+    const enviarCalificacion = async() => {
         if(calificacion<=5 && calificacion>=1){
-            alert("Calificando pedido #" + pedidoSel + " con calificación " + calificacion);
+            await calificarPedidoPeticion();
+            alert(" pedido #" + pedidoSel + " Calificado con " + calificacion);
             window.location.reload();
-             //calificarPedidoPeticion();
-            
         }else{
             alert("Ingrese un valor valido de calificación");
         }
@@ -59,12 +58,15 @@ function CalificacionComponent({ idPedido }) {
     var calificarPedidoPeticion = () => {
         return new Promise((resolve, reject) => {
             setMessage("");
-            Axios.post('http://localhost:8080/cliente/', { "Serial": window.sessionStorage.getItem("Serial"), "Utilitary": idPedido })
+            Axios.post('http://localhost:8080/cliente/calificacion', { 
+                            "serial": window.sessionStorage.getItem("Serial"), "idpedido": pedidoSel, "calificacion":calificacion
+                        })
                 .then((response) => {
                     // Resolvemos la promesa con los datos recibidos
                     resolve(response.data);
                 })
                 .catch((error) => {
+                    console.log("error");
                     // Rechazamos la promesa con el mensaje de error
                     setMessage(error.response.data.errors);
 

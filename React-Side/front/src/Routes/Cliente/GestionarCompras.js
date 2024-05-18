@@ -21,6 +21,9 @@ function GestionarCompras() {
     //estado del pedido que se selecciona
     const [estadoPedido, setEstadoPedido] = useState('');
 
+    //Precio total del pedido seleccionado
+    const [precioPedidoSel, setPrecioSel] = useState(0)
+
     //Calificación del pedido que se selecciona
     const [calificacionPed, setCalificacion] = useState('');
 
@@ -32,7 +35,9 @@ function GestionarCompras() {
 
 
     //Constante que cambia el valor del id del pedido elegido
-    const handlePedidoElegido = async (idPedido, isPagar, estado, calificacion) => {
+    const handlePedidoElegido = async (idPedido, isPagar, estado, calificacion, precioPedido) => {
+
+        //Si es para pagar se muestra la vista correspondiente
         if (isPagar) {
             setPedidoSelect(false);
             setPagarSelect(true);
@@ -40,10 +45,15 @@ function GestionarCompras() {
             setPedidoSelect(true);
             setPagarSelect(false);
         }
+
+        //Se asigna estado, id, calificacion y precio del pedido
         setPedidoElegido(idPedido);
         setEstadoPedido(estado);
         if(calificacion){
             setCalificacion(calificacion);
+        }
+        if(precioPedido){
+            setPrecioSel(precioPedido);
         }
     }
 
@@ -71,7 +81,7 @@ function GestionarCompras() {
                     <Row>
                         <Col></Col>
                         <Col className='div-pago'>
-                            <PagoComponent codPedido={pedidoElegido} idPedido={pedidoElegido} />
+                            <PagoComponent idPedido={pedidoElegido} totalPedido={precioPedidoSel} />
                         </Col>
                         <Col></Col>
                     </Row>

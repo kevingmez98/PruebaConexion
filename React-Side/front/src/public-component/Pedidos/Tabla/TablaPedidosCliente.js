@@ -81,7 +81,7 @@ function TablaPedidosCliente({ handlePedido }) {
                 <Alert variant="danger">{ErroMessage}</Alert>
             )}
             <Table responsive striped bordered hover variant="dark">
-                <TableHeader headers={headers} extraHeaders={['Detalles', 'Pago']}></TableHeader>
+                <TableHeader headers={headers} extraHeaders={['Detalles']}></TableHeader>
                 <tbody>
                     {/* Se generan los datos de la tabla */}
                     {pedidos && pedidos.map((pedido, index) => (
@@ -91,9 +91,6 @@ function TablaPedidosCliente({ handlePedido }) {
                             <TableCell>{pedido.estado}</TableCell>
                             <TableCell>
                                 <Button variant="outline-light" onClick={() => handlePedidoElegido(pedido.codigoPedido, false, pedido.estado, pedido.calificacion )}>Ver detalles</Button>
-                            </TableCell>
-                            <TableCell>
-                                <Button variant="outline-success" onClick={() => handlePedidoElegido(pedido.codigoPedido, true, pedido.estado)}>Pagar</Button>
                             </TableCell>
                         </tr>
                     ))}

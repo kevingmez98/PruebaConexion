@@ -194,7 +194,7 @@ public class ClienteController {
       
          
          
-         return new ResponseEntity("Se califico el pedido ekisde",HttpStatus.OK);
+         return new ResponseEntity("Se califico el pedido",HttpStatus.OK);
          
         }
         @PostMapping(value="/PagarPedido",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)

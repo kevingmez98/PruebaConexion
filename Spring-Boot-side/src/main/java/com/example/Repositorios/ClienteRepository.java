@@ -36,15 +36,16 @@ static private ClienteRepository repositorio;
      * PARAMETROS DE SALIDA:  ResultSet rs;
      */
 public ResultSet ConsultarRepresentanteAsignado(Conexion solicitante){
-    System.out.println(solicitante.user);
+    System.out.println("rep"+solicitante.user);
 try {
-    String sql= "SELECT C.K_DOC_CLIENTE from natame.cliente C where  C.n_username='"+solicitante.user+"'";
+    String sql= "SELECT C.K_DOC_CLIENTE from natame.cliente C where  UPPER(C.n_username)=UPPER('"+solicitante.user+"')";
     PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
     ResultSet rs=stmt.executeQuery();
     rs.next();
     String documentocliente=rs.getString("K_DOC_CLIENTE");
     System.out.println(documentocliente);
-    sql = "SELECT rc.n_primer_nombre, rc.n_primer_apellido FROM natame.contrato c, natame.representante rc where C.K_DOC_CLIENTE=? AND RC.K_COD_REPRESENTANTE=C.K_COD_REPRESENTANTE AND C.F_TERMINO is null";
+    sql = "SELECT rc.n_primer_nombre, rc.n_primer_apellido FROM natame.contrato c, natame.representante rc "+
+          "where C.K_DOC_CLIENTE=? AND RC.K_COD_REPRESENTANTE=C.K_COD_REPRESENTANTE AND C.F_TERMINO is null";
     stmt = solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,documentocliente);
    
@@ -179,9 +180,9 @@ public ResultSet ConsultarPedidos(Conexion solicitante){
 public ResultSet ConsultarItemspedido(Conexion solicitante,String codpedido){
         try {
             System.out.println(codpedido);
-            String sql= "SELECT item.k_cod_pedido,region.n_nom_region,producto.n_nom_producto,item.q_cantidad "+
-            "from natame.item item,natame.region region,natame.producto producto "+
-            "where item.k_cod_region=region.k_cod_region and item.k_cod_producto=producto.k_cod_producto "+
+            String sql= "SELECT item.k_cod_pedido,region.n_nom_region,producto.n_nom_producto,item.q_cantidad, inv.q_precio_unitario "+
+            "from natame.item item,natame.region region,natame.producto producto, natame.inventario inv "+
+            "where item.k_cod_region=region.k_cod_region and item.k_cod_producto=producto.k_cod_producto and inv.k_cod_producto = item.k_cod_producto "+
             "and item.I_ID_CAT_PRODUCTO=producto.I_ID_CAT_PRODUCTO and item.k_cod_pedido=?";
             
             PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
@@ -395,6 +396,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
             stmt.setInt(1,calificacion);
             stmt.setString(2,idpedido);
             stmt.executeUpdate();
+            solicitante.getConexion().commit();
             
             
         }catch(Exception e){
@@ -405,7 +407,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
         public void pagarpedido(Conexion solicitante,String idpedido,String metodo,Long valor){
     
             try{
-                String sql="INSERT INTO NATAME.PAGO(K_CODPAGO,F_FECHA,I_METODO,Q_VALOR) values(PAGO_SEQ.nextval,?,?,?)";
+                String sql="INSERT INTO NATAME.PAGO(K_COD_PAGO,F_FECHA,I_METODO,Q_VALOR) values(natame.PAGO_SEQ.nextval,?,?,?)";
                 PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
                 LocalDate now = LocalDate.now();
                 LocalDateTime startOfDay = now.atStartOfDay();
@@ -415,7 +417,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
                 stmt.setString(2,metodo);
                 stmt.setLong(3,valor);
                 stmt.executeUpdate();
-                sql="UPDATE NATAME.PEDIDO set K_COD_PAGO=PAGO_SEQ.currval, I_ESTADO='S' WHERE K_COD_PEDIDO=?";
+                sql="UPDATE NATAME.PEDIDO set K_COD_PAGO=natame.PAGO_SEQ.currval, I_ESTADO='S' WHERE K_COD_PEDIDO=?";
                 stmt=solicitante.getConexion().prepareStatement(sql);
                 stmt.setString(1,idpedido);
                 stmt.executeUpdate();

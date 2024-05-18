@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { dividirArray } from '../../../public-component/Common-functions/ArrayFunct'
+import { calcularTotalPedidoItems } from '../../Common-functions/operacionesPedido';
 import SimpleProductCard from '../../../public-component/Product/CardProduct/SimpleProductCard';
 
 import { convertirMuchosDatos as convertirItems, asignarProductos } from '../../../mapeo/Helpers/ItemHelper';
@@ -35,6 +36,9 @@ function DetallesPedido({ handlePedido, idPedido, estadoPedido, calificacion }) 
     //Estado pedido
     const [calificacionPedido, setCalificacion] = useState('');
 
+    //Precio total del pedido
+    const [precioPedido, setPrecio] = useState(0)
+
     //Mensaje de error
     const [ErroMessage, setMessage] = useState('');
 
@@ -42,9 +46,9 @@ function DetallesPedido({ handlePedido, idPedido, estadoPedido, calificacion }) 
     const [region, setRegion] = useState('');
 
 
-    /* Funcion para pasar al padre el pedido que se pagaria*/
+    /* Funcion para pasar al padre el pedido y el precio que se pagaria*/
     const handlePagoPedido = () => {
-        handlePedido(idPedido, true);
+        handlePedido(idPedido, true, null, null, precioPedido);
     }
 
     //UseEffect para verificar el cambio en idPedido
@@ -84,6 +88,9 @@ function DetallesPedido({ handlePedido, idPedido, estadoPedido, calificacion }) 
 
                 //Se organizan los items en grupos de 3 para mostrarse en la vista
                 setItemsOrg(dividirArray(petItems, 3));
+
+                //Calcular y asignar el precio total del pedido
+                setPrecio(calcularTotalPedidoItems(petItems));
 
             } catch (error) {
                 // Manejamos cualquier error que pueda ocurrir
@@ -133,13 +140,13 @@ function DetallesPedido({ handlePedido, idPedido, estadoPedido, calificacion }) 
                     {estadoPedido == 'F' ? (
                         /*Estado finalizado, se muestra solo la calificación e items*/
                         <React.Fragment>
-                            <h3>Finalizado</h3>
+                            <h4>Finalizado</h4>
                             <h3>Puntuación: {calificacion}</h3>
                         </React.Fragment>
                     ) : estadoPedido == 'P' ? (
                         /*Estado pendiente, se muestra solo boton para pagar e items*/
                         <React.Fragment>
-                            <h3>Pendiente</h3>
+                            <h4>Pendiente</h4>
                             <Button variant="outline-info" size="lg" onClick={() => handlePagoPedido()}>
                                 Pagar pedido
                             </Button>
@@ -148,6 +155,7 @@ function DetallesPedido({ handlePedido, idPedido, estadoPedido, calificacion }) 
                     ) : estadoPedido == 'S' ? (
                         /*Estado pendiente de calificación, se muestra solo calificacion e items*/
                         <React.Fragment>
+                            <h4>Pendiente de calificación</h4>
                             <CalificacionComponent idPedido={pedidoSel} estadoPedido={estadoPedido}></CalificacionComponent>
                         </React.Fragment>
                     ) : null
@@ -156,8 +164,9 @@ function DetallesPedido({ handlePedido, idPedido, estadoPedido, calificacion }) 
 
                 <Col></Col>
             </Row>
-
-            <h1>Productos del pedido</h1>
+            <h4>Total del pedido: {precioPedido}</h4>
+            <hr/>
+            <h4>Productos del pedido</h4>
             {itemsOrg.length === 0 ? (
                 <p>No hay productos disponibles que cumplan con los criterios</p>
             ) : (

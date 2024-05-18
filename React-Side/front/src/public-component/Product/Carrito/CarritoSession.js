@@ -1,3 +1,4 @@
+import { calcularTotalPedido } from "../../Common-functions/operacionesPedido";
 
 export const actualizarCarrito = async (idCliente,producto,region, cantidad,precio, reemplazar) => {
     try {
@@ -64,16 +65,8 @@ export const actualizarCarrito = async (idCliente,producto,region, cantidad,prec
 };
 
 export const calcularTotalCarrito= (listaProductos) =>{
-    let productos = listaProductos;
-
-    let total= 0;
-
-    for (let i = 0; i < productos.length; i++) {
-        const prod = productos[i];
-        total += prod.precioUnitario*prod.cantidad;
-    }
-
-    return total;
+   let total = calcularTotalPedido(listaProductos);
+   return total;
 }
 
 export const obtenerCarrito = () => {

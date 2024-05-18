@@ -106,7 +106,6 @@ function CarritoComponent({isCliente}) {
         let carrito = obtenerCarrito();
         let listaProd = carrito.productos;
         let pedido = new Pedido();
-        console.log(listaProd[0].codProducto);
         for (let i = 0; i < listaProd.length; i++) {
             let item = new Item();
 
@@ -160,21 +159,21 @@ function CarritoComponent({isCliente}) {
     }
 
 
-
-
     return (
         <React.Fragment>
             {/*Mensaje de error */}
             <p style={{ color: 'red' }}>{ErroMessage}</p>
             <p>Precio total: {carrito && carrito.total ? carrito.total : 0}</p>
             <Button onClick={crearPedido}>Realizar pedido</Button>
-            {/*Recorrer la lista de productos agregados al carrito */}
+
+            {/*Recorrer la lista que tiene agrupados los productos agregados al carrito */}
             {listaProductos.map((grupoProd, index) => (
                 <Row key={index}>
                     {grupoProd.map((producto, ix) => (
                         <Col key={`${index}-${ix}`}>
-                            <SimpleProductCard idProd={producto.codProducto} nomProducto={producto.nomProducto} precio={producto.precioUnitario} key={index}>
+                            <SimpleProductCard idProd={producto.producto._codProducto} nomProducto={producto.producto._nomProducto} precio={producto.precioUnitario} key={index}>
                                 <Form id={`form-prod-${index}-${ix}`}>
+                                <h2>{console.log(producto)}</h2>
                                     <Form.Label htmlFor={`cant-${index}-${ix}`}>Cantidad actual en el carrito: {producto.cantidad}</Form.Label>
                                     <br />
                                     <Form.Control type='number'

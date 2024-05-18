@@ -2,9 +2,11 @@ import SideBarBtn from "./SideBarBtn";
 import AccordionGroup from "./AccordionGroup";
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
+import { eliminarCarrito } from '../../public-component/Product/Carrito/CarritoSession';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faPenNib, faHouse, faUser, faCircleUser, faCartShopping, faHandshake, faUsers, faWarehouse, faSignOut } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faPenNib, faHouse, faUser, faCircleUser, faCartShopping, 
+         faHandshake, faUsers, faWarehouse, faSignOut } from '@fortawesome/free-solid-svg-icons'
 function SideBar() {
 
     // Función para cerrar sesión
@@ -16,6 +18,8 @@ function SideBar() {
             // Si la petición se realiza con éxito, Elimina el sessionstorage
             window.sessionStorage.removeItem("Serial");
 
+            //Se elimina el carrito
+            eliminarCarrito();
         } catch (error) {
             // Maneja cualquier error que pueda ocurrir durante la petición
             console.error("Error al cerrar sesión:", error);
