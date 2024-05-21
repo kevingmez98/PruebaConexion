@@ -38,4 +38,16 @@ public class LoginService {
     }
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
+
+    public JSONObject cerrarsesion(String serial){
+         JSONObject resultado =new JSONObject();
+        try{ 
+            
+             resultado.put("message",Pool.getPool().removeConnection(serial));
+        return resultado;
+    }catch(Exception e){
+        System.out.println("Error en cliente service");
+    }
+        return resultado;
+    }
 }

@@ -200,6 +200,23 @@ public ResultSet ConsultarItemspedido(Conexion solicitante,String codpedido){
      * PARAMETROS DE ENTRADA: Conexion solicitante
      * PARAMETROS DE SALIDA:  ResultSet rs;
      */
+public ResultSet getdetallesdepago(Conexion solicitante, String idpedido){
+    
+try {
+    String sql= "SELECT P.K_COD_PAGO, P.F_FECHA,I_METODO,Q_VALOR FROM NATAME.PAGO P, NATAME.PEDIDO PE WHERE PE.K_COD_PAGO=P.K_COD_PAGO AND P.K_COD_PEDIDO=?";
+    PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+    stmt.setString(1,idpedido);
+    ResultSet rs=stmt.executeQuery();
+    
+    return rs;
+    
+} catch (Exception e) {
+    System.out.println("Fallo la recuperacion de los datos del pago");
+    System.out.println(e.getMessage());
+    solicitante.message=e.getMessage();
+}
+return null;
+}
 public ResultSet getdatosbasicos(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
@@ -296,7 +313,7 @@ public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
         sql="CREATE USER ? identified by ?";
         stmt=Pool.getPool().getSystem().getConexion().prepareStatement(sql);
         stmt.setString(1,cliente.getUsuario());
-        stmt.setString(2,cliente.getPass());
+        stmt.setString(2,cliente.getDocumento());
         stmt.execute();
         sql="GRANT R_REPVENTAS to ?";
         stmt=Pool.getPool().getSystem().getConexion().prepareStatement(sql);
@@ -343,7 +360,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
         
         
 		//Se procede a insertar el pedido
-         sql= "INSERT INTO NATAME.PEDIDO(K_COD_PEDIDO,K_DOC_CLIENTE,I_TIPO_DOC,I_ESTADO,F_PEDIDO) VALUES (NATAME.PEDIDO_SEQ.NEXTVAL,?,?,?,?)";
+         sql= "INSERT INTO NATAME.PEDIDO(K_COD_PEDIDO,K_DOC_CLIENTE,I_TIPO_DOC,I_ESTADO,F_PEDIDO) VALUES(NATAME.PEDIDO_SEQ.NEXTVAL,?,?,?,?)";
          stmt=solicitante.getConexion().prepareStatement(sql);
          stmt.setString(1, documentocliente);
          stmt.setString(2, tipoDocCliente);

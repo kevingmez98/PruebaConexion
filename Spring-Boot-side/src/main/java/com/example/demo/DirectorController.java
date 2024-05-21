@@ -44,4 +44,12 @@ public class DirectorController {
          return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
           
         }
+
+        @PostMapping(value="/Volarcorea",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity Reclasificar(@RequestBody SerialPOJO Serial){
+         JSONObject respuesta= directorservice.reclasificar(Serial.Serial,Serial.Utilitary);
+         
+         return new ResponseEntity(respuesta.toString(),HttpStatus.OK);
+          
+        }
 }

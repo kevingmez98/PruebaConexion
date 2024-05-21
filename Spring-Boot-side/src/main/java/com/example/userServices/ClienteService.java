@@ -87,6 +87,18 @@ public class ClienteService {
     }
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
+    
+    public Pair<JSONObject,Conexion> getdatosdepago(String serial,String idpedido){
+        Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
+         JSONObject resultado =new JSONObject();
+        try{ 
+             resultado=JsonManager.convert(ClienteRepository.getRepositorio().getdetallesdepago(solicitante,idpedido),solicitante);
+        return new Pair<JSONObject,Conexion>(resultado,solicitante);
+    }catch(Exception e){
+        System.out.println("Error en cliente service - get datos de pago");
+    }
+        return new Pair<JSONObject,Conexion>(null,solicitante);
+    }
 
     public ArrayList<ArrayList<String>> ObtenerRegiones(){
         ArrayList<ArrayList<String>> Regiones=Pool.getPool().getRegiones();

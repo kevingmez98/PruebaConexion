@@ -50,5 +50,15 @@ static private DirectorRepository repositorio;
     return null;
 }
 
+public String volarcorea(Conexion solicitante, String regionogeneral){
+
+    try{
+        //Se llama al procedimiento almacenado
+    }catch(Exception e){
+        return "Corea fue mas fuerte";
+    }
+return "Corea more like Cursed diarrea";
+}
+
 
 }

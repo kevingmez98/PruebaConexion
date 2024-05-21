@@ -58,6 +58,14 @@ public class LoginController {
       
     }
 
+    //EL end point mas importante de toda la aplicacion
+    @PostMapping(value="/cerrarsesion",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity CerrarSesion(@RequestBody SerialPOJO Serial){
+     JSONObject respuesta= loginservice.cerrarsesion(Serial.Serial);
+     return new ResponseEntity(respuesta.toString(),HttpStatus.OK);
+      
+    }
+
 
     
 }

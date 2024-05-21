@@ -23,4 +23,13 @@ public class DirectorService {
         }
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
+    public JSONObject reclasificar(String serial, String regionogeneral){
+        Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
+        JSONObject respuesta=new JSONObject();
+        respuesta.put("message",DirectorRepository.getRepositorio().volarcorea(solicitante,regionogeneral));
+        return respuesta;
+        
+
+
+    }
 }
