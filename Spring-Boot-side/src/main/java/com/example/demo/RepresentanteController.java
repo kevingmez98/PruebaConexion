@@ -82,4 +82,16 @@ public class RepresentanteController {
          return new ResponseEntity(error.toString(),HttpStatus.OK);
           
         }
+
+        @PostMapping(value="/CambiarRepresentante",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity CambiarRepresentante(@RequestBody SerialPOJO serial){
+        
+        
+         JSONObject message= representanteservice.cambiarRepresentante(serial.Serial);
+
+         
+         
+         return new ResponseEntity(message.toString(),HttpStatus.OK);
+          
+        }
 }

@@ -27,6 +27,18 @@ public static Pool getPool(){
      Pool.getPool().getRegiones();
      return pool;
 }
+
+public String removeConnection(String serial){
+    boolean removed=false;
+    for(Conexion e: ConexionesActivas){
+            removed= ConexionesActivas.removeIf(n->(n.serial==serial));
+    }
+    
+    if(removed){
+        return "Sesion cerrada con exito";
+       }
+      return "Hubo un error al cerrar la sesion";
+}
 public Conexion createConnection(String user, String pass){
     for(Conexion e : ConexionesActivas){
         if(e.user==user && e.pass==pass){

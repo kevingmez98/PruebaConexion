@@ -46,6 +46,7 @@ public class ClienteController {
          */
         @PostMapping(value="/representanteAsignado",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity getClientes(@RequestBody SerialPOJO Serial){
+
          Pair<JSONObject,Conexion> respuesta=  clienteservice.getrepresentanteasignado(Serial.Serial);
          if(respuesta.getValue0()!=null){
             return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
@@ -194,7 +195,7 @@ public class ClienteController {
       
          
          
-         return new ResponseEntity("Se califico el pedido",HttpStatus.OK);
+         return new ResponseEntity("Se califico el pedido ekisde",HttpStatus.OK);
          
         }
         @PostMapping(value="/PagarPedido",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
@@ -215,4 +216,21 @@ public class ClienteController {
          return new ResponseEntity("Se Pago el pedido ekisde",HttpStatus.OK);
          
         }
+        //Endpoint que recibe un id del pedido y un serial de conexion, y retorna los datos del pago
+
+        @PostMapping(value="/detallePago",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity getDetallePago(@RequestBody PAGOPOJO Pago){
+         
+         Pair<JSONObject,Conexion> respuesta=clienteservice.getdatosdepago(Pago.getSerial(),Pago.getCodPedido());
+         if(respuesta.getValue0()!=null){
+            return new ResponseEntity(respuesta.getValue0().toString(),HttpStatus.OK);
+         }
+         JSONObject error = new JSONObject();
+         error.put("errors",respuesta.getValue1().message);
+
+         return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+          
+        }
+
+        
 }

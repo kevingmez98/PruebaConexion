@@ -71,4 +71,15 @@ try {
 }
 return null;
 }
+
+public String cambiarRepresentante(Conexion solicitante){
+    try{
+        //Llamar al procedimiento almacenado
+
+        
+    }catch(Exception e){
+        return "Sorry socio";
+    }
+    return "Se ha cambiado el representante con exito";
+}
 }
