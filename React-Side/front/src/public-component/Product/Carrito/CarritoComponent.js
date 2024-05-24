@@ -139,10 +139,10 @@ function CarritoComponent({isCliente}) {
                         setMessage(error.response.data.errors)
                     })
 
-                alert("pago enviado como cliente. Serial "+sessionStorage.getItem("Serial")+" id/serial: "+carrito.idCliente);
+                alert("pedido enviado como cliente. Serial "+sessionStorage.getItem("Serial")+" id/serial: "+carrito.idCliente);
             }else{
                 //Se hace pago como representante. Se envia la sesion del representante y el id del cliente
-                     Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido._items, "Serial": sessionStorage.getItem("Serial") })
+                     Axios.post('http://localhost:8080/cliente/CrearPedidoRep', { "_items": pedido._items, "Serial": sessionStorage.getItem("Serial"), "Utilitary": carrito.idCliente })
                     .then((response) => {
 
                         setMessage("Carrito enviado");
@@ -152,7 +152,7 @@ function CarritoComponent({isCliente}) {
                     ).catch((error) => {
                         setMessage(error.response.data.errors)
                     })
-                alert("pago enviado como representante. Para cliente con id: "+carrito.idCliente);
+                alert("pedido enviado como representante. Para cliente con id: "+carrito.idCliente);
             }
         }
         peticion.call();
