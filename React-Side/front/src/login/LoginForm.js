@@ -7,22 +7,12 @@ import React from 'react';
 import Axios from 'axios';
 
 function LoginForm() {
-    const [user, setUser] = React.useState('0');
-    const [pass, setPass] = React.useState('0');
+    const [user, setUser] = React.useState('');
+    const [pass, setPass] = React.useState('');
     const [ErroMessage, setMessage] = React.useState('');
 
     const navigate = useNavigate();
 
-    /*React.useEffect(() => {
-        try {
-            setUser(window.sessionStorage.getItem("user"))
-            setPass(window.sessionStorage.getItem("pass"))
-            window.sessionStorage.getItem("Role")
-            peticion.call();
-        } catch (error) {
-
-        }
-    }, []); */
 
     var peticion = () => {
         setMessage("");

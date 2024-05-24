@@ -13,6 +13,7 @@ import { convertirMuchosDatos as convertirItems, asignarProductos } from '../../
 import { convertirMuchosDatos as convertirProductos } from '../../../mapeo/Helpers/ProductoHelper';
 import { convertirMuchosDatos as convertirRegiones } from '../../../mapeo/Helpers/RegionHelper';
 import CalificacionComponent from '../Calificacion/CalificacionComponent';
+import VistaPagoComponent from '../Pago/VistaPagoComponent';
 /*
 HandlePedido es un handler de un componente padre para pasarle cuando se elije un pedido para pagar
 
@@ -142,6 +143,8 @@ function DetallesPedido({ handlePedido, idPedido, estadoPedido, calificacion }) 
                         <React.Fragment>
                             <h4>Finalizado</h4>
                             <h3>Puntuación: {calificacion}</h3>
+                            {/*Datos del pago */}
+                            <VistaPagoComponent idPedido={idPedido}></VistaPagoComponent>
                         </React.Fragment>
                     ) : estadoPedido == 'P' ? (
                         /*Estado pendiente, se muestra solo boton para pagar e items*/

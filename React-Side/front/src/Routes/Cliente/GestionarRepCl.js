@@ -1,11 +1,32 @@
-import CardComponent from "../../public-component/Card/DarkCard/CardComponent";
-import SimpleTable from "../../public-component/JSONTable/SimpleTable";
-import BtnTable from "../../public-component/JSONTable/BtnTable";
 import React from 'react';
 import Axios from 'axios';
+
+import TableHeader from '../../public-component/JSONTable/Part/TableHeader';
+import TableCell from '../../public-component/JSONTable/Part/TableCell';
+
+
+import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
+
+import Usuario from "../../mapeo/Classes/Usuario";
+import { convertirMuchosDatos, concatenarNombre } from "../../mapeo/Helpers/UserHelper"
 function GestionarRepCl() {
     const [ErroMessage, setMessage] = React.useState('');
     var [jsonData, SetjsonData] = React.useState('');
+
+    //Variable usuario representante
+    var [representante, setRepresentante] = React.useState('');
+
+    //Variable con el nombre completo del representante
+    var [nomRepresentante, setNomRep] = React.useState('');
+
+    //Campos que se verán en la tabla
+    const headers = [
+        { name: "Nombre" },
+        { name: "Telefono" },
+        { name: "Correo electronico" }
+    ];
 
 
 
@@ -14,10 +35,10 @@ function GestionarRepCl() {
             try {
                 // Esperamos la resolución de la promesa usando await
                 const data = await peticion();
+
                 // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
                 SetjsonData(data);
 
-                console.log(data); // Aquí puedes ver los datos en la consola
             } catch (error) {
                 // Manejamos cualquier error que pueda ocurrir
                 console.error('Error al obtener los datos:', error);
@@ -26,6 +47,24 @@ function GestionarRepCl() {
 
         fetchData();
     }, []);
+
+    //UseEffect que Revisa el cambio en dataJson y actualiza las variables
+    React.useEffect(() => {
+        if (jsonData) {
+            //Se convierte la respuesta a clase usuario
+            let userRep = convertirMuchosDatos(jsonData.records, jsonData.fields)[0];
+            setRepresentante(userRep);
+        }
+    }, [jsonData]);
+
+    //UseEffeect que revisa el cambio en representante
+    React.useEffect(() => {
+        if (representante) {
+            setNomRep(concatenarNombre(representante));
+        }
+    }, [representante]);
+
+
 
     var peticion = () => {
         return new Promise((resolve, reject) => {
@@ -44,12 +83,27 @@ function GestionarRepCl() {
 
     return (
         <React.Fragment>
-            <CardComponent titulo={"Gestionar representante - cliente"}>
-                <div className="p-3 mb-2 bg-info text-white">Representante</div>
-                <p style={{ color: 'red' }}>{ErroMessage}</p>
-            </CardComponent>
-            <SimpleTable dataJson={jsonData}></SimpleTable>
-            <BtnTable dataJson={jsonData}></BtnTable>
+            <Alert variant="light">¿Quien es mi representante?</Alert>
+            {/*Mensaje de error */}
+            {ErroMessage && (
+                <Alert variant="danger">{ErroMessage}</Alert>
+            )}
+
+            <Table responsive striped bordered hover variant="dark">
+                <TableHeader headers={headers} extraHeaders={['Acciones']}></TableHeader>
+                <tbody>
+                    {/* Se generan los datos de la tabla */}
+                    {representante && (
+                        <tr>
+                            {/* mostrar las propiedades del pedido */}
+                            <TableCell>{nomRepresentante}</TableCell>
+                            <TableCell>{representante.numTelefono}</TableCell>
+                            <TableCell>{representante.correo}</TableCell> 
+                            <TableCell><Button>Cambiar</Button></TableCell>
+                        </tr>
+                    )}
+                </tbody>
+            </Table>
         </React.Fragment>
     )
 }

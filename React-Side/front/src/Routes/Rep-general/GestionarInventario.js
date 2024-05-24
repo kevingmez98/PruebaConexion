@@ -9,6 +9,9 @@ import CategoryFilter from "../../public-component/Product/CategoryComponent/Cat
 import SimpleProductCard from '../../public-component/Product/CardProduct/SimpleProductCard';
 
 
+import { convertirMuchosDatos as convertirProductos, buscarProducto } from '../../mapeo/Helpers/ProductoHelper';
+
+
 function GestionarInventario() {
 
     //Mensaje de error
@@ -66,8 +69,12 @@ function GestionarInventario() {
         if (productosJson) {
             //Records o resultados
             let { records, fields } = productosJson;
+
+            //Se convierten los records en productos
+            let productos = convertirProductos(records,fields);
+
             //Se divide el array de productos(records) en grupos de 3
-            let lista = dividirArray(records, 3);
+            let lista = dividirArray(productos, 3);
             setListaProductos(lista);
             setListaProdTemp(lista);
 
@@ -169,10 +176,10 @@ function GestionarInventario() {
                     <Row key={index}>
                         {grupoProd.map((producto, i) => (
                             <Col key={i}>
-                                <SimpleProductCard idProd={producto[1]} nomProducto={producto[0]} precio={producto[3]}>
+                                <SimpleProductCard idProd={producto.codProducto} nomProducto={producto.nomProducto} precio={producto.precioUnitario}>
                                     <Form id={`form-prod-${index}-${i}`}>
                                         <Form.Group className="mb-3">
-                                            <Form.Label>Cantidad actual : 3</Form.Label>
+                                            <Form.Label>Cantidad actual : {producto.cantidadStock}</Form.Label>
                                             <Form.Control size="sm" type="number" min="1" name="cantidad" />
                                         </Form.Group>
                                         <Form.Group className="mb-3">

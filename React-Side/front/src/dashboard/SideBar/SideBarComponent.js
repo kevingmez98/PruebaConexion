@@ -5,41 +5,34 @@ import Axios from 'axios';
 import { eliminarCarrito } from '../../public-component/Product/Carrito/CarritoSession';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faPenNib, faHouse, faUser, faCircleUser, faCartShopping, 
-         faHandshake, faUsers, faWarehouse, faSignOut } from '@fortawesome/free-solid-svg-icons'
+import {
+    faEnvelope, faPenNib, faHouse, faUser, faCircleUser, faCartShopping,
+    faHandshake, faUsers, faWarehouse, faSignOut
+} from '@fortawesome/free-solid-svg-icons'
 function SideBar() {
 
     // Función para cerrar sesión
     const handleCerrarSesion = async () => {
         try {
-            // Realiza la petición para cerrar sesión
-            //await peticionCierre("AND");
-
             // Si la petición se realiza con éxito, Elimina el sessionstorage
             window.sessionStorage.removeItem("Serial");
 
             //Se elimina el carrito
             eliminarCarrito();
+            // Realiza la petición para cerrar sesión
+            await peticionCierre();
+
         } catch (error) {
             // Maneja cualquier error que pueda ocurrir durante la petición
             console.error("Error al cerrar sesión:", error);
         }
     };
 
-    //Peticion para cerrar la sesion
-    var peticionCierre = (region, idCat, idSub) => {
-        return new Promise((resolve, reject) => {
-            Axios.post('http://localhost:8080/cerrar', { "serial": window.sessionStorage.getItem("Serial"), "region": region, "categoria": idCat, "subcategoria": idSub })
-                .then((response) => {
-                    // Resolvemos la promesa con los datos recibidos
-                    resolve(response.data);
-                })
-                .catch((error) => {
-                    // Rechazamos la promesa con el mensaje de error
-                    alert(error.response.data.errors);
-
-                });
-        });
+    //Peticion para cerrar la sesion        
+    var peticionCierre = async () => {
+      await Axios.post('http://localhost:8080/Login/cerrarsesion', {}, {
+        "Serial": window.sessionStorage.getItem("Serial") 
+      });
     };
     return (
         <div className="navi">

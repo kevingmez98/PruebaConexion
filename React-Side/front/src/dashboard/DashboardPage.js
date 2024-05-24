@@ -7,7 +7,7 @@ import SideBarComponent from "./SideBar/SideBarComponent";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 
-import { convertirDatosParcial } from '../mapeo/Helpers/UserHelper';
+import { concatenarNombre, convertirMuchosDatos } from '../mapeo/Helpers/UserHelper';
 
 import './CSS/dashboard-styles.css';
 import './CSS/own-dashboard-styles.css';
@@ -43,9 +43,11 @@ function DashBoardPage() {
             const data = await peticionUser();
             // Una vez que la promesa se resuelve, se crea un objeto Persona y se le asigna el nombre
             //Solo se espera recibir un usuario, por eso se usa el primer resultado
-            let persona = convertirDatosParcial(data.records[0]);
+            let persona = convertirMuchosDatos(data.records, data.fields)[0];
 
-            setNombre(persona.primerNombre + " " + persona.segundoNombre + " " + persona.primerApellido + " " + persona.segundoApellido);
+            
+
+            setNombre(concatenarNombre(persona));
         }
 
         // Asignar una clase al body al montar el componente

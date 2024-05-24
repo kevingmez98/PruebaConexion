@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Axios from 'axios';
 import Alert from 'react-bootstrap/Alert';
 
-import { convertirDatosParcial } from '../mapeo/Helpers/UserHelper';
+import { convertirDatos, convertirMuchosDatos } from '../mapeo/Helpers/UserHelper';
 import CardComponent from '../public-component/Card/DarkCard/CardComponent';
 
 function Profile() {
@@ -25,8 +25,9 @@ function Profile() {
             // Una vez que la promesa se resuelve, se crea un objeto Persona y se le asigna el nombre
             //Solo se espera recibir un usuario, por eso se usa el primer resultado
             if (data) {
-                let usuario = convertirDatosParcial(data.records[0]);
-
+                let usuario = convertirMuchosDatos(data.records, data.fields)[0];
+                console.log(usuario);
+                console.log(data);
                 setUsuario(usuario);
             }
 
@@ -69,20 +70,36 @@ function Profile() {
             {usuario && (
                 <Form>
                     <Form.Group>
-                        <Form.Label>Región:</Form.Label>
-                        <Form.Label>{usuario.region}</Form.Label>
+                        <Form.Label>Ciudad: </Form.Label>
+                        <Form.Label>{usuario.ciudad}</Form.Label>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Label>Primer Nombre:</Form.Label>
+                        <Form.Label>Primer Nombre: </Form.Label>
                         <Form.Label>{usuario.primerNombre}</Form.Label>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Label>Primer Apellido:</Form.Label>
+                        <Form.Label>Segundo Nombre: </Form.Label>
+                        <Form.Label>{usuario.segundoNombre}</Form.Label>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Primer Apellido: </Form.Label>
                         <Form.Label>{usuario.primerApellido}</Form.Label>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Segundo apellido: </Form.Label>
+                        <Form.Label> {usuario.segundoApellido}</Form.Label>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Correo:</Form.Label>
                         <Form.Label>{usuario.correo}</Form.Label>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Telefono:</Form.Label>
+                        <Form.Label>{usuario.numTelefono}</Form.Label>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Direccion registrada:</Form.Label>
+                        <Form.Label>{usuario.direccion}</Form.Label>
                     </Form.Group>
                 </Form>
             )}

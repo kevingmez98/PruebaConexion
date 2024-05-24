@@ -8,6 +8,9 @@ export default class Usuario {
         this._segundoNombre = "";
         this._segundoApellido = "";
         this._correo = "";
+        this._ciudad = "";
+        this._numTelefono = "";
+        this._direccion = "";
     }
 
     // Getter y setter para la región
@@ -18,7 +21,32 @@ export default class Usuario {
     set region(region) {
         this._region = region;
     }
+    // Getter y setter para la telefono
+    get numTelefono() {
+        return this._numTelefono;
+    }
 
+    set numTelefono(numTelefono) {
+        this._numTelefono = numTelefono;
+    }
+
+     // Getter y setter para la telefono
+     get direccion() {
+        return this._direccion;
+    }
+
+    set direccion(direccion) {
+        this._direccion = direccion;
+    }
+
+    // Getter y setter para la ciudad
+    get ciudad() {
+        return this._ciudad;
+    }
+
+    set ciudad(ciudad) {
+        this._ciudad = ciudad;
+    }
     // Getter y setter para el primer nombre
     get primerNombre() {
         return this._primerNombre;

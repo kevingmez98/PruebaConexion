@@ -11,6 +11,7 @@ import Axios from 'axios';
 import SimpleModal from '../../public-component/Modal/SimpleModal';
 import { convertirMuchosDatos as convertirMuchosDatosCliente } from '../../mapeo/Helpers/ClienteHelper';
 import { convertirMuchosDatos as convertirProductos, buscarProducto } from '../../mapeo/Helpers/ProductoHelper';
+import { convertirMuchosDatos as convertirUsuarios } from '../../mapeo/Helpers/UserHelper';
 
 import { dividirArray } from '../../public-component/Common-functions/ArrayFunct';
 import CategoryFilter from '../../public-component/Product/CategoryComponent/CategoryFilter';
@@ -47,6 +48,8 @@ function RealizarVenta() {
     //Variable que guarda el valor puesto en el filtro por nombre
     var [nomFiltro, setNomFiltro] = React.useState('');
 
+    //constante con la region del representante
+    const [regionRep, setRegionRep] = React.useState('');
 
     //Constante que cambia el valor de la variable del modal
     const handleClModal = () => setShowClModal(!setShowClModal);
@@ -74,9 +77,9 @@ function RealizarVenta() {
 
             //Si la categoria elegida no tiene categoria padre entonces se envia la categoria elegida como categoria padre
             if (!datos.idCatPadre) {
-                data = await peticion("AND", datos.idCat, null);
+                data = await peticion(regionRep, datos.idCat, null);
             } else {
-                data = await peticion("AND", datos.idCatPadre, datos.idCat);
+                data = await peticion(regionRep, datos.idCatPadre, datos.idCat);
             }
 
             // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
@@ -91,9 +94,14 @@ function RealizarVenta() {
                 //Se espera la promesa de peticion de clientes
                 const dataCl = await peticionClientes();
 
-                let clientes = convertirMuchosDatosCliente(dataCl.records);
+                let clientes = convertirMuchosDatosCliente(dataCl.records, dataCl.fields);
                 setClientesData(clientes);
 
+                //Se hace la peticion de usuario para guardar la region
+                const dataUser = await peticionUser();
+                let user = convertirUsuarios(dataUser.records, dataUser.fields)[0];
+                setRegionRep(user.region);
+                console.log(user);
             } catch (error) {
                 // Manejamos cualquier error que pueda ocurrir
                 console.error('Error al obtener los datos:', error);
@@ -108,14 +116,13 @@ function RealizarVenta() {
 
             //Records o resultados
             let { records, fields } = productosJson;
-             //Se convierten los records en productos
-             let productos = convertirProductos(records);
+            //Se convierten los records en productos
+            let productos = convertirProductos(records, fields);
 
             //Se divide el array de productos(records) en grupos de 3
             let lista = dividirArray(productos, 3);
             setListaProductos(lista);
             setListaProdTemp(lista);
-
             //Se reinicia el filtro de busqueda por nombre
             document.getElementById("nomFiltroInput").value = '';
             setNomFiltro('');
@@ -127,20 +134,10 @@ function RealizarVenta() {
         async function fetchData() {
             if (clienteActivo) {
                 // Esperamos la resolución de la promesa usando await
-                const data = await peticion("AND", null, null);
+                const data = await peticion(regionRep, null, null);
 
                 // Una vez que la promesa se resuelve, actualizamos el estado con los datos recibidos
                 SetProductosJson(data);
-
-                //Records o resultados
-                let { records, fields } = productosJson;
-                //Se divide el array de productos(records) en grupos de 3
-
-                if (records) {
-                    let lista = dividirArray(records, 3);
-                    setListaProductos(lista);
-                    setListaProdTemp(lista);
-                }
 
                 //Se cierra el modal
                 handleClModal();
@@ -201,7 +198,23 @@ function RealizarVenta() {
         });
     };
 
-    //Peticion para traer las regiones
+    //Peticion para traer datos del representante activo
+    var peticionUser = () => {
+        return new Promise((resolve, reject) => {
+            setMessage("");
+            Axios.post('http://localhost:8080/Login/datosbasicos', { "Serial": window.sessionStorage.getItem("Serial") })
+                .then((response) => {
+                    // Resolvemos la promesa con los datos recibidos
+                    resolve(response.data);
+                })
+                .catch((error) => {
+                    // Rechazamos la promesa con el mensaje de error
+                    setMessage(error.response.data.errors);
+                });
+        });
+    };
+
+    //Peticion para traer los clientes del representante
     var peticionClientes = () => {
         return new Promise((resolve, reject) => {
             setMessage("");
@@ -230,21 +243,21 @@ function RealizarVenta() {
 
             let producto = "";
             //Se recorre la lista de listas de productos hasta encontrar al producto respectivo
-             for (let i = 0; i < listaProductos.length; i++) {
+            for (let i = 0; i < listaProductos.length; i++) {
                 let listaP = listaProductos[i];
                 producto = buscarProducto(listaP, productoId);
-                if(producto.codProducto){
+                if (producto.codProducto) {
                     break;
                 }
-             }
-            
+            }
+
 
             if (cant > 0) {
                 setTimeout(() => {
                     //Guardar en el carrito
                     setLoading(false);
                 }, 1000); // Tiempo de espera
-                actualizarCarrito(clienteActivo, producto.nomProducto, productoId, cant, producto.precioUnitario);
+                actualizarCarrito(clienteActivo, producto, regionRep, cant, producto.precioUnitario);
                 alert(`Producto ${producto.nomProducto} agregado con ${cant} unidades`);
                 prodForm.elements["cantidad"].value = "";
             } else {
@@ -288,10 +301,10 @@ function RealizarVenta() {
             <Alert variant="primary">
                 <h4>Cliente seleccionado {clienteActivo}</h4>
                 <div className="d-grid gap-2">
-                <Button variant="primary" onClick={() => setShowClModal(true)}>
-                    Cambiar cliente
-                </Button>
-            </div>
+                    <Button variant="primary" onClick={() => setShowClModal(true)}>
+                        Cambiar cliente
+                    </Button>
+                </div>
             </Alert>
 
             <div className="d-grid gap-2">

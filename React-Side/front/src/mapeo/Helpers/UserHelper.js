@@ -3,28 +3,70 @@
 
 import Usuario from "../Classes/Usuario";
 
-//convierte datos traidos de Axios a clase de region
-function convertirDatos(record) {
-    let user = new Usuario();
-    user.region = record[0];
-    user.primerNombre = record[1];
-    user.segundoNombre = record[2];
-    user.primerApellido = record[3];
-    user.segundoApellido = record[4];
-    user.correo = record[6];
+const campoMap = {
+    k_cod_ciudad: 'ciudad',
+    n_primer_nombre: 'primerNombre',
+    n_segundo_nombre: 'segundoNombre',
+    n_primer_apellido: 'primerApellido',
+    n_segundo_apellido: 'segundoApellido',
+    o_email: 'correo',
+    q_num_telefono: 'numTelefono',
+    o_direccion: 'direccion',
+    k_cod_region: 'region'
+};
 
-    return user;
+
+//convierte datos traidos de Axios a clase de usuario
+function convertirDatos(record,fields) {
+    let usuario = new Usuario();
+    // Verifica si se proporciona una lista de campos
+    if (Array.isArray(fields)) {
+        // Itera sobre los campos y asigna los valores correspondientes
+        fields.forEach((campoDb, index) => {
+            // Verifica si el índice está dentro del rango de la lista de campos
+            if (index < record.length) {
+                // Verifica si el campo mapeado está en el campo de fields
+                if (campoDb.name.toLowerCase() in campoMap) {
+                    //Se asigna el campo corresponiente en records
+                    const campoApp = campoMap[campoDb.name.toLowerCase()];
+                    usuario[campoApp] = record[index];
+                }
+            }
+        });
+    } else {
+        // Itera sobre las claves del mapeo
+        for (let campoDb in campoMap) {
+            // Verifica si el campo mapeado está en el registro
+            if (record[campoDb] !== undefined) {
+                const campoApp = campoMap[campoDb];
+                usuario[campoApp] = record[campoDb];
+            }
+        }
+    }
+    return usuario;
+
 }
 
-//Solo convierte los datos de nombre y correo
-function convertirDatosParcial(record){
-    let user = new Usuario();
-    user.region = record[0];
-    user.primerNombre = record[1];
-    user.primerApellido = record[2];
-    user.correo = record[3];
-
-    return user;
+//Convierte muchos records de axios a una lista de pedidos
+function convertirMuchosDatos(records,fields) {
+    let listausuarios = [];
+    records.map((rec, index) => (
+        listausuarios.push(convertirDatos(rec, fields))
+    ))
+    return listausuarios;
 }
 
-export { convertirDatos, convertirDatosParcial}
+//Forma el nombre sin los espacioss en null
+function concatenarNombre(usuario){
+    //Traer componentes del nombre
+    const { primerNombre, segundoNombre, primerApellido, segundoApellido } = usuario;
+
+    const nombresYApellidos = [primerNombre, segundoNombre, primerApellido, segundoApellido]
+        .filter(nombre => nombre) // Filtra los valores que no sean null ni undefined
+        .join(' '); // Únelos con un espacio
+
+    return nombresYApellidos;
+}
+
+
+export { convertirDatos, convertirMuchosDatos, concatenarNombre}

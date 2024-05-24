@@ -1,4 +1,4 @@
-//Componente que trae 
+//Componente que trae los elementos necesarios para realizar un pago
 import React, { useState, useEffect } from 'react';
 import Alert from 'react-bootstrap/Alert';
 import Axios from 'axios';

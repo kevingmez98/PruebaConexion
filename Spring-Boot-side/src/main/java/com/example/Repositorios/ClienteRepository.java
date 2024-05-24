@@ -44,7 +44,8 @@ try {
     rs.next();
     String documentocliente=rs.getString("K_DOC_CLIENTE");
     System.out.println(documentocliente);
-    sql = "SELECT rc.n_primer_nombre, rc.n_primer_apellido FROM natame.contrato c, natame.representante rc "+
+    sql = "SELECT rc.n_primer_nombre, rc.n_primer_apellido, rc.n_segundo_nombre, rc.n_segundo_apellido, rc.q_num_telefono, rc.o_email "+
+          "FROM natame.contrato c, natame.representante rc "+
           "where C.K_DOC_CLIENTE=? AND RC.K_COD_REPRESENTANTE=C.K_COD_REPRESENTANTE AND C.F_TERMINO is null";
     stmt = solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,documentocliente);
@@ -203,7 +204,7 @@ public ResultSet ConsultarItemspedido(Conexion solicitante,String codpedido){
 public ResultSet getdetallesdepago(Conexion solicitante, String idpedido){
     
 try {
-    String sql= "SELECT P.K_COD_PAGO, P.F_FECHA,I_METODO,Q_VALOR FROM NATAME.PAGO P, NATAME.PEDIDO PE WHERE PE.K_COD_PAGO=P.K_COD_PAGO AND P.K_COD_PEDIDO=?";
+    String sql= "SELECT P.K_COD_PAGO, P.F_FECHA,I_METODO,Q_VALOR FROM NATAME.PAGO P, NATAME.PEDIDO PE WHERE PE.K_COD_PAGO=P.K_COD_PAGO AND PE.K_COD_PEDIDO=?";
     PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,idpedido);
     ResultSet rs=stmt.executeQuery();
@@ -220,7 +221,8 @@ return null;
 public ResultSet getdatosbasicos(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
-    String sql= "SELECT R.K_COD_REGION,R.N_PRIMER_NOMBRE,R.N_PRIMER_APELLIDO,R.O_EMAIL from natame.representante R WHERE K_COD_REPRESENTANTE=?";
+    String sql= "SELECT R.K_COD_REGION,R.N_PRIMER_NOMBRE,R.N_SEGUNDO_NOMBRE,R.N_PRIMER_APELLIDO,R.N_SEGUNDO_APELLIDO,R.O_EMAIL,R.I_GENERO, R.F_NACIMIENTO, R.Q_NUM_TELEFONO, R.O_DIRECCION" 
+               +" from natame.representante R WHERE K_COD_REPRESENTANTE=?";
     PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,solicitante.user.toUpperCase());
     ResultSet rs=stmt.executeQuery();
@@ -229,7 +231,8 @@ try {
        
         return rs;
     }
-    sql= "SELECT C.K_COD_CIUDAD,C.N_PRIMER_NOMBRE,C.N_PRIMER_APELLIDO,C.O_EMAIL FROM NATAME.CLIENTE C WHERE C.N_USERNAME=?";
+    sql= "SELECT C.K_COD_CIUDAD,C.N_PRIMER_NOMBRE,C.N_SEGUNDO_NOMBRE,C.N_PRIMER_APELLIDO,C.N_SEGUNDO_APELLIDO,C.O_EMAIL, C.Q_NUM_TELEFONO, C.O_DIRECCION"
+        +" FROM NATAME.CLIENTE C WHERE C.N_USERNAME=?";
     stmt=solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,solicitante.user.toUpperCase());
     rs=stmt.executeQuery();
