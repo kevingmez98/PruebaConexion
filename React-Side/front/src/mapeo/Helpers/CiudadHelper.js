@@ -1,26 +1,18 @@
 
-//ClienteHelper contiene metodos de ayuda para manejar el mapeo
+//CiudadHelper contiene metodos de ayuda para manejar el mapeo
 
-import Cliente from "../Classes/Cliente";
+import Ciudad from "../Classes/Ciudad";
 
 // Define un mapeo de nombres de campo entre la base de datos y la aplicación
 const campoMap = {
-    n_username: 'username',
-    k_doc_cliente: 'docCliente',
-    i_tipo_doc: 'tipoDoc',
-    k_cod_ciudad: 'codCiudad',
-    n_primer_nombre: 'primerNombre',
-    n_segundo_nombre: 'segundoNombre',
-    n_primer_apellido: 'primerApellido',
-    n_segundo_apellido: 'segundoApellido',
-    o_email: 'email',
-    q_num_telefono: 'numTelefono',
-    o_direccion: 'direccion',
+    k_cod_ciudad:"codCiudad",
+    k_cod_region:"codRegion",
+    n_nom_ciudad:"nomCiudad" 
 };
 
 //convierte datos traidos de Axios a clase de region
 function convertirDatos(record,fields) {
-    let cliente = new Cliente();
+    let ciudad = new Ciudad();
     // Verifica si se proporciona una lista de campos
     if (Array.isArray(fields)) {
         // Itera sobre los campos y asigna los valores correspondientes
@@ -31,7 +23,7 @@ function convertirDatos(record,fields) {
                 if (campoDb.name.toLowerCase() in campoMap) {
                     //Se asigna el campo corresponiente en records
                     const campoApp = campoMap[campoDb.name.toLowerCase()];
-                    cliente[campoApp] = record[index];
+                    ciudad[campoApp] = record[index];
                 }
             }
         });
@@ -41,20 +33,21 @@ function convertirDatos(record,fields) {
             // Verifica si el campo mapeado está en el registro
             if (record[campoDb] !== undefined) {
                 const campoApp = campoMap[campoDb];
-                cliente[campoApp] = record[campoDb];
+                ciudad[campoApp] = record[campoDb];
             }
         }
     }
-    return cliente;
+    return ciudad;
+
 }
 
 //Convierte muchos records de axios a una lista de regiones
 function convertirMuchosDatos(records, fields) {
-    let listaCliente = [];
+    let listaCiudad = [];
     records.map((rec, index) => (
-        listaCliente.push(convertirDatos(rec,fields))
+        listaCiudad.push(convertirDatos(rec,fields))
     ))
-    return listaCliente;
+    return listaCiudad;
 }
 
 export { convertirDatos, convertirMuchosDatos }

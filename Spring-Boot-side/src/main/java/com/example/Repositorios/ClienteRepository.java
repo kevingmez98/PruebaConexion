@@ -317,6 +317,8 @@ public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
         stmt=Pool.getPool().getSystem().getConexion().prepareStatement(sql);
         stmt.setString(1,cliente.getUsuario());
         stmt.setString(2,cliente.getDocumento());
+        System.out.println(cliente.getUsuario());
+        System.out.println(cliente.getDocumento());
         stmt.execute();
         sql="GRANT R_REPVENTAS to ?";
         stmt=Pool.getPool().getSystem().getConexion().prepareStatement(sql);
