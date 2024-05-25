@@ -297,7 +297,7 @@ public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
         stmt.setString(11, cliente.getDireccion());
         stmt.executeUpdate();
         
-        sql="INSERT INTO natame.CONTRATO values('1',?,?,?,?,?)";
+        sql="INSERT INTO natame.CONTRATO values(NATAME.CONTRATO_SEQ.NEXTVAL,?,?,?,?,?)";
         stmt=solicitante.getConexion().prepareStatement(sql);
         stmt.setString(1,solicitante.user.toUpperCase());
         stmt.setString(2,cliente.getDocumento());
@@ -315,7 +315,7 @@ public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
         stmt.close();
         sql="CREATE USER ? identified by ?";
         stmt=Pool.getPool().getSystem().getConexion().prepareStatement(sql);
-        stmt.setString(1,cliente.getUsuario());
+        stmt.setString(1,cliente.getUsuario().toUpperCase());
         stmt.setString(2,cliente.getDocumento());
         System.out.println(cliente.getUsuario());
         System.out.println(cliente.getDocumento());
