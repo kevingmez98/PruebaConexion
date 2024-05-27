@@ -3,9 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Alert from 'react-bootstrap/Alert';
 import Axios from 'axios';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
 
 import { convertirMuchosDatos as convertirPagos } from '../../../mapeo/Helpers/PagoHelper';
 import { convertirDatos } from '../../../mapeo/Helpers/PedidoHelper';
@@ -77,6 +74,7 @@ function VistaPagoComponent({idPedido}) {
                 let pagoPet = convertirPagos(dataPago.records, dataPago.fields)[0];
                 // let pagoPet = convertirPagos(pagoTemp.records, pagoTemp.fields)[0];;
                 setPago(pagoPet);
+                console.log(idPedido);
                 console.log(pagoTemp);
                 console.log(dataPago);
 

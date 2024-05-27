@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import { obtenerCarrito, actualizarCarrito } from "./CarritoSession";
+import { obtenerCarrito, actualizarCarrito, eliminarCarrito } from "./CarritoSession";
 import SimpleProductCard from '../CardProduct/SimpleProductCard';
 import { convertirMuchosDatos as convertirProductos, buscarProducto } from '../../../mapeo/Helpers/ProductoHelper';
 import Pedido from '../../../mapeo/Classes/Pedido';
@@ -12,7 +12,7 @@ import Axios from 'axios';
 import Alert from 'react-bootstrap/Alert';
 import { dividirArray } from '../../../public-component/Common-functions/ArrayFunct';
 
-function CarritoComponent({isCliente}) {
+function CarritoComponent({ isCliente }) {
 
     //Btn para gestionar el estado de los botones
     const [isBtnLoading, setLoading] = useState(false);
@@ -104,65 +104,79 @@ function CarritoComponent({isCliente}) {
 
     function crearPedido() {
         let carrito = obtenerCarrito();
-        let listaProd = carrito.productos;
-        let pedido = new Pedido();
-        for (let i = 0; i < listaProd.length; i++) {
-            let item = new Item();
+        if (carrito) {
+            let listaProd = carrito.productos;
+            let pedido = new Pedido();
+            if (listaProd && listaProd.length > 0) {
 
-            /*Debido a la conversion de productos a JSON se usa el nombre privado de las variables, 
-            no se puede acceder al getter y setter al no ser objetos tipo producto. 
-            Convertirlos en este punto no aporta nada.*/
+                //Se crean los items
+                for (let i = 0; i < listaProd.length; i++) {
+                    let item = new Item();
 
-   
-            item.codProducto = listaProd[i].producto._codProducto;
-            item.cantidad = listaProd[i].cantidad;
-            item.codRegion = carrito.region;
-            item.idCategoriaProducto = listaProd[i].producto._idCatProducto;
-            item.producto = listaProd[i].producto;
-            pedido.agregarItem(item);   
-        }
+                    /*Debido a la conversion de productos a JSON se usa el nombre privado de las variables, 
+                    no se puede acceder al getter y setter al no ser objetos tipo producto. 
+                    Convertirlos en este punto no aporta nada.*/
 
-        var peticion = () => {
-            setMessage("");
-            if (isCliente) {
-                pedido.documentoCliente=carrito.idCliente;
-       
-                //Se hace pago como cliente se envia solamente el serial
-                Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido.items, "Serial": sessionStorage.getItem("Serial") })
-                    .then((response) => {
 
-                        setMessage("Carrito enviado");
-                        // Redireccion
+                    item.codProducto = listaProd[i].producto._codProducto;
+                    item.cantidad = listaProd[i].cantidad;
+                    item.codRegion = carrito.region;
+                    item.idCategoriaProducto = listaProd[i].producto._idCatProducto;
+                    item.producto = listaProd[i].producto;
+                    pedido.agregarItem(item);
+                }
 
+                var peticion = () => {
+                    setMessage("");
+                    if (isCliente) {
+                        pedido.documentoCliente = carrito.idCliente;
+
+                        //Se hace pago como cliente se envia solamente el serial
+                        Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido.items, "Serial": sessionStorage.getItem("Serial") })
+                            .then((response) => {
+                                setMessage("Carrito enviado");
+                                // Redireccion
+                            }
+                            ).catch((error) => {
+                                setMessage(error.response.data.errors)
+                            })
+
+                        alert("pedido enviado como cliente. Serial " + sessionStorage.getItem("Serial") + " id/serial: " + carrito.idCliente);
+                    } else {
+                        //Se hace pago como representante. Se envia la sesion del representante y el id del cliente
+                        Axios.post('http://localhost:8080/cliente/CrearPedidoRep', { "_items": pedido._items, "Serial": sessionStorage.getItem("Serial"), "Utilitary": carrito.idCliente })
+                            .then((response) => {
+
+                                setMessage("Carrito enviado");
+                                // Redireccion
+
+                            }
+                            ).catch((error) => {
+                                setMessage(error.response.data.errors)
+                            })
+                        alert("pedido enviado como representante. Para cliente con id: " + carrito.idCliente);
                     }
-                    ).catch((error) => {
-                        setMessage(error.response.data.errors)
-                    })
-
-                alert("pedido enviado como cliente. Serial "+sessionStorage.getItem("Serial")+" id/serial: "+carrito.idCliente);
-            }else{
-                //Se hace pago como representante. Se envia la sesion del representante y el id del cliente
-                     Axios.post('http://localhost:8080/cliente/CrearPedidoRep', { "_items": pedido._items, "Serial": sessionStorage.getItem("Serial"), "Utilitary": carrito.idCliente })
-                    .then((response) => {
-
-                        setMessage("Carrito enviado");
-                        // Redireccion
-
-                    }
-                    ).catch((error) => {
-                        setMessage(error.response.data.errors)
-                    })
-                alert("pedido enviado como representante. Para cliente con id: "+carrito.idCliente);
+                }
+                peticion.call();
+                //Borrar carrito
+                eliminarCarrito();
+                //Actualizar la pagina
+                window.location.reload();
+            } else {
+                alert("El carrito no puede estar vacio... ");
             }
+        }else{
+            alert("El carrito no puede estar vacio... ");
         }
-        peticion.call();
     }
 
 
     return (
         <React.Fragment>
             {/*Mensaje de error */}
-            <p style={{ color: 'red' }}>{ErroMessage}</p>
+            {ErroMessage && (
+                <Alert variant="danger">{ErroMessage}</Alert>
+            )}
             <p>Precio total: {carrito && carrito.total ? carrito.total : 0}</p>
             <Button onClick={crearPedido}>Realizar pedido</Button>
 
@@ -173,7 +187,7 @@ function CarritoComponent({isCliente}) {
                         <Col key={`${index}-${ix}`}>
                             <SimpleProductCard idProd={producto.producto._codProducto} nomProducto={producto.producto._nomProducto} precio={producto.precioUnitario} key={index}>
                                 <Form id={`form-prod-${index}-${ix}`}>
-                                <h2>{console.log(producto)}</h2>
+                                    <h2>{console.log(producto)}</h2>
                                     <Form.Label htmlFor={`cant-${index}-${ix}`}>Cantidad actual en el carrito: {producto.cantidad}</Form.Label>
                                     <br />
                                     <Form.Control type='number'
