@@ -88,13 +88,19 @@ function GestionarRepCl() {
         var peticionNuevoRep = () => {
             setMessage("");
             //Se hace la peticion al back
-            Axios.post('http://localhost:8080/cliente/cambiarRepresentante', { "Serial": sessionStorage.getItem("Serial") })
+            Axios.post('http://localhost:8080/representante/cambiarRepresentante', { "Serial": sessionStorage.getItem("Serial") })
                 .then((response) => {
                     alert(response);
                 }
                 ).catch((error) => {
-                    setMessage(error.response.data.errors);
-                    alert(error.response.data.errors);
+                    // Rechazamos la promesa con el mensaje de error
+                    if (error.response && error.response.data && error.response.data.errors) {
+                        setMessage(error.response.data.errors);
+                        reject(error.response.data.errors);
+                    } else {
+                        setMessage("Error desconocido");
+                        reject("Error desconocido");
+                    }
                 })
         }
         // Mostrar el cuadro de confirmación
