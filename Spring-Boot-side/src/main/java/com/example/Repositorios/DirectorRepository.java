@@ -1,5 +1,6 @@
 package com.example.Repositorios;
 
+import java.sql.CallableStatement;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -132,6 +133,7 @@ public String volarcorea(Conexion solicitante){
 
     try{
         //Se llama al procedimiento almacenado
+        
     }catch(Exception e){
         return "Corea fue mas fuerte";
     }
@@ -139,12 +141,23 @@ return "Corea more like Cursed diarrea";
 }
 public String volarcoreaR(Conexion solicitante){
     //Recuperar region
+    
     try{
+        String sql="select K_COD_REGION REGION from s_representante where k_cod_representante=? ";
+    PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+    stmt.setString(1,solicitante.user);
+    ResultSet rs=stmt.executeQuery();
+    rs.next();
+    String codigoRegion=rs.getString("REGION");
+     CallableStatement cambiarRepresentante=solicitante.getConexion().prepareCall("{call NATAME.PK_REPRESENTANTE.PR_CLASIFICAR_REPRESENTANTES(?)}");
+        cambiarRepresentante.setString(1,codigoRegion);
+        cambiarRepresentante.execute();
+        cambiarRepresentante.close();
         //Se llama al procedimiento almacenado
     }catch(Exception e){
-        return "Corea fue mas fuerte";
+        return e.getMessage();
     }
-return "Corea more like Cursed diarrea";
+return null;
 }
 
 

@@ -91,10 +91,10 @@ public class RepresentanteController {
             JSONObject resultado=new JSONObject();
          if(message==null){
             resultado.put("message","Representante cambiado con esito");
-            return new ResponseEntity(message.toString(),HttpStatus.OK);  
+            return new ResponseEntity(resultado.toString(),HttpStatus.OK);  
          }
          resultado.put("message","No hay un representante disponible");
-         return new ResponseEntity(message.toString(),HttpStatus.BAD_REQUEST);
+         return new ResponseEntity(resultado.toString(),HttpStatus.BAD_REQUEST);
           
         }
         @PostMapping(value="/verEstadisticas",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)

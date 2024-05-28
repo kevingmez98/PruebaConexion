@@ -55,9 +55,15 @@ public class DirectorController {
         }
         @PostMapping(value="/clasificacionRegional",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity ReclasificarRegion(@RequestBody SerialPOJO Serial){
-         JSONObject respuesta= directorservice.reclasificarRegion(Serial.Serial);
-         
-         return new ResponseEntity(respuesta.toString(),HttpStatus.OK);
+         String respuesta= directorservice.reclasificarRegion(Serial.Serial);
+         JSONObject message=new JSONObject();
+         if(respuesta==null){
+            message.put("message","Reclasificacion exitosa");
+            return new ResponseEntity(message.toString(),HttpStatus.OK);
+
+         }
+         message.put("message",message);
+         return new ResponseEntity(message.toString(),HttpStatus.BAD_REQUEST);
           
         }
 

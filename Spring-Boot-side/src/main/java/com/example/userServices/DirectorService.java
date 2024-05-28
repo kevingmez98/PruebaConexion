@@ -32,12 +32,10 @@ public class DirectorService {
         return respuesta;
 
     }
-    public JSONObject reclasificarRegion(String serial){
+    public String reclasificarRegion(String serial){
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
-        JSONObject respuesta=new JSONObject();
-        respuesta.put("message",DirectorRepository.getRepositorio().volarcoreaR(solicitante));
-        return respuesta;
-
+        return DirectorRepository.getRepositorio().volarcoreaR(solicitante);
+        
     }
     public JSONObject verListaEstadisticas(String serial){
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
