@@ -6,7 +6,7 @@ import { eliminarCarrito } from '../../public-component/Product/Carrito/CarritoS
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    faEnvelope, faPenNib, faHouse, faUser, faCircleUser, faCartShopping,
+    faChartPie, faChartBar, faPenNib, faHouse, faUser, faCircleUser, faCartShopping,
     faHandshake, faUsers, faWarehouse, faSignOut
 } from '@fortawesome/free-solid-svg-icons'
 function SideBar() {
@@ -45,12 +45,14 @@ function SideBar() {
                 </li>
                 <li>
                     <AccordionGroup icon={faCircleUser} nombreBtn={"Representante de ventas"} nombreGrupo={"representante-ventas"}>
+                        <SideBarBtn nombreBtn={"Mis estadisticas"} icon={faChartBar} route={"/mis-estadisticas"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Realizar venta"} icon={faPenNib} route={"/realizar-venta"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Ver carrito"} icon={faCartShopping} route={"/ver-carrito"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Gestionar clientes"} icon={faUser} route={"/gestion-cliente"}></SideBarBtn>
                     </AccordionGroup>
 
                     <AccordionGroup icon={faCircleUser} nombreBtn={"Representante general"} nombreGrupo={"representante-general"}>
+                        <SideBarBtn nombreBtn={"Estadisticas representantes"} icon={faChartPie} route={"/lista-estadisticas"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Realizar venta"} icon={faPenNib} route={"/realizar-venta"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Gestionar clientes"} icon={faUser} route={"/gestion-cliente"}></SideBarBtn>
                         <SideBarBtn nombreBtn={"Gestionar representantes"} icon={faUsers} route={"/gestion-representante"}></SideBarBtn>

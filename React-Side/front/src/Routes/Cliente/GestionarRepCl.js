@@ -81,6 +81,35 @@ function GestionarRepCl() {
         });
     };
 
+
+    //Funcion para cambiar el representante
+    function handleNuevoRepresentante() {
+        //Peticion para cambiar el representante
+        var peticionNuevoRep = () => {
+            setMessage("");
+            //Se hace la peticion al back
+            Axios.post('http://localhost:8080/cliente/cambiarRepresentante', { "Serial": sessionStorage.getItem("Serial") })
+                .then((response) => {
+                    alert(response);
+                }
+                ).catch((error) => {
+                    setMessage(error.response.data.errors);
+                    alert(error.response.data.errors);
+                })
+        }
+        // Mostrar el cuadro de confirmación
+        const isConfirmed = window.confirm('¿Estás seguro de que deseas cambiar de representante?');
+
+        // Si el usuario confirmó, llamar al método deseado
+        if (isConfirmed) {
+            //Llamar la petición 
+            peticionNuevoRep.call();
+        }
+
+    }
+
+
+
     return (
         <React.Fragment>
             <Alert variant="light">¿Quien es mi representante?</Alert>
@@ -98,8 +127,8 @@ function GestionarRepCl() {
                             {/* mostrar las propiedades del pedido */}
                             <TableCell>{nomRepresentante}</TableCell>
                             <TableCell>{representante.numTelefono}</TableCell>
-                            <TableCell>{representante.correo}</TableCell> 
-                            <TableCell><Button>Cambiar</Button></TableCell>
+                            <TableCell>{representante.correo}</TableCell>
+                            <TableCell><Button onClick={handleNuevoRepresentante}>Cambiar</Button></TableCell>
                         </tr>
                     )}
                 </tbody>

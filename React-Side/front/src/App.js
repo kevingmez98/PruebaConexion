@@ -20,6 +20,9 @@ import GestionarCarritoCl from './Routes/Cliente/GestionarCarritoCl';
 import RealizarCompraCl from './Routes/Cliente/RealizarCompraCl';
 import GestionarCarritoRep from './Routes/Representante/GestionarCarritoRep';
 
+import VerListaEstadisticas from './Routes/Rep-general/VerListaEstadisticas';
+import VerEstadisticas from './Routes/Representante/VerEstadisticas';
+
 function App() {
   return (
     //Rutas del proyecto
@@ -30,6 +33,10 @@ function App() {
         <Route element={<DashBoardPage />}>  
           <Route path='/home' element={<Home />} />
           <Route path='/profile' element={<Profile/>} />
+
+          <Route path='/mis-estadisticas' element={<VerEstadisticas/>}/>
+          <Route path='/lista-estadisticas' element={<VerListaEstadisticas/>}/>
+          
           <Route path='/realizar-venta' element={<RealizarVenta/>} />
           <Route path='/gestion-cliente' element={<GestionarCliente/>} />
           <Route path='/gestion-representante' element={<GestionarRepresentante/>} />
