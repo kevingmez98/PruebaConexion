@@ -398,7 +398,11 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
             System.out.println(cantidadStock.getInt(1)+" "+e.get_cantidad());
             if(e.get_cantidad()>cantidadStock.getInt(1)){
                 solicitante.message="No hay suficiente del producto "+ e.get_catProducto()+" en la region "+e.get_region();
-                throw new IOException("Productos insuficientes");   
+                solicitante.getConexion().rollback();
+                return solicitante.message;
+                   
+                
+                
             }
             stmt.setString(1,e.get_region());
             stmt.setString(2,e.get_codigoProducto());
@@ -408,15 +412,16 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
         }
         
          solicitante.getConexion().commit();
-    } catch(IOException a){
-        
-        a.printStackTrace();
-        return a.getMessage();
-    }
+    } 
     catch (Exception e) {
         System.out.println("Fallo la creacion de los items");
         System.out.println(e.getMessage());
         solicitante.message=e.getMessage();
+        try{
+            solicitante.getConexion().rollback();
+        }catch(Exception a){
+            
+        }
         return e.getMessage();
     }
    
