@@ -84,6 +84,7 @@ public void crearRepresentante(Conexion solicitante,CLIENTEPOJO cliente){
         stmt.setString(3, "BGN");
         stmt.setString(4, solicitante.user.toUpperCase());
         stmt.setString(5, cliente.getPrimernombre().toUpperCase());
+        System.out.println(cliente.getPrimernombre());
         if(cliente.getSegundonombre()!=null){
             stmt.setString(6, cliente.getSegundonombre().toUpperCase());
         }else{
@@ -99,12 +100,6 @@ public void crearRepresentante(Conexion solicitante,CLIENTEPOJO cliente){
         stmt.setString(13, cliente.getNumtelefono());
         stmt.setString(14, cliente.getDireccion());
         stmt.executeUpdate();
-        
-        sql="INSERT INTO S_CONTRATO values(natame.CONTRATO_ID_SEQ.NEXTVAL,?,?,?,?,?)";
-        stmt=solicitante.getConexion().prepareStatement(sql);
-        stmt.setString(1,solicitante.user.toUpperCase());
-        stmt.setString(2,cliente.getDocumento());
-        stmt.setString(3,cliente.getTipodocumento());
         //Fecha actual
         stmt.setDate(4,today);
         stmt.setNull(5,Types.DATE);
