@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ConnectionPool.Conexion;
+import com.example.Utils.CLIENTEPOJO;
 import com.example.Utils.SerialPOJO;
 import com.example.userServices.DirectorService;
 import com.example.userServices.RepresentanteService;
@@ -65,6 +66,24 @@ public class DirectorController {
          JSONObject respuesta= directorservice.verListaEstadisticas(Serial.Serial);
          
          return new ResponseEntity(respuesta.toString(),HttpStatus.OK);
+
           
         }
+
+        @PostMapping(value="/crearRepresentante",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity getCiudades(@RequestBody CLIENTEPOJO cliente){
+        if(cliente.getSerial()==null){
+            JSONObject error=new JSONObject();
+            error.put("errors","Peticion invalida, hace falta identificador");
+            return new ResponseEntity(error.toString(),HttpStatus.BAD_REQUEST);
+        }
+        String message= directorservice.crearRepresentante(cliente);
+
+         JSONObject error = new JSONObject();
+         error.put("errors",message);
+         
+         return new ResponseEntity(error.toString(),HttpStatus.OK);
+          
+        }
+        
 }

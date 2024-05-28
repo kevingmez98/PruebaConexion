@@ -5,7 +5,9 @@ import org.json.JSONObject;
 
 import com.example.ConnectionPool.Conexion;
 import com.example.ConnectionPool.Pool;
+import com.example.Repositorios.ClienteRepository;
 import com.example.Repositorios.DirectorRepository;
+import com.example.Utils.CLIENTEPOJO;
 import com.example.Utils.JsonManager;
 
 /*
@@ -43,5 +45,12 @@ public class DirectorService {
         respuesta.put("message",DirectorRepository.getRepositorio().verListaEstadisticas(solicitante));
         return respuesta;
     }
+
+     public String crearRepresentante(CLIENTEPOJO cliente){
+        Conexion solicitante=Pool.getPool().getConexionbyserial(cliente.getSerial());
+        DirectorRepository.getRepositorio().crearRepresentante(solicitante,cliente);
+        return solicitante.message;
+    }
+    
     
 }
