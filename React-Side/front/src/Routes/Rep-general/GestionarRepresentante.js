@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import Alert from 'react-bootstrap/Alert';
 
 function GestionarRepresentante() {
 
@@ -24,7 +25,10 @@ function GestionarRepresentante() {
         email: '',
         genero: '',
         numTelefono: '',
-        direccion: ''
+        direccion: '',
+        fechaNacimiento: '',
+        documento:'',
+        tipoDoc:''
     });
 
     //Variable con los posibles genero
@@ -49,10 +53,11 @@ function GestionarRepresentante() {
         //Evitar que se actualice
         event.preventDefault();
 
-        console.log(formData);
+        console.log("====?");
 
-        peticionCrearRep();
-
+        if (validarFecha()) {
+            peticionCrearRep();
+        }
     }
 
 
@@ -83,7 +88,8 @@ function GestionarRepresentante() {
                 "serial": window.sessionStorage.getItem("Serial"),
                 "primernombre": formData.primerNombre, "segundonombre": formData.segundoNombre,
                 "primerapellido": formData.primerApellido, "segundoapellido": formData.segundoApellido, "email": formData.email,
-                "numtelefono": formData.numTelefono, "direccion": formData.direccion, "genero": formData.genero
+                "numtelefono": formData.numTelefono, "direccion": formData.direccion, "genero": formData.genero, 
+                "fechanacimiento": formData.fechaNacimiento, "documento": formData.documento, "tipodocumento": formData.tipoDoc
             })
                 .then((response) => {
                     // Resolvemos la promesa con los datos recibidos
@@ -91,11 +97,32 @@ function GestionarRepresentante() {
                 })
                 .catch((error) => {
                     // Rechazamos la promesa con el mensaje de error
-                    setMessage(error.response.data.errors);
+                    if (error.response && error.response.data && error.response.data.errors) {
+                        setMessage(error.response.data.errors);
+                    } else {
+                        setMessage("Error desconocido");
+                    }
                 });
         });
     };
 
+    function validarFecha() {
+        const today = new Date();
+        const selected = new Date(formData.fechaNacimiento);
+        const eighteenYearsAgo = new Date();
+        eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+
+        console.log(selected);
+        console.log(eighteenYearsAgo);
+
+        // Validar que la fecha seleccionada sea al menos 18 años antes de la fecha actual
+        if (selected > eighteenYearsAgo) {
+            alert('Debe tener al menos 18 años.');
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     var peticion = () => {
         return new Promise((resolve, reject) => {
@@ -123,9 +150,35 @@ function GestionarRepresentante() {
             <SimpleTable dataJson={jsonData}></SimpleTable>
             <br />
             <hr />
+            <Alert variant="info">Crear representante</Alert>
+            {/*Mensaje de error */}
+            {ErroMessage && (
+                <Alert variant="danger">{ErroMessage}</Alert>
+            )}
             {/*Formulario para crear clientes */}
             <Form onSubmit={handleForm}>
+            <Row className="mb-3">
+                    <Form.Group as={Col} controlId="formGridTipoDoc">
+                        <Form.Label>Tipo de documento.</Form.Label>
+                        <Form.Select
+                            name="tipoDoc" value={formData.tipoDoc}
+                            onChange={handleFormChange}
+                            required >
 
+                            <option value="">Escoger</option>
+                            <option value="CC">Cedula de ciudadania</option>
+                            <option value="TI">Tarjeta de identidad</option>
+                            <option value="CE">Cedula de extranjeria</option>
+                            <option value="PS">Pasaporte</option>
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group as={Col} controlId="formGridDoc">
+                        <Form.Label>Documento</Form.Label>
+                        <Form.Control required
+                            name="documento" value={formData.documento}
+                            onChange={handleFormChange} />
+                    </Form.Group>
+               </Row>
                 <Row className="mb-3">
                     <Form.Group as={Col} controlId="formGridPrimerNom">
                         <Form.Label>Primer nombre</Form.Label>
@@ -174,16 +227,26 @@ function GestionarRepresentante() {
                 </Row>
 
                 <Row>
-                    
-                <Form.Group as={Col} controlId="formGridDireccion">
+                    <Form.Group as={Col} controlId="formGridDireccion">
                         <Form.Label>Direccion</Form.Label>
                         <Form.Control placeholder="Cll 123"
                             name="direccion" value={formData.direccion}
                             onChange={handleFormChange} />
                     </Form.Group>
-                    <Form.Group as={Col} controlId="formGridDireccion">
+
+                    <Form.Group>
+                        <Form.Label>Fecha de Nacimiento</Form.Label>
+                        <Form.Control
+                            type="date"
+                            name="fechaNacimiento"
+                            value={formData.fechaNacimiento}
+                            onChange={handleFormChange}
+                            required
+                        />
+                    </Form.Group>
+                    <Form.Group as={Col}>
                         <Form.Label>Genero</Form.Label>
-                        <br/>
+                        <br />
                         {genero.map((gen) => (
                             <Form.Check
                                 key={gen.value}
@@ -193,15 +256,20 @@ function GestionarRepresentante() {
                                 value={gen.value}
                                 checked={formData.genero === gen.value}
                                 onChange={handleFormChange}
+                                required
                                 inline
                             />
                         ))}
                     </Form.Group>
                 </Row>
-                <hr/>
-                <Button variant="primary" type="submit">
-                    Registrar
-                </Button>
+                <hr />
+                <div className="d-grid gap-2">
+                    <Button variant="primary" type="submit" size="lg">
+                        Registrar
+                    </Button>
+                </div>
+                <br />
+
             </Form>
         </React.Fragment>
 
