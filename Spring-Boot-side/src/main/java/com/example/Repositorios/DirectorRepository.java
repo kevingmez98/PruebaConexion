@@ -78,13 +78,13 @@ public void crearRepresentante(Conexion solicitante,CLIENTEPOJO cliente){
          sql="INSERT INTO S_REPRESENTANTE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
          stmt=solicitante.getConexion().prepareStatement(sql);
          LocalDate fechan=LocalDate.parse(cliente.getFechanacimiento());
-         Date fechanacimiento=Date.valueOf(fechan);
+         Date fechanacimiento=Date.valueOf(fechan); 
+         System.out.println(cliente.getPrimernombre());
         stmt.setString(1, cliente.getDocumento());
         stmt.setString(2, codRegion.toUpperCase());
         stmt.setString(3, "BGN");
         stmt.setString(4, solicitante.user.toUpperCase());
         stmt.setString(5, cliente.getPrimernombre().toUpperCase());
-        System.out.println(cliente.getPrimernombre());
         if(cliente.getSegundonombre()!=null){
             stmt.setString(6, cliente.getSegundonombre().toUpperCase());
         }else{
@@ -100,19 +100,16 @@ public void crearRepresentante(Conexion solicitante,CLIENTEPOJO cliente){
         stmt.setString(13, cliente.getNumtelefono());
         stmt.setString(14, cliente.getDireccion());
         stmt.executeUpdate();
-        //Fecha actual
-        stmt.setDate(4,today);
-        stmt.setNull(5,Types.DATE);
-        stmt.executeUpdate();
+        
         
         solicitante.message="Cliente creado con exito";
         stmt.close();
-        sql="CREATE USER "+cliente.getDocumento()+" identified by "+cliente.getDocumento();
+        sql="CREATE USER \""+cliente.getDocumento()+"\" identified by "+cliente.getDocumento();
         Statement ctmt=Pool.getSystem().getConexion().createStatement();
         System.out.println(cliente.getDocumento());
         ctmt.execute(sql);
         ctmt.close();
-        sql="GRANT R_Cliente to "+cliente.getDocumento();
+        sql="GRANT R_RepVentas to \""+cliente.getDocumento()+"\"";
         ctmt=Pool.getSystem().getConexion().prepareStatement(sql);
         ctmt.execute(sql);
         ctmt.close();
