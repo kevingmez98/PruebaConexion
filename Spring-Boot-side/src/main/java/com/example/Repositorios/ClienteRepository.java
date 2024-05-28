@@ -385,7 +385,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     }
     // Insertar Items
     try {
-        CallableStatement cantidadStock=solicitante.getConexion().prepareCall("{? = call NATAME.FU_CANTIDAD_STOCK(?,?,?)}");
+        CallableStatement cantidadStock=solicitante.getConexion().prepareCall("{? = call NATAME.PK_REPRESENTANTE.FU_CANTIDAD_STOCK(?,?,?)}");
         cantidadStock.registerOutParameter(1, Type.INT);
         String sql="INSERT into S_ITEM(S_ITEM.k_cod_item, S_ITEM.k_cod_pedido, S_ITEM.k_cod_region, S_ITEM.k_cod_producto, S_ITEM.i_id_cat_producto,Q_cantidad) "+
         "values(natame.ITEM_ID_SEQ.NEXTVAL,natame.PEDIDO_ID_SEQ.CURRVAL,?,?,?,?)";
@@ -409,6 +409,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
         
          solicitante.getConexion().commit();
     } catch(IOException a){
+        
         a.printStackTrace();
         return a.getMessage();
     }

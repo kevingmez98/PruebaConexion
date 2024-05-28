@@ -42,10 +42,10 @@ public class RepresentanteService {
         ClienteRepository.getRepositorio().crearCliente(solicitante,cliente);
         return solicitante.message;
     }
-    public JSONObject cambiarRepresentante(String serial){
+    public String cambiarRepresentante(String serial){
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
-        JSONObject resultado=new JSONObject();
-        resultado.put("message", RepresentanteRepository.getRepositorio().cambiarRepresentante(solicitante));
+        
+        String resultado= RepresentanteRepository.getRepositorio().cambiarRepresentante(solicitante);
         return resultado;
     }
 

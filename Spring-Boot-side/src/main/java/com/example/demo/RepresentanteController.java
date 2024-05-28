@@ -87,12 +87,13 @@ public class RepresentanteController {
         public ResponseEntity CambiarRepresentante(@RequestBody SerialPOJO serial){
         
         
-         JSONObject message= representanteservice.cambiarRepresentante(serial.Serial);
-
-         if(message.getString("message")==null){
+         String message= representanteservice.cambiarRepresentante(serial.Serial);
+            JSONObject resultado=new JSONObject();
+         if(message==null){
+            resultado.put("message","Representante cambiado con esito");
             return new ResponseEntity(message.toString(),HttpStatus.OK);  
          }
-         
+         resultado.put("message","No hay un representante disponible");
          return new ResponseEntity(message.toString(),HttpStatus.BAD_REQUEST);
           
         }

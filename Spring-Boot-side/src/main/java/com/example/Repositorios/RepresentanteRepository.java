@@ -75,15 +75,18 @@ return null;
 
 public String cambiarRepresentante(Conexion solicitante){
     try{
-        String sql="SELECT K_COD_CLIENTE CODIGO FROM S_CLIENTE WHERE N_USERNAME=?";
+        String sql="SELECT K_DOC_CLIENTE CODIGO FROM S_CLIENTE WHERE N_USERNAME=?";
         PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
         stmt.setString(1,solicitante.user.toUpperCase());
+        System.out.println(solicitante.user.toUpperCase());
         ResultSet rs=stmt.executeQuery();
         rs.next();
         String codigoCliente=rs.getString("CODIGO");
+        System.out.println(codigoCliente);
         CallableStatement cambiarRepresentante=solicitante.getConexion().prepareCall("{call NATAME.PK_REPRESENTANTE.PR_CAMBIAR_REP(?)}");
         cambiarRepresentante.setString(1,codigoCliente);
         cambiarRepresentante.execute();
+        cambiarRepresentante.close();
 
         
     }catch(Exception e){
