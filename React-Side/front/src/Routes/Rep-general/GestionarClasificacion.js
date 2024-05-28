@@ -62,15 +62,6 @@ function GestionarClasificacion() {
             )}
             <br />
             <hr />
-            <Row>
-                <Col></Col>
-                <Col>
-                    <Button variant="outline-dark" size="lg" onClick={handleClasificacionGeneral}>
-                        Realizar nueva clasificación
-                    </Button>
-                </Col>
-                <Col></Col>
-            </Row>
             <br />
             <hr />
             <Row>

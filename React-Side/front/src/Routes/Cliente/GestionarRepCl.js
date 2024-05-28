@@ -91,15 +91,17 @@ function GestionarRepCl() {
             Axios.post('http://localhost:8080/representante/CambiarRepresentante', { "Serial": sessionStorage.getItem("Serial") })
                 .then((response) => {
                     alert(response.message);
+
+                    //Actualizar la pagina
+                    window.location.reload();
                 }
                 ).catch((error) => {
                     // Rechazamos la promesa con el mensaje de error
                     if (error.response && error.response.data && error.response.data.errors) {
-                        setMessage(error.response.data.errors);
-                      
+                        setMessage(error.response.data.message);
                     } else {
-                        setMessage("Error desconocido");
-                   
+                        alert(error.response.data.message);
+                        setMessage(error.response.data.message);
                     }
                 })
         }
