@@ -7,6 +7,8 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
+
+import Alert from 'react-bootstrap/Alert';
 import Ciudad from "../../mapeo/Classes/Ciudad";
 import { convertirMuchosDatos as convertirCiudades } from "../../mapeo/Helpers/CiudadHelper";
 
@@ -49,8 +51,6 @@ function GestionarCliente() {
 
         //Evitar que se actualice
         event.preventDefault();
-
-        console.log(formData);
 
         peticionCrearCliente();
 
@@ -124,10 +124,20 @@ function GestionarCliente() {
                 .then((response) => {
                     // Resolvemos la promesa con los datos recibidos
                     resolve(response.data);
+                    alert("Cliente creado");
+                    
+                    window.location.reload();
+
                 })
                 .catch((error) => {
                     // Rechazamos la promesa con el mensaje de error
-                    setMessage(error.response.data.errors);
+                    if (error.response && error.response.data && error.response.data.errors) {
+                        setMessage(error.response.data.errors);
+                        alert("No se pudo crear el cliente");
+                    } else {
+                        setMessage("Error desconocido");
+
+                    }
                 });
         });
     };
@@ -137,7 +147,11 @@ function GestionarCliente() {
     return (
         //El react fragment no afecta el DOM pero permite envolver componentes
         <React.Fragment>
-            <p style={{ color: 'red' }}>{ErroMessage}</p>
+
+            {/*Mensaje de error */}
+            {ErroMessage && (
+                <Alert variant="danger">{ErroMessage}</Alert>
+            )}
 
             {/*Formulario para crear clientes */}
             <Form onSubmit={handleForm}>

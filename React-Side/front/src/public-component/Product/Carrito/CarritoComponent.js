@@ -135,7 +135,6 @@ function CarritoComponent({ isCliente }) {
                         Axios.post('http://localhost:8080/cliente/CrearPedido', { "_items": pedido.items, "Serial": sessionStorage.getItem("Serial") })
                             .then((response) => {
                                 setMessage("Carrito enviado");
-                                window.location.reload();
                                 // Redireccion
                             }
                             ).catch((error) => {
@@ -162,6 +161,7 @@ function CarritoComponent({ isCliente }) {
                 //Borrar carrito
                 eliminarCarrito();
                 //Actualizar la pagina
+                window.location.reload();
                 
             } else {
                 alert("El carrito no puede estar vacio... ");

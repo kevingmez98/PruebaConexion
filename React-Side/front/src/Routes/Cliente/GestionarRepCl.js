@@ -90,7 +90,7 @@ function GestionarRepCl() {
             //Se hace la peticion al back
             Axios.post('http://localhost:8080/representante/CambiarRepresentante', { "Serial": sessionStorage.getItem("Serial") })
                 .then((response) => {
-                    alert(response);
+                    alert(response.message);
                 }
                 ).catch((error) => {
                     // Rechazamos la promesa con el mensaje de error
