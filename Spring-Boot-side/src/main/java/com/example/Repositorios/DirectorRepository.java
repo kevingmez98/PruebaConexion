@@ -32,8 +32,8 @@ static private DirectorRepository repositorio;
         System.out.println(solicitante.user);
     try {
         String sql = "select representante.k_cod_representante,representante.n_primer_nombre,representante.n_segundo_nombre,representante.n_primer_apellido,representante.n_segundo_Apellido,representante.O_EMAIL,representante.I_GENERO,representante.F_Nacimiento,representante.F_contrato,representante.Q_NUM_TELEFONO,representante.O_Direccion,representante.K_COD_REP_SUP,representante.K_ID_CLASIFICACION,representante.K_COD_REGION" 
-        +" from S_REPRESENTANTE, S_REGION "
-        +" where S_REPRESENTANTE.k_cod_region=S_REGION.k_cod_region and S_REPRESENTANTE.k_cod_rep_sup=?";
+        +" from S_REPRESENTANTE representante, S_REGION "
+        +" where representante.k_cod_region=S_REGION.k_cod_region and representante.k_cod_rep_sup=?";
         PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
        stmt.setString(1,solicitante.user.toUpperCase());
        
@@ -50,7 +50,7 @@ static private DirectorRepository repositorio;
     return null;
 }
 
-public String volarcorea(Conexion solicitante, String regionogeneral){
+public String volarcorea(Conexion solicitante){
 
     try{
         //Se llama al procedimiento almacenado
@@ -59,6 +59,27 @@ public String volarcorea(Conexion solicitante, String regionogeneral){
     }
 return "Corea more like Cursed diarrea";
 }
+public String volarcoreaR(Conexion solicitante){
+    //Recuperar region
+    try{
+        //Se llama al procedimiento almacenado
+    }catch(Exception e){
+        return "Corea fue mas fuerte";
+    }
+return "Corea more like Cursed diarrea";
+}
+
+
+public String verListaEstadisticas(Conexion solicitante){
+
+    try{
+        //Se llama al procedimiento almacenado para ver lista estadisticas de todos los representontos
+    }catch(Exception e){
+        return "Corea fue mas fuerte";
+    }
+return "Corea more like Cursed diarrea";
+}
+
 
 
 }

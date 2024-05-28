@@ -88,7 +88,7 @@ function GestionarRepCl() {
         var peticionNuevoRep = () => {
             setMessage("");
             //Se hace la peticion al back
-            Axios.post('http://localhost:8080/cliente/cambiarRepresentante', { "Serial": sessionStorage.getItem("Serial") })
+            Axios.post('http://localhost:8080/representante/CambiarRepresentante', { "Serial": sessionStorage.getItem("Serial") })
                 .then((response) => {
                     alert(response);
                 }

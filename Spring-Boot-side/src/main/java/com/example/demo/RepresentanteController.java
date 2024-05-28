@@ -94,4 +94,16 @@ public class RepresentanteController {
          return new ResponseEntity(message.toString(),HttpStatus.OK);
           
         }
+        @PostMapping(value="/verEstadisticas",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity verEstadisticas(@RequestBody SerialPOJO serial){
+        
+        
+         JSONObject message= representanteservice.verEstadisticas(serial.Serial);
+
+         
+         
+         return new ResponseEntity(message.toString(),HttpStatus.OK);
+          
+        }
+        
 }

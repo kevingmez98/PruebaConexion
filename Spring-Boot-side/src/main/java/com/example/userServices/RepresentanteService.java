@@ -48,4 +48,15 @@ public class RepresentanteService {
         resultado.put("message", RepresentanteRepository.getRepositorio().cambiarRepresentante(solicitante));
         return resultado;
     }
+
+    public JSONObject verEstadisticas(String serial){
+        Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
+        JSONObject resultado=new JSONObject();
+        resultado.put("message", RepresentanteRepository.getRepositorio().verEstadisticas(solicitante));
+        return resultado;
+    }
+
+    
+    
+    
 }

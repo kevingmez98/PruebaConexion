@@ -23,13 +23,25 @@ public class DirectorService {
         }
         return new Pair<JSONObject,Conexion>(null,solicitante);
     }
-    public JSONObject reclasificar(String serial, String regionogeneral){
+    public JSONObject reclasificar(String serial){
         Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
         JSONObject respuesta=new JSONObject();
-        respuesta.put("message",DirectorRepository.getRepositorio().volarcorea(solicitante,regionogeneral));
+        respuesta.put("message",DirectorRepository.getRepositorio().volarcorea(solicitante));
         return respuesta;
-        
-
 
     }
+    public JSONObject reclasificarRegion(String serial){
+        Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
+        JSONObject respuesta=new JSONObject();
+        respuesta.put("message",DirectorRepository.getRepositorio().volarcoreaR(solicitante));
+        return respuesta;
+
+    }
+    public JSONObject verListaEstadisticas(String serial){
+        Conexion solicitante=Pool.getPool().getConexionbyserial(serial);
+        JSONObject respuesta=new JSONObject();
+        respuesta.put("message",DirectorRepository.getRepositorio().verListaEstadisticas(solicitante));
+        return respuesta;
+    }
+    
 }

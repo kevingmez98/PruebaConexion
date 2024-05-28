@@ -82,4 +82,17 @@ public String cambiarRepresentante(Conexion solicitante){
     }
     return "Se ha cambiado el representante con exito";
 }
+
+public String verEstadisticas(Conexion solicitante){
+    try{
+        //Llamar al procedimiento almacenado para ver las estadisticas de un solo representante
+
+        
+    }catch(Exception e){
+        return "Sorry socio";
+    }
+    return "Se ha cambiado el representante con exito";
+}
+
+
 }

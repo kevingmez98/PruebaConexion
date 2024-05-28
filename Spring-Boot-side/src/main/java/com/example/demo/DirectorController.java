@@ -45,9 +45,24 @@ public class DirectorController {
           
         }
 
-        @PostMapping(value="/Volarcorea",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        @PostMapping(value="/clasificacionGeneral",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity Reclasificar(@RequestBody SerialPOJO Serial){
-         JSONObject respuesta= directorservice.reclasificar(Serial.Serial,Serial.Utilitary);
+         JSONObject respuesta= directorservice.reclasificar(Serial.Serial);
+         
+         return new ResponseEntity(respuesta.toString(),HttpStatus.OK);
+          
+        }
+        @PostMapping(value="/clasificacionRegional",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity ReclasificarRegion(@RequestBody SerialPOJO Serial){
+         JSONObject respuesta= directorservice.reclasificarRegion(Serial.Serial);
+         
+         return new ResponseEntity(respuesta.toString(),HttpStatus.OK);
+          
+        }
+
+        @PostMapping(value="/verListaEstadisticas",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity VerEstadisticas(@RequestBody SerialPOJO Serial){
+         JSONObject respuesta= directorservice.verListaEstadisticas(Serial.Serial);
          
          return new ResponseEntity(respuesta.toString(),HttpStatus.OK);
           

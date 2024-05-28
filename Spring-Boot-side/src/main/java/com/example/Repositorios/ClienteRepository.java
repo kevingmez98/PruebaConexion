@@ -4,10 +4,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+
+import org.springframework.asm.Type;
 
 import com.example.ConnectionPool.Conexion;
 import com.example.ConnectionPool.Pool;
@@ -45,7 +49,7 @@ try {
     String documentocliente=rs.getString("K_DOC_CLIENTE");
     System.out.println(documentocliente);
     sql = "SELECT rc.n_primer_nombre, rc.n_primer_apellido, rc.n_segundo_nombre, rc.n_segundo_apellido, rc.q_num_telefono, rc.o_email "+
-          "FROM S_CONTRATO c, s rc "+
+          "FROM S_CONTRATO c, S_REPRESENTANTE rc "+
           "where C.K_DOC_CLIENTE=? AND RC.K_COD_REPRESENTANTE=C.K_COD_REPRESENTANTE AND C.F_TERMINO is null";
     stmt = solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,documentocliente);
@@ -346,6 +350,7 @@ public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
 public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     //falta comprobar la disponibilidad de los productos en el inventario
     //Se crea el pedido primero
+    
     try{
         String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from S_CLIENTE C where UPPER(C.n_username)=?";
         PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
@@ -380,10 +385,21 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     }
     // Insertar Items
     try {
-        String sql="INSERT into S_ITEM(item.k_cod_item, item.k_cod_pedido, item.k_cod_region, item.k_cod_producto, item.i_id_cat_producto,Q_cantidad) "+
+        CallableStatement cantidadStock=solicitante.getConexion().prepareCall("{? = call NATAME.FU_CANTIDAD_STOCK(?,?,?)}");
+        cantidadStock.registerOutParameter(1, Type.INT);
+        String sql="INSERT into S_ITEM(S_ITEM.k_cod_item, S_ITEM.k_cod_pedido, S_ITEM.k_cod_region, S_ITEM.k_cod_producto, S_ITEM.i_id_cat_producto,Q_cantidad) "+
         "values(natame.ITEM_ID_SEQ.NEXTVAL,natame.PEDIDO_ID_SEQ.CURRVAL,?,?,?,?)";
         PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
         for(ITEM e :pedido.get_items()){
+            cantidadStock.setString(2,e.get_region());
+            cantidadStock.setString(3,e.get_codigoProducto());
+            cantidadStock.setString(4,e.get_catProducto());
+            cantidadStock.execute();
+            System.out.println(cantidadStock.getInt(1)+" "+e.get_cantidad());
+            if(e.get_cantidad()>cantidadStock.getInt(1)){
+                solicitante.message="No hay suficiente del producto "+ e.get_catProducto()+" en la region "+e.get_region();
+                throw new IOException("Productos insuficientes");   
+            }
             stmt.setString(1,e.get_region());
             stmt.setString(2,e.get_codigoProducto());
             stmt.setString(3,e.get_catProducto());
@@ -392,7 +408,11 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
         }
         
          solicitante.getConexion().commit();
-    } catch (Exception e) {
+    } catch(IOException a){
+        a.printStackTrace();
+        return a.getMessage();
+    }
+    catch (Exception e) {
         System.out.println("Fallo la creacion de los items");
         System.out.println(e.getMessage());
         solicitante.message=e.getMessage();
