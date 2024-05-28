@@ -93,8 +93,14 @@ function GestionarRepCl() {
                     alert(response);
                 }
                 ).catch((error) => {
-                    setMessage(error.response.data.errors);
-                    alert(error.response.data.errors);
+                    // Rechazamos la promesa con el mensaje de error
+                    if (error.response && error.response.data && error.response.data.errors) {
+                        setMessage(error.response.data.errors);
+                      
+                    } else {
+                        setMessage("Error desconocido");
+                   
+                    }
                 })
         }
         // Mostrar el cuadro de confirmación
