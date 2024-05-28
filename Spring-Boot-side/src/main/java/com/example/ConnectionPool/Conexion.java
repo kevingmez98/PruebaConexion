@@ -95,7 +95,7 @@ public void getAllStudents() {
 public ResultSet ConsultarRegiones(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
-    String sql = "SELECT r.K_COD_REGION, r.N_NOM_REGION from REGION r";
+    String sql = "SELECT r.K_COD_REGION, r.N_NOM_REGION from S_REGION r";
     Statement stmt=solicitante.getConexion().createStatement();
    
     

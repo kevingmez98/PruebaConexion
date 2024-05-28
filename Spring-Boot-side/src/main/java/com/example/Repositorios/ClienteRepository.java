@@ -38,14 +38,14 @@ static private ClienteRepository repositorio;
 public ResultSet ConsultarRepresentanteAsignado(Conexion solicitante){
     System.out.println("rep"+solicitante.user);
 try {
-    String sql= "SELECT C.K_DOC_CLIENTE from natame.cliente C where  UPPER(C.n_username)=UPPER('"+solicitante.user+"')";
+    String sql= "SELECT C.K_DOC_CLIENTE from S_CLIENTE C where  UPPER(C.n_username)=UPPER('"+solicitante.user+"')";
     PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
     ResultSet rs=stmt.executeQuery();
     rs.next();
     String documentocliente=rs.getString("K_DOC_CLIENTE");
     System.out.println(documentocliente);
     sql = "SELECT rc.n_primer_nombre, rc.n_primer_apellido, rc.n_segundo_nombre, rc.n_segundo_apellido, rc.q_num_telefono, rc.o_email "+
-          "FROM natame.contrato c, natame.representante rc "+
+          "FROM S_CONTRATO c, s rc "+
           "where C.K_DOC_CLIENTE=? AND RC.K_COD_REPRESENTANTE=C.K_COD_REPRESENTANTE AND C.F_TERMINO is null";
     stmt = solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,documentocliente);
@@ -79,7 +79,7 @@ public ResultSet ConsultarProductosRegion(Conexion solicitante,String region, St
 try {
     int parametros=0;
     String sql = "select P.N_NOM_PRODUCTO, V.K_COD_PRODUCTO,V.I_ID_CAT_PRODUCTO,C.I_ID_CAT_PRO_SUP,V.Q_PRECIO_UNITARIO,V.Q_CANTIDAD_EN_STOCK "
-    +"FROM NATAME.PRODUCTO P,NATAME.INVENTARIO V, NATAME.CAT_PRODUCTO C WHERE V.K_COD_REGION=?" 
+    +"FROM S_PRODUCTO P,S_INVENTARIO V, S_CAT_PRODUCTO C WHERE V.K_COD_REGION=?" 
     +"AND P.K_COD_PRODUCTO = V.K_COD_PRODUCTO AND P.I_ID_CAT_PRODUCTO=C.I_ID_CAT_PRODUCTO ";
     String sqlcategoria= "AND C.I_ID_CAT_PRO_SUP=?";
     String sqlsubcategoria= "AND V.I_ID_CAT_PRODUCTO=?";
@@ -124,7 +124,7 @@ return null;
 public ResultSet ConsultarCategorias(Conexion solicitante){
 try {
     int parametros=0;
-    String sql = "select C.I_ID_CAT_PRODUCTO, C.I_ID_CAT_PRO_SUP, C.N_NOM_CAT_PRODUCTO from natame.CAT_PRODUCTO c" ;
+    String sql = "select C.I_ID_CAT_PRODUCTO, C.I_ID_CAT_PRO_SUP, C.N_NOM_CAT_PRODUCTO from S_CAT_PRODUCTO c" ;
     
     PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
 
@@ -147,7 +147,7 @@ return null;
 public ResultSet ConsultarPedidos(Conexion solicitante){
     try {
         
-        String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from natame.cliente C where UPPER(C.n_username)=?";
+        String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from S_CLIENTE C where UPPER(C.n_username)=?";
         PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
         stmt.setString(1,solicitante.user.toUpperCase());
         ResultSet rs=stmt.executeQuery();
@@ -157,7 +157,7 @@ public ResultSet ConsultarPedidos(Conexion solicitante){
         String tipoDocCliente=rs.getString("I_TIPO_DOC");
         rs.close();
         stmt.close();
-        sql="SELECT pedido.K_COD_PEDIDO,pedido.K_COD_PAGO,pedido.I_ESTADO,pedido.F_PEDIDO,pedido.Q_CALIFICACION from natame.pedido pedido where pedido.K_DOC_CLIENTE=? AND pedido.I_TIPO_DOC=? ";
+        sql="SELECT pedido.K_COD_PEDIDO,pedido.K_COD_PAGO,pedido.I_ESTADO,pedido.F_PEDIDO,pedido.Q_CALIFICACION from S_PEDIDO pedido where pedido.K_DOC_CLIENTE=? AND pedido.I_TIPO_DOC=? ";
         stmt=solicitante.getConexion().prepareStatement(sql);
         stmt.setString(1,documentocliente);
         stmt.setString(2,tipoDocCliente);
@@ -182,7 +182,7 @@ public ResultSet ConsultarItemspedido(Conexion solicitante,String codpedido){
         try {
             System.out.println(codpedido);
             String sql= "SELECT item.k_cod_pedido,region.n_nom_region,producto.n_nom_producto,item.q_cantidad, inv.q_precio_unitario "+
-            "from natame.item item,natame.region region,natame.producto producto, natame.inventario inv "+
+            "from S_ITEM item,S_REGION region,S_PRODUCTO producto, S_INVENTARIO inv "+
             "where item.k_cod_region=region.k_cod_region and item.k_cod_producto=producto.k_cod_producto and inv.k_cod_producto = item.k_cod_producto "+
             "and item.I_ID_CAT_PRODUCTO=producto.I_ID_CAT_PRODUCTO and item.k_cod_pedido=?";
             
@@ -204,7 +204,7 @@ public ResultSet ConsultarItemspedido(Conexion solicitante,String codpedido){
 public ResultSet getdetallesdepago(Conexion solicitante, String idpedido){
     
 try {
-    String sql= "SELECT P.K_COD_PAGO, P.F_FECHA,I_METODO,Q_VALOR FROM NATAME.PAGO P, NATAME.PEDIDO PE WHERE PE.K_COD_PAGO=P.K_COD_PAGO AND PE.K_COD_PEDIDO=?";
+    String sql= "SELECT P.K_COD_PAGO, P.F_FECHA,I_METODO,Q_VALOR FROM S_PAGO P, S_PEDIDO PE WHERE PE.K_COD_PAGO=P.K_COD_PAGO AND PE.K_COD_PEDIDO=?";
     PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,idpedido);
     ResultSet rs=stmt.executeQuery();
@@ -222,7 +222,7 @@ public ResultSet getdatosbasicos(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
     String sql= "SELECT R.K_COD_REGION,R.N_PRIMER_NOMBRE,R.N_SEGUNDO_NOMBRE,R.N_PRIMER_APELLIDO,R.N_SEGUNDO_APELLIDO,R.O_EMAIL,R.I_GENERO, R.F_NACIMIENTO, R.Q_NUM_TELEFONO, R.O_DIRECCION" 
-               +" from natame.representante R WHERE K_COD_REPRESENTANTE=?";
+               +" from S_REPRESENTANTE R WHERE K_COD_REPRESENTANTE=?";
     PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,solicitante.user.toUpperCase());
     ResultSet rs=stmt.executeQuery();
@@ -232,7 +232,7 @@ try {
         return rs;
     }
     sql= "SELECT C.K_COD_CIUDAD,C.N_PRIMER_NOMBRE,C.N_SEGUNDO_NOMBRE,C.N_PRIMER_APELLIDO,C.N_SEGUNDO_APELLIDO,C.O_EMAIL, C.Q_NUM_TELEFONO, C.O_DIRECCION"
-        +" FROM NATAME.CLIENTE C WHERE C.N_USERNAME=?";
+        +" FROM S_CLIENTE C WHERE C.N_USERNAME=?";
     stmt=solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,solicitante.user.toUpperCase());
     rs=stmt.executeQuery();
@@ -255,7 +255,7 @@ return null;
 public ResultSet getdatosdepago(Conexion solicitante){
     System.out.println(solicitante.user);
 try {
-    String sql= "SELECT cliente.k_doc_cliente, cliente.i_tipo_doc,cliente.k_cod_ciudad,cliente.n_primer_nombre,cliente.n_segundo_nombre,cliente.n_primer_apellido,cliente.n_segundo_apellido,cliente.o_email,cliente.q_num_telefono,cliente.o_direccion from natame.cliente cliente where cliente.n_username=?";
+    String sql= "SELECT cliente.k_doc_cliente, cliente.i_tipo_doc,cliente.k_cod_ciudad,cliente.n_primer_nombre,cliente.n_segundo_nombre,cliente.n_primer_apellido,cliente.n_segundo_apellido,cliente.o_email,cliente.q_num_telefono,cliente.o_direccion from S_CLIENTE cliente where cliente.n_username=?";
     PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
     stmt.setString(1,solicitante.user.toUpperCase());
     ResultSet rs=stmt.executeQuery();
@@ -278,26 +278,26 @@ return null;
 public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
     //Debe probarse la funcion :v
     try{
-        String sql="INSERT INTO NATAME.CLIENTE VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        String sql="INSERT INTO S_CLIENTE VALUES(?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
-        stmt.setString(1, cliente.getUsuario());
+        stmt.setString(1, cliente.getUsuario().toUpperCase());
         stmt.setString(2, cliente.getDocumento());
         stmt.setString(3, cliente.getTipodocumento());
         stmt.setString(4, cliente.getCodigociudad());
-        stmt.setString(5, cliente.getPrimernombre());
+        stmt.setString(5, cliente.getPrimernombre().toUpperCase());
         if(cliente.getSegundonombre()!=null){
-            stmt.setString(6, cliente.getSegundonombre());
+            stmt.setString(6, cliente.getSegundonombre().toUpperCase());
         }else{
             stmt.setNull(6, Types.VARCHAR);
         }
-        stmt.setString(7, cliente.getPrimerapellido());
-        stmt.setString(8, cliente.getSegundoapellido());
+        stmt.setString(7, cliente.getPrimerapellido().toUpperCase());
+        stmt.setString(8, cliente.getSegundoapellido().toUpperCase());
         stmt.setString(9, cliente.getEmail());
         stmt.setString(10, cliente.getNumtelefono());
-        stmt.setString(11, cliente.getDireccion());
+        stmt.setString(11, cliente.getDireccion().toUpperCase());
         stmt.executeUpdate();
         
-        sql="INSERT INTO natame.CONTRATO values(NATAME.CONTRATO_SEQ.NEXTVAL,?,?,?,?,?)";
+        sql="INSERT INTO S_CONTRATO values(natame.CONTRATO_ID_SEQ.NEXTVAL,?,?,?,?,?)";
         stmt=solicitante.getConexion().prepareStatement(sql);
         stmt.setString(1,solicitante.user.toUpperCase());
         stmt.setString(2,cliente.getDocumento());
@@ -310,21 +310,20 @@ public void crearCliente(Conexion solicitante,CLIENTEPOJO cliente){
         stmt.setDate(4,today);
         stmt.setNull(5,Types.DATE);
         stmt.executeUpdate();
-        solicitante.getConexion().commit();
+        
         solicitante.message="Cliente creado con exito";
         stmt.close();
-        sql="CREATE USER ? identified by ?";
-        stmt=Pool.getPool().getSystem().getConexion().prepareStatement(sql);
-        stmt.setString(1,cliente.getUsuario().toUpperCase());
-        stmt.setString(2,cliente.getDocumento());
+        sql="CREATE USER "+cliente.getUsuario() +" identified by "+cliente.getDocumento();
+        Statement ctmt=Pool.getSystem().getConexion().createStatement();
         System.out.println(cliente.getUsuario());
         System.out.println(cliente.getDocumento());
-        stmt.execute();
-        sql="GRANT R_REPVENTAS to ?";
-        stmt=Pool.getPool().getSystem().getConexion().prepareStatement(sql);
-        stmt.setString(1,cliente.getUsuario().toUpperCase());
-        stmt.execute();
-        
+        ctmt.execute(sql);
+        ctmt.close();
+        sql="GRANT R_Cliente to "+cliente.getUsuario();
+        ctmt=Pool.getSystem().getConexion().prepareStatement(sql);
+        ctmt.execute(sql);
+        ctmt.close();
+        solicitante.getConexion().commit();
     }catch(Exception e){
         e.printStackTrace();
         try {
@@ -348,7 +347,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     //falta comprobar la disponibilidad de los productos en el inventario
     //Se crea el pedido primero
     try{
-        String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from natame.cliente C where UPPER(C.n_username)=?";
+        String sql= "SELECT C.K_DOC_CLIENTE,C.I_TIPO_DOC from S_CLIENTE C where UPPER(C.n_username)=?";
         PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
         stmt.setString(1, solicitante.user.toUpperCase()); // Establecer el parámetro de manera segura
         ResultSet rs=stmt.executeQuery();   
@@ -365,7 +364,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
         
         
 		//Se procede a insertar el pedido
-         sql= "INSERT INTO NATAME.PEDIDO(K_COD_PEDIDO,K_DOC_CLIENTE,I_TIPO_DOC,I_ESTADO,F_PEDIDO) VALUES(NATAME.PEDIDO_SEQ.NEXTVAL,?,?,?,?)";
+         sql= "INSERT INTO S_PEDIDO(K_COD_PEDIDO,K_DOC_CLIENTE,I_TIPO_DOC,I_ESTADO,F_PEDIDO) VALUES(natame.PEDIDO_ID_SEQ.NEXTVAL,?,?,?,?)";
          stmt=solicitante.getConexion().prepareStatement(sql);
          stmt.setString(1, documentocliente);
          stmt.setString(2, tipoDocCliente);
@@ -381,8 +380,8 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     }
     // Insertar Items
     try {
-        String sql="INSERT into natame.ITEM(item.k_cod_item, item.k_cod_pedido, item.k_cod_region, item.k_cod_producto, item.i_id_cat_producto,Q_cantidad) "+
-        "values(NATAME.ITEM_SEQ.NEXTVAL,NATAME.PEDIDO_SEQ.CURRVAL,?,?,?,?)";
+        String sql="INSERT into S_ITEM(item.k_cod_item, item.k_cod_pedido, item.k_cod_region, item.k_cod_producto, item.i_id_cat_producto,Q_cantidad) "+
+        "values(natame.ITEM_ID_SEQ.NEXTVAL,natame.PEDIDO_ID_SEQ.CURRVAL,?,?,?,?)";
         PreparedStatement stmt = solicitante.getConexion().prepareStatement(sql);
         for(ITEM e :pedido.get_items()){
             stmt.setString(1,e.get_region());
@@ -413,7 +412,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
     public void crearCalificacion(Conexion solicitante,String idpedido,int calificacion){
     
         try{
-            String sql="UPDATE natame.pedido set q_calificacion=?,I_ESTADO='F' where K_COD_PEDIDO=?";
+            String sql="UPDATE S_PEDIDO set q_calificacion=?,I_ESTADO='F' where K_COD_PEDIDO=?";
             PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
             stmt.setInt(1,calificacion);
             stmt.setString(2,idpedido);
@@ -429,7 +428,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
         public void pagarpedido(Conexion solicitante,String idpedido,String metodo,Long valor){
     
             try{
-                String sql="INSERT INTO NATAME.PAGO(K_COD_PAGO,F_FECHA,I_METODO,Q_VALOR) values(natame.PAGO_SEQ.nextval,?,?,?)";
+                String sql="INSERT INTO S_PAGO(K_COD_PAGO,F_FECHA,I_METODO,Q_VALOR) values(natame.PAGO_ID_SEQ.nextval,?,?,?)";
                 PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
                 LocalDate now = LocalDate.now();
                 LocalDateTime startOfDay = now.atStartOfDay();
@@ -439,7 +438,7 @@ public String crearPedido(Conexion solicitante,PEDIDOPOJO pedido){
                 stmt.setString(2,metodo);
                 stmt.setLong(3,valor);
                 stmt.executeUpdate();
-                sql="UPDATE NATAME.PEDIDO set K_COD_PAGO=natame.PAGO_SEQ.currval, I_ESTADO='S' WHERE K_COD_PEDIDO=?";
+                sql="UPDATE S_PEDIDO set K_COD_PAGO=natame.PAGO_ID_SEQ.currval, I_ESTADO='S' WHERE K_COD_PEDIDO=?";
                 stmt=solicitante.getConexion().prepareStatement(sql);
                 stmt.setString(1,idpedido);
                 stmt.executeUpdate();
