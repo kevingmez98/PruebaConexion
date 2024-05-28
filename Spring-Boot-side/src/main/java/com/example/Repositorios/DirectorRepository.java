@@ -77,11 +77,8 @@ public void crearRepresentante(Conexion solicitante,CLIENTEPOJO cliente){
         rs.close();
          sql="INSERT INTO S_REPRESENTANTE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
          stmt=solicitante.getConexion().prepareStatement(sql);
-         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("YYYY-MM-DD");
-         LocalDate Fechanacimiento=LocalDate.parse(cliente.getFechanacimiento(),formatter);
-         startOfDay=Fechanacimiento.atStartOfDay();
-         hola=java.util.Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
-         Date fechanacimiento=new Date(hola.getTime());
+         LocalDate fechan=LocalDate.parse(cliente.getFechanacimiento());
+         Date fechanacimiento=Date.valueOf(fechan);
         stmt.setString(1, cliente.getDocumento());
         stmt.setString(2, codRegion.toUpperCase());
         stmt.setString(3, "BGN");

@@ -1,4 +1,5 @@
 package com.example.Repositorios;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -74,13 +75,22 @@ return null;
 
 public String cambiarRepresentante(Conexion solicitante){
     try{
-        //Llamar al procedimiento almacenado
+        String sql="SELECT K_COD_CLIENTE CODIGO FROM S_CLIENTE WHERE N_USERNAME=?";
+        PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+        stmt.setString(1,solicitante.user.toUpperCase());
+        ResultSet rs=stmt.executeQuery();
+        rs.next();
+        String codigoCliente=rs.getString("CODIGO");
+        CallableStatement cambiarRepresentante=solicitante.getConexion().prepareCall("{call NATAME.PK_REPRESENTANTE.PR_CAMBIAR_REP(?)}");
+        cambiarRepresentante.setString(1,codigoCliente);
+        cambiarRepresentante.execute();
 
         
     }catch(Exception e){
-        return "Sorry socio";
+        System.out.println(e.getMessage());
+        return e.getMessage();
     }
-    return "Se ha cambiado el representante con exito";
+    return null;
 }
 
 public String verEstadisticas(Conexion solicitante){

@@ -89,9 +89,11 @@ public class RepresentanteController {
         
          JSONObject message= representanteservice.cambiarRepresentante(serial.Serial);
 
+         if(message.getString("message")==null){
+            return new ResponseEntity(message.toString(),HttpStatus.OK);  
+         }
          
-         
-         return new ResponseEntity(message.toString(),HttpStatus.OK);
+         return new ResponseEntity(message.toString(),HttpStatus.BAD_REQUEST);
           
         }
         @PostMapping(value="/verEstadisticas",consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
