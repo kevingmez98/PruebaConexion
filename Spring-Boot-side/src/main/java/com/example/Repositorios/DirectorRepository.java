@@ -1,9 +1,20 @@
 package com.example.Repositorios;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Formatter;
 
 import com.example.ConnectionPool.Conexion;
+import com.example.ConnectionPool.Pool;
+import com.example.Utils.CLIENTEPOJO;
 
 public class DirectorRepository {
 static private DirectorRepository repositorio;
@@ -49,6 +60,84 @@ static private DirectorRepository repositorio;
     }
     return null;
 }
+
+public void crearRepresentante(Conexion solicitante,CLIENTEPOJO cliente){
+    //Debe probarse la funcion :v
+    LocalDate now = LocalDate.now();
+    LocalDateTime startOfDay = now.atStartOfDay();
+    java.util.Date hola=java.util.Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
+    Date today = new Date(hola.getTime());
+    try{
+        String sql="SELECT R.K_COD_REGION region FROM S_REGION R, S_REPRESENTANTE REP WHERE R.K_COD_REGION=REP.K_COD_REGION AND REP.K_COD_REPRESENTANTE=?";
+        PreparedStatement stmt=solicitante.getConexion().prepareStatement(sql);
+        stmt.setString(1,solicitante.user.toUpperCase());
+        ResultSet rs= stmt.executeQuery();
+        rs.next();
+        String codRegion=rs.getString("region");
+        rs.close();
+         sql="INSERT INTO S_REPRESENTANTE VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+         stmt=solicitante.getConexion().prepareStatement(sql);
+         DateTimeFormatter formatter=DateTimeFormatter.ofPattern("YYYY-MM-DD");
+         LocalDate Fechanacimiento=LocalDate.parse(cliente.getFechanacimiento(),formatter);
+         startOfDay=Fechanacimiento.atStartOfDay();
+         hola=java.util.Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
+         Date fechanacimiento=new Date(hola.getTime());
+        stmt.setString(1, cliente.getDocumento());
+        stmt.setString(2, codRegion.toUpperCase());
+        stmt.setString(3, "BGN");
+        stmt.setString(4, solicitante.user.toUpperCase());
+        stmt.setString(5, cliente.getPrimernombre().toUpperCase());
+        if(cliente.getSegundonombre()!=null){
+            stmt.setString(6, cliente.getSegundonombre().toUpperCase());
+        }else{
+            stmt.setNull(6, Types.VARCHAR);
+        }
+        stmt.setString(7, cliente.getPrimerapellido().toUpperCase());
+        stmt.setString(8, cliente.getSegundoapellido().toUpperCase());
+        stmt.setString(9, cliente.getEmail());
+        stmt.setString(10, cliente.getGenero());
+        stmt.setDate(11, fechanacimiento);
+
+        stmt.setDate(12, today);
+        stmt.setString(13, cliente.getNumtelefono());
+        stmt.setString(14, cliente.getDireccion());
+        stmt.executeUpdate();
+        
+        sql="INSERT INTO S_CONTRATO values(natame.CONTRATO_ID_SEQ.NEXTVAL,?,?,?,?,?)";
+        stmt=solicitante.getConexion().prepareStatement(sql);
+        stmt.setString(1,solicitante.user.toUpperCase());
+        stmt.setString(2,cliente.getDocumento());
+        stmt.setString(3,cliente.getTipodocumento());
+        //Fecha actual
+        stmt.setDate(4,today);
+        stmt.setNull(5,Types.DATE);
+        stmt.executeUpdate();
+        
+        solicitante.message="Cliente creado con exito";
+        stmt.close();
+        sql="CREATE USER "+cliente.getDocumento()+" identified by "+cliente.getDocumento();
+        Statement ctmt=Pool.getSystem().getConexion().createStatement();
+        System.out.println(cliente.getDocumento());
+        ctmt.execute(sql);
+        ctmt.close();
+        sql="GRANT R_Cliente to "+cliente.getDocumento();
+        ctmt=Pool.getSystem().getConexion().prepareStatement(sql);
+        ctmt.execute(sql);
+        ctmt.close();
+        solicitante.getConexion().commit();
+    }catch(Exception e){
+        e.printStackTrace();
+        try {
+            solicitante.getConexion().rollback();
+        } catch (SQLException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        solicitante.message=e.getMessage();
+    }
+
+    }
+
 
 public String volarcorea(Conexion solicitante){
 

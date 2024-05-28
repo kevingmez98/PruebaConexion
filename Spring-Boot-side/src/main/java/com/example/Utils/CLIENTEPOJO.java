@@ -17,13 +17,17 @@ private String numtelefono;
 private String direccion;
 private String serial;
 private String pass;
+private String genero;
+private String fechanacimiento;
+
+
 
 
 
 @JsonCreator
 public CLIENTEPOJO(String usuario, String documento, String tipodocumento, String codigociudad, String primernombre,
         String segundonombre, String primerapellido, String segundoapellido, String email, String numtelefono,
-        String direccion,String serial,String pass) {
+        String direccion,String serial,String pass,String genero,String fechanacimiento) {
     this.usuario = usuario;
     this.documento = documento;
     this.tipodocumento = tipodocumento;
@@ -37,6 +41,8 @@ public CLIENTEPOJO(String usuario, String documento, String tipodocumento, Strin
     this.direccion = direccion;
     this.serial = serial;
     this.pass=pass;
+    this.genero=genero;
+    this.fechanacimiento=fechanacimiento;
 }
 public String getSerial() {
     return serial;
@@ -115,6 +121,18 @@ public String getPass() {
 }
 public void setPass(String pass) {
     this.pass = pass;
+}
+public String getGenero() {
+    return genero;
+}
+public void setGenero(String genero) {
+    this.genero = genero;
+}
+public String getFechanacimiento() {
+    return fechanacimiento;
+}
+public void setFechanacimiento(String fechanacimiento) {
+    this.fechanacimiento = fechanacimiento;
 }
 
 }
