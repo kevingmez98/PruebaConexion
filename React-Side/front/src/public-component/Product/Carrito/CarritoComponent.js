@@ -161,7 +161,7 @@ function CarritoComponent({ isCliente }) {
                 //Borrar carrito
                 eliminarCarrito();
                 //Actualizar la pagina
-                window.location.reload();
+                //window.location.reload();
                 
             } else {
                 alert("El carrito no puede estar vacio... ");

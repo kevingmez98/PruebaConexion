@@ -52,11 +52,11 @@ function GestionarRepresentante() {
 
         //Evitar que se actualice
         event.preventDefault();
-
-        console.log("====?");
-
+        
         if (validarFecha()) {
             peticionCrearRep();
+                                //Actualizar la pagina
+                                window.location.reload();
         }
     }
 

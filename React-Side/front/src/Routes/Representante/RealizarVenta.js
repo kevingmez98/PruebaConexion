@@ -336,9 +336,9 @@ function RealizarVenta() {
                             <Col key={i}>
                                 <SimpleProductCard idProd={producto.codProducto} nomProducto={producto.nomProducto} precio={producto.precioUnitario}>
                                     <Form id={`form-prod-${index}-${i}`}>
-                                        <Form.Group className="mb-3">
-                                            <Form.Label>Cantidad</Form.Label>
-                                            <Form.Control size="sm" type="number" min="1" name="cantidad" />
+                                    <Form.Group className="mb-3">
+                                            <Form.Label>Cantidad max {producto.cantidadStock}</Form.Label>
+                                            <Form.Control size="sm" type="number" min="1" name="cantidad" max={parseInt(producto.cantidadStock)}/>
                                         </Form.Group>
                                         <Form.Group className="mb-3">
                                             <Button variant="secondary" size="lg" type="submit" disabled={isBtnLoading}
